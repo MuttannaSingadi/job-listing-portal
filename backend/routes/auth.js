@@ -22,22 +22,26 @@ const transporter = nodemailer.createTransport({
 router.post("/signup", async (req, res) => {
   try {
     console.log("✅ Signup API called");
-    console.log("Request Body:", req.body);
-    console.log("ENV EMAIL:", process.env.EMAIL);
-    console.log("ENV PASS exists:", process.env.EMAIL_PASS ? "YES" : "NO");
 
     const { name, email, password } = req.body;
 
-    let user = await User.findOne({ email });
-    if (user) {
+    if (!name || !email || !password) {
+      return res.status(400).json({ msg: "All fields required" });
+    }
+
+    // Check existing user
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
       console.log("❌ User already exists");
       return res.status(400).json({ msg: "User already exists" });
     }
 
+    // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    user = new User({
+    // Save user
+    const user = new User({
       name,
       email,
       password: hashedPassword,
@@ -49,16 +53,20 @@ router.post("/signup", async (req, res) => {
     // ===============================
     // SEND CONFIRMATION EMAIL
     // ===============================
-    console.log("📩 Preparing to send email...");
+    console.log("📩 Sending email to:", email);
 
     await transporter.sendMail({
       from: process.env.EMAIL,
       to: email,
-      subject: "Registration Successful",
+      subject: "Registration Successful ✅",
       html: `
-        <h2>Welcome ${name} 🎉</h2>
-        <p>Your account has been created successfully.</p>
-        <p>You can now login to the Job Portal.</p>
+        <div style="font-family: Arial; padding:20px;">
+          <h2>Hello ${name} 👋</h2>
+          <p>Your registration has been completed successfully.</p>
+          <p>You can now login to your account.</p>
+          <br/>
+          <p>Regards,<br/><b>Job Portal Team</b></p>
+        </div>
       `,
     });
 
@@ -68,7 +76,7 @@ router.post("/signup", async (req, res) => {
 
   } catch (error) {
     console.log("❌ EMAIL ERROR:", error);
-    res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ msg: "Email failed or server error" });
   }
 });
 
