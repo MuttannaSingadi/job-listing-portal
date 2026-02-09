@@ -5,9 +5,12 @@ import axios from "axios";
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
 
- 
+  // ⭐ production backend
+  const API = "https://job-listing-portal-iu9g.onrender.com";
+
+  // =============================
   // SIGNUP
-  
+  // =============================
   const [signupData, setSignupData] = useState({
     name: "",
     email: "",
@@ -21,20 +24,16 @@ export default function Auth() {
 
   const handleSignup = async () => {
     try {
-      
       if (signupData.password !== signupData.confirmPassword) {
         alert("Passwords do not match");
         return;
       }
 
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/signup",
-        {
-          name: signupData.name,
-          email: signupData.email,
-          password: signupData.password,
-        }
-      );
+      const res = await axios.post(`${API}/api/auth/signup`, {
+        name: signupData.name,
+        email: signupData.email,
+        password: signupData.password,
+      });
 
       alert(res.data.msg);
       setIsLogin(true);
@@ -43,9 +42,9 @@ export default function Auth() {
     }
   };
 
- 
+  // =============================
   // LOGIN
- 
+  // =============================
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
@@ -57,20 +56,16 @@ export default function Auth() {
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        loginData
-      );
-
+      const res = await axios.post(`${API}/api/auth/login`, loginData);
       alert(res.data.msg);
     } catch (err) {
       alert(err.response?.data?.msg || "Error");
     }
   };
 
-  
-  // RESET PASSWORD (Demo)
-  
+  // =============================
+  // RESET PASSWORD
+  // =============================
   const handleForgotPassword = async () => {
     const email = prompt("Enter your email:");
     const newPassword = prompt("Enter new password:");
@@ -78,10 +73,10 @@ export default function Auth() {
     if (!email || !newPassword) return;
 
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/reset-password",
-        { email, newPassword }
-      );
+      const res = await axios.post(`${API}/api/auth/reset-password`, {
+        email,
+        newPassword,
+      });
 
       alert(res.data.msg);
     } catch (err) {
@@ -131,7 +126,6 @@ export default function Auth() {
           Forgot Password?
         </button>
 
-
         <button onClick={handleLogin}>Login</button>
       </div>
 
@@ -178,7 +172,6 @@ export default function Auth() {
           />
         </div>
 
-        {/* ✅ Confirm Password */}
         <div className="input-group">
           <i className="fas fa-lock"></i>
           <input
