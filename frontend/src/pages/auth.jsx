@@ -8,9 +8,9 @@ export default function Auth() {
   // ⭐ production backend
   const API = "https://job-listing-portal-iu9g.onrender.com";
 
-  // =============================
+  
   // SIGNUP
-  // =============================
+  
   const [signupData, setSignupData] = useState({
     name: "",
     email: "",
@@ -42,9 +42,9 @@ export default function Auth() {
     }
   };
 
-  // =============================
+  
   // LOGIN
-  // =============================
+  
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
@@ -63,9 +63,9 @@ export default function Auth() {
     }
   };
 
-  // =============================
+  
   // RESET PASSWORD
-  // =============================
+ 
   const handleForgotPassword = async () => {
     const email = prompt("Enter your email:");
     const newPassword = prompt("Enter new password:");
