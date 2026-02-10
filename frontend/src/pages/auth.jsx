@@ -1,6 +1,8 @@
 import { useState } from "react";
 import "./auth.css";
 import axios from "axios";
+import logo from "../assets/image.png";
+
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -16,7 +18,10 @@ export default function Auth() {
     confirmPassword: "",
   });
 
-  // ✅ this was missing
+  // 👁 show/hide states
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const handleSignupChange = (e) => {
     setSignupData({ ...signupData, [e.target.name]: e.target.value });
   };
@@ -36,10 +41,10 @@ export default function Auth() {
       if (!passwordRegex.test(signupData.password)) {
         alert(
           "Password must contain:\n" +
-            "• Minimum 8 characters\n" +
-            "• 1 uppercase letter\n" +
-            "• 1 number\n" +
-            "• 1 special character"
+          "• Minimum 8 characters\n" +
+          "• 1 uppercase letter\n" +
+          "• 1 number\n" +
+          "• 1 special character"
         );
         return;
       }
@@ -54,6 +59,7 @@ export default function Auth() {
 
       setIsLogin(true);
 
+      // reset form
       setSignupData({
         name: "",
         email: "",
@@ -104,124 +110,159 @@ export default function Auth() {
   };
 
   return (
-    <div className="container">
-      {/* Login */}
-      <div
-        className={`form-container ${!isLogin ? "slide-in-right" : ""}`}
-        id="loginForm"
-        style={{
-          display: isLogin ? "flex" : "none",
-          transform: isLogin ? "translateX(0)" : "translateX(-100%)",
-        }}
-      >
-        <h2>
-          <i className="fas fa-right-to-bracket"></i> Login
-        </h2>
-
-        <div className="input-group">
-          <i className="fas fa-envelope"></i>
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            onChange={handleLoginChange}
-          />
+    <>
+      {/* Header */}
+      <div className="top-header">
+        <div className="brand">
+          <img src={logo} alt="DevHire Logo" />
+          
         </div>
 
-        <div className="input-group">
-          <i className="fas fa-lock"></i>
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            onChange={handleLoginChange}
-          />
+        <div className="nav-buttons">
+          <button
+            className={isLogin ? "active" : ""}
+            onClick={() => setIsLogin(true)}
+          >
+            Login
+          </button>
+
+          <button
+            className={!isLogin ? "active" : ""}
+            onClick={() => setIsLogin(false)}
+          >
+            Sign Up
+          </button>
         </div>
-
-        <button className="forgot-password" onClick={handleForgotPassword}>
-          Forgot Password?
-        </button>
-
-        <button type="button" onClick={handleLogin}>
-          Login
-        </button>
       </div>
 
-      {/* Signup */}
-      <div
-        className={`form-container ${isLogin ? "slide-in-left" : ""}`}
-        id="signupForm"
-        style={{
-          display: isLogin ? "none" : "flex",
-          transform: isLogin ? "translateX(100%)" : "translateX(0)",
-        }}
-      >
-        <h2>
-          <i className="fas fa-user-plus"></i> Sign Up
-        </h2>
 
-        <div className="input-group">
-          <i className="fas fa-user"></i>
-          <input
-            type="text"
-            name="name"
-            placeholder="Full Name"
-            onChange={handleSignupChange}
-          />
+      <div className="container">
+        {/* Login */}
+        <div
+          className={`form-container ${!isLogin ? "slide-in-right" : ""}`}
+          id="loginForm"
+          style={{
+            display: isLogin ? "flex" : "none",
+            transform: isLogin ? "translateX(0)" : "translateX(-100%)",
+          }}
+        >
+          <h2>
+            <i className="fas fa-right-to-bracket"></i> Login
+          </h2>
+
+          <div className="input-group">
+            <i className="fas fa-envelope"></i>
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              onChange={handleLoginChange}
+            />
+          </div>
+
+          <div className="input-group">
+            <i className="fas fa-lock"></i>
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              onChange={handleLoginChange}
+            />
+          </div>
+
+          <button className="forgot-password" onClick={handleForgotPassword}>
+            Forgot Password?
+          </button>
+
+          <button type="button" onClick={handleLogin}>
+            Login
+          </button>
         </div>
 
-        <div className="input-group">
-          <i className="fas fa-envelope"></i>
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            onChange={handleSignupChange}
-          />
+        {/* Signup */}
+        <div
+          className={`form-container ${isLogin ? "slide-in-left" : ""}`}
+          id="signupForm"
+          style={{
+            display: isLogin ? "none" : "flex",
+            transform: isLogin ? "translateX(100%)" : "translateX(0)",
+          }}
+        >
+          <h2>
+            <i className="fas fa-user-plus"></i> Sign Up
+          </h2>
+
+          <div className="input-group">
+            <i className="fas fa-user"></i>
+            <input
+              type="text"
+              name="name"
+              placeholder="Full Name"
+              value={signupData.name}
+              onChange={handleSignupChange}
+            />
+          </div>
+
+          <div className="input-group">
+            <i className="fas fa-envelope"></i>
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={signupData.email}
+              onChange={handleSignupChange}
+            />
+          </div>
+
+          <div className="input-group">
+            <i className="fas fa-lock"></i>
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              placeholder="Password"
+              value={signupData.password}
+              onChange={handleSignupChange}
+            />
+          </div>
+
+          <div className="input-group">
+            <i className="fas fa-lock"></i>
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              value={signupData.confirmPassword}
+              onChange={handleSignupChange}
+            />
+          </div>
+
+          <small className="password-hint">
+            8+ chars, uppercase, number & special character.
+          </small>
+
+          <button type="button" onClick={handleSignup}>
+            Sign Up
+          </button>
         </div>
 
-        <div className="input-group">
-          <i className="fas fa-lock"></i>
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            onChange={handleSignupChange}
-          />
-        </div>
+        {/* Overlay */}
+        <div
+          className="overlay-container"
+          style={{ left: isLogin ? "50%" : "0" }}
+        >
+          <h2>{isLogin ? "Welcome Back!" : "Hello, Friend!"}</h2>
 
-        <div className="input-group">
-          <i className="fas fa-lock"></i>
-          <input
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            onChange={handleSignupChange}
-          />
-        </div>
+          <p>
+            {isLogin
+              ? "To keep connected, please login with your personal info"
+              : "Enter your details and start your journey with us"}
+          </p>
 
-        <button type="button" onClick={handleSignup}>
-          Sign Up
-        </button>
+          <button onClick={() => setIsLogin(!isLogin)}>
+            {isLogin ? "Switch to Sign Up" : "Switch to Login"}
+          </button>
+        </div>
       </div>
-
-      {/* Overlay */}
-      <div
-        className="overlay-container"
-        style={{ left: isLogin ? "50%" : "0" }}
-      >
-        <h2>{isLogin ? "Welcome Back!" : "Hello, Friend!"}</h2>
-
-        <p>
-          {isLogin
-            ? "To keep connected, please login with your personal info"
-            : "Enter your details and start your journey with us"}
-        </p>
-
-        <button onClick={() => setIsLogin(!isLogin)}>
-          {isLogin ? "Switch to Sign Up" : "Switch to Login"}
-        </button>
-      </div>
-    </div>
+    </>
   );
 }
