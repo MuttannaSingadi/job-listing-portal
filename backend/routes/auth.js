@@ -29,18 +29,15 @@ router.post("/signup", async (req, res) => {
       return res.status(400).json({ msg: "All fields required" });
     }
 
-    // Check existing user
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       console.log("❌ User already exists");
       return res.status(400).json({ msg: "User already exists" });
     }
 
-    // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Save user
     const user = new User({
       name,
       email,
@@ -52,31 +49,35 @@ router.post("/signup", async (req, res) => {
 
     console.log("📢 Sending success response to frontend");
 
-    // ✅ SEND SUCCESS FIRST & EXIT
-    return res.json({ msg: "Registration successful ✅" });
+    // ✅ SEND SUCCESS FIRST
+    res.json({ msg: "Registration successful ✅" });
 
     // ===============================
-    // BELOW WILL NEVER RUN
+    // EMAIL IN BACKGROUND
     // ===============================
-    transporter
-      .sendMail({
-        from: process.env.EMAIL,
-        to: email,
-        subject: "Registration Successful ✅",
-        html: `
-          <div style="font-family: Arial; padding:20px;">
-            <h2>Hello ${name} 👋</h2>
-            <p>Your registration has been completed successfully.</p>
-            <p>You can now login to your account.</p>
-            <br/>
-            <p>Regards,<br/><b>Job Portal Team</b></p>
-          </div>
-        `,
-      })
-      .then(() => console.log("✅ Email sent"))
-      .catch((mailError) =>
-        console.log("⚠ Email failed but user registered:", mailError.message)
-      );
+    setImmediate(() => {
+      console.log("📩 Sending email in background...");
+
+      transporter
+        .sendMail({
+          from: process.env.EMAIL,
+          to: email,
+          subject: "Registration Successful ✅",
+          html: `
+            <div style="font-family: Arial; padding:20px;">
+              <h2>Hello ${name} 👋</h2>
+              <p>Your registration has been completed successfully.</p>
+              <p>You can now login to your account.</p>
+              <br/>
+              <p>Regards,<br/><b>Job Portal Team</b></p>
+            </div>
+          `,
+        })
+        .then(() => console.log("✅ Email sent"))
+        .catch((mailError) =>
+          console.log("⚠ Email failed but user registered:", mailError.message)
+        );
+    });
 
   } catch (error) {
     console.log("❌ SERVER ERROR:", error);
