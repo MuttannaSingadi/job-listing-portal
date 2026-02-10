@@ -52,14 +52,12 @@ router.post("/signup", async (req, res) => {
 
     console.log("📢 Sending success response to frontend");
 
-    // ✅ SEND SUCCESS FIRST
-    res.json({ msg: "Registration successful ✅" });
+    // ✅ SEND SUCCESS FIRST & EXIT
+    return res.json({ msg: "Registration successful ✅" });
 
     // ===============================
-    // SEND EMAIL IN BACKGROUND
+    // BELOW WILL NEVER RUN
     // ===============================
-    console.log("📩 Trying to send email in background...");
-
     transporter
       .sendMail({
         from: process.env.EMAIL,
@@ -82,7 +80,7 @@ router.post("/signup", async (req, res) => {
 
   } catch (error) {
     console.log("❌ SERVER ERROR:", error);
-    res.status(500).json({ msg: "Server error" });
+    return res.status(500).json({ msg: "Server error" });
   }
 });
 
@@ -99,11 +97,11 @@ router.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ msg: "Wrong Password" });
 
-    res.json({ msg: "Login successful" });
+    return res.json({ msg: "Login successful" });
 
   } catch (error) {
     console.log(error);
-    res.status(500).json({ msg: "Server error" });
+    return res.status(500).json({ msg: "Server error" });
   }
 });
 
@@ -122,10 +120,10 @@ router.post("/reset-password", async (req, res) => {
 
     await user.save();
 
-    res.json({ msg: "Password updated successfully" });
+    return res.json({ msg: "Password updated successfully" });
 
   } catch (error) {
-    res.status(500).json({ msg: "Server error" });
+    return res.status(500).json({ msg: "Server error" });
   }
 });
 
