@@ -1,46 +1,59 @@
-# job-listing-portal
-# 🚀 DevHire – Job Listing Portal
+# 💼 DevHire – Job Listing Portal (Work in Progress 🚧)
 
-DevHire is a full-stack job listing platform that enables users to register, log in securely, and receive email notifications.  
-The system is built with modern technologies and follows production-style architecture.
+**DevHire** is a full-stack job listing platform being actively developed.  
+It aims to provide a secure and scalable environment where job seekers can explore opportunities and recruiters can post openings.
+
+The project follows modern production-style architecture using the MERN ecosystem.
 
 ---
 
-## ✨ Features
+## 🎯 Project Vision
 
-- User Signup & Login
-- Secure Password Validation
-- Password Reset
-- Email Notifications
-- MongoDB Database Integration
-- Responsive & Animated UI
-- REST API Backend
+To build a real-world hiring platform with authentication, job management, notifications, and deployment-ready infrastructure.
+
+---
+
+## ✅ Completed Modules
+
+- Project setup (Frontend + Backend)  
+- User registration  
+- Login system  
+- Password validation  
+- MongoDB Atlas connection  
+- Basic API structure  
+- Responsive UI foundation  
+
+---
+
+## 🚧 Currently Working On
+
+- JWT authentication  
+- Protected routes  
+- Email notifications (Resend API)  
+- Password reset flow  
+- Job listing CRUD operations  
+- Backend validation & error handling  
 
 ---
 
 ## 🛠 Tech Stack
 
-**Frontend**
-- React.js
-- Vite
-- CSS3
+### Frontend
+- React.js  
+- Vite  
+- CSS3  
 
-**Backend**
-- Node.js
-- Express.js
+### Backend
+- Node.js  
+- Express.js  
 
-**Database**
-- MongoDB Atlas
+### Database
+- MongoDB Atlas  
 
-**Email Service**
-- Resend API
+### Integrations
+- Resend API (emails)
 
 ---
 
-## ⚙️ Installation & Setup
+## 📂 Project Structure
 
-### Backend
-```bash
-cd backend
-npm install
-npm start
