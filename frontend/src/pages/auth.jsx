@@ -8,9 +8,7 @@ export default function Auth() {
   // ⭐ production backend
   const API = "https://job-listing-portal-iu9g.onrender.com";
 
-  
   // SIGNUP
-  
   const [signupData, setSignupData] = useState({
     name: "",
     email: "",
@@ -18,33 +16,56 @@ export default function Auth() {
     confirmPassword: "",
   });
 
+  // ✅ this was missing
   const handleSignupChange = (e) => {
     setSignupData({ ...signupData, [e.target.name]: e.target.value });
   };
 
-  const handleSignup = async () => {
+  const handleSignup = async (e) => {
+    e.preventDefault();
+
     try {
       if (signupData.password !== signupData.confirmPassword) {
         alert("Passwords do not match");
         return;
       }
 
-      const res = await axios.post(`${API}/api/auth/signup`, {
+      const passwordRegex =
+        /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$/;
+
+      if (!passwordRegex.test(signupData.password)) {
+        alert(
+          "Password must contain:\n" +
+            "• Minimum 8 characters\n" +
+            "• 1 uppercase letter\n" +
+            "• 1 number\n" +
+            "• 1 special character"
+        );
+        return;
+      }
+
+      await axios.post(`${API}/api/auth/signup`, {
         name: signupData.name,
         email: signupData.email,
         password: signupData.password,
       });
 
-      alert(res.data.msg);
+      alert("Registration successful ✅");
+
       setIsLogin(true);
+
+      setSignupData({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
     } catch (err) {
       alert(err.response?.data?.msg || "Error");
     }
   };
 
-  
   // LOGIN
-  
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
@@ -63,9 +84,7 @@ export default function Auth() {
     }
   };
 
-  
   // RESET PASSWORD
- 
   const handleForgotPassword = async () => {
     const email = prompt("Enter your email:");
     const newPassword = prompt("Enter new password:");
@@ -119,14 +138,13 @@ export default function Auth() {
           />
         </div>
 
-        <button
-          className="forgot-password"
-          onClick={handleForgotPassword}
-        >
+        <button className="forgot-password" onClick={handleForgotPassword}>
           Forgot Password?
         </button>
 
-        <button onClick={handleLogin}>Login</button>
+        <button type="button" onClick={handleLogin}>
+          Login
+        </button>
       </div>
 
       {/* Signup */}
@@ -182,7 +200,9 @@ export default function Auth() {
           />
         </div>
 
-        <button onClick={handleSignup}>Sign Up</button>
+        <button type="button" onClick={handleSignup}>
+          Sign Up
+        </button>
       </div>
 
       {/* Overlay */}
@@ -190,9 +210,7 @@ export default function Auth() {
         className="overlay-container"
         style={{ left: isLogin ? "50%" : "0" }}
       >
-        <h2>
-          {isLogin ? "Welcome Back!" : "Hello, Friend!"}
-        </h2>
+        <h2>{isLogin ? "Welcome Back!" : "Hello, Friend!"}</h2>
 
         <p>
           {isLogin

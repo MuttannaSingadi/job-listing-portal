@@ -1,20 +1,14 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 const User = require("../models/User");
 
 const router = express.Router();
 
 // ===============================
-// EMAIL TRANSPORTER
+// RESEND SETUP
 // ===============================
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // ===============================
 // SIGNUP
@@ -47,20 +41,18 @@ router.post("/signup", async (req, res) => {
     await user.save();
     console.log("✅ User saved in DB");
 
-    console.log("📢 Sending success response to frontend");
-
-    // ✅ SEND SUCCESS FIRST
+    // send success immediately
     res.json({ msg: "Registration successful ✅" });
 
     // ===============================
     // EMAIL IN BACKGROUND
     // ===============================
-    setImmediate(() => {
-      console.log("📩 Sending email in background...");
+    setImmediate(async () => {
+      try {
+        console.log("📩 Sending email using Resend...");
 
-      transporter
-        .sendMail({
-          from: process.env.EMAIL,
+        await resend.emails.send({
+          from: "onboarding@resend.dev",
           to: email,
           subject: "Registration Successful ✅",
           html: `
@@ -72,11 +64,12 @@ router.post("/signup", async (req, res) => {
               <p>Regards,<br/><b>Job Portal Team</b></p>
             </div>
           `,
-        })
-        .then(() => console.log("✅ Email sent"))
-        .catch((mailError) =>
-          console.log("⚠ Email failed but user registered:", mailError.message)
-        );
+        });
+
+        console.log("✅ Email sent");
+      } catch (mailError) {
+        console.log("⚠ Email failed but user registered:", mailError.message);
+      }
     });
 
   } catch (error) {
@@ -99,7 +92,6 @@ router.post("/login", async (req, res) => {
     if (!isMatch) return res.status(400).json({ msg: "Wrong Password" });
 
     return res.json({ msg: "Login successful" });
-
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error" });
@@ -122,7 +114,6 @@ router.post("/reset-password", async (req, res) => {
     await user.save();
 
     return res.json({ msg: "Password updated successfully" });
-
   } catch (error) {
     return res.status(500).json({ msg: "Server error" });
   }
