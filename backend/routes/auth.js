@@ -5,14 +5,14 @@ const User = require("../models/User");
 
 const router = express.Router();
 
-// ===============================
+
 // RESEND SETUP
-// ===============================
+
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// ===============================
+
 // SIGNUP
-// ===============================
+
 router.post("/signup", async (req, res) => {
   try {
     console.log("✅ Signup API called");
@@ -44,9 +44,9 @@ router.post("/signup", async (req, res) => {
     // send success immediately
     res.json({ msg: "Registration successful ✅" });
 
-    // ===============================
+    
     // EMAIL IN BACKGROUND
-    // ===============================
+    
     setImmediate(async () => {
       try {
         console.log("📩 Sending email using Resend...");
@@ -78,9 +78,9 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-// ===============================
+
 // LOGIN
-// ===============================
+
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -98,9 +98,8 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// ===============================
+
 // RESET PASSWORD
-// ===============================
 router.post("/reset-password", async (req, res) => {
   try {
     const { email, newPassword } = req.body;
