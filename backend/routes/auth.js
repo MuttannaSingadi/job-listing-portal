@@ -51,32 +51,39 @@ router.post("/signup", async (req, res) => {
     console.log("✅ User saved in DB");
 
     // ===============================
-    // SEND CONFIRMATION EMAIL
+    // SEND CONFIRMATION EMAIL (SAFE)
     // ===============================
     console.log("📩 Sending email to:", email);
 
-    await transporter.sendMail({
-      from: process.env.EMAIL,
-      to: email,
-      subject: "Registration Successful ✅",
-      html: `
-        <div style="font-family: Arial; padding:20px;">
-          <h2>Hello ${name} 👋</h2>
-          <p>Your registration has been completed successfully.</p>
-          <p>You can now login to your account.</p>
-          <br/>
-          <p>Regards,<br/><b>Job Portal Team</b></p>
-        </div>
-      `,
-    });
+    try {
+      await transporter.sendMail({
+        from: process.env.EMAIL,
+        to: email,
+        subject: "Registration Successful ✅",
+        html: `
+          <div style="font-family: Arial; padding:20px;">
+            <h2>Hello ${name} 👋</h2>
+            <p>Your registration has been completed successfully.</p>
+            <p>You can now login to your account.</p>
+            <br/>
+            <p>Regards,<br/><b>Job Portal Team</b></p>
+          </div>
+        `,
+      });
 
-    console.log("✅ Email sent successfully");
+      console.log("✅ Email sent successfully");
+    } catch (mailError) {
+      console.log("⚠ Email failed but user registered:", mailError.message);
+    }
 
-    res.json({ msg: "Signup successful. Confirmation email sent." });
+    console.log("📢 Sending success response to frontend");
+
+    // ALWAYS RETURN SUCCESS
+    res.json({ msg: "Registration successful ✅" });
 
   } catch (error) {
-    console.log("❌ EMAIL ERROR:", error);
-    res.status(500).json({ msg: "Email failed or server error" });
+    console.log("❌ SERVER ERROR:", error);
+    res.status(500).json({ msg: "Server error" });
   }
 });
 
