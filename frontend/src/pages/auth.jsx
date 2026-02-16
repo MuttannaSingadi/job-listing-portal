@@ -3,22 +3,25 @@ import "./auth.css";
 import axios from "axios";
 import logo from "../assets/image.png";
 
-
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
 
-  // ⭐ production backend
   const API = "https://job-listing-portal-iu9g.onrender.com";
 
-  // SIGNUP
+  // ================= SIGNUP =================
   const [signupData, setSignupData] = useState({
+    role: "jobseeker",
     name: "",
+    location: "",
+    companyName: "",
+    contactPerson: "",
+    companyLocation: "",
     email: "",
+    phone: "",
     password: "",
     confirmPassword: "",
   });
 
-  // 👁 show/hide states
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -29,49 +32,42 @@ export default function Auth() {
   const handleSignup = async (e) => {
     e.preventDefault();
 
+    if (!signupData.email || !signupData.password) {
+      alert("Email & Password required");
+      return;
+    }
+
+    if (signupData.password !== signupData.confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
     try {
-      if (signupData.password !== signupData.confirmPassword) {
-        alert("Passwords do not match");
-        return;
-      }
-
-      const passwordRegex =
-        /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$/;
-
-      if (!passwordRegex.test(signupData.password)) {
-        alert(
-          "Password must contain:\n" +
-          "• Minimum 8 characters\n" +
-          "• 1 uppercase letter\n" +
-          "• 1 number\n" +
-          "• 1 special character"
-        );
-        return;
-      }
-
-      await axios.post(`${API}/api/auth/signup`, {
-        name: signupData.name,
-        email: signupData.email,
-        password: signupData.password,
-      });
+      await axios.post(`${API}/api/auth/signup`, signupData);
 
       alert("Registration successful ✅");
 
-      setIsLogin(true);
-
       // reset form
       setSignupData({
+        role: "jobseeker",
         name: "",
+        location: "",
+        companyName: "",
+        contactPerson: "",
+        companyLocation: "",
         email: "",
+        phone: "",
         password: "",
         confirmPassword: "",
       });
+
+      setIsLogin(true);
     } catch (err) {
       alert(err.response?.data?.msg || "Error");
     }
   };
 
-  // LOGIN
+  // ================= LOGIN =================
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
@@ -82,19 +78,26 @@ export default function Auth() {
   };
 
   const handleLogin = async () => {
+    if (!loginData.email || !loginData.password) {
+      alert("Enter email & password");
+      return;
+    }
+
     try {
       const res = await axios.post(`${API}/api/auth/login`, loginData);
       alert(res.data.msg);
+
+      // ⭐ in future you can redirect based on role
+      // const role = res.data.role;
     } catch (err) {
       alert(err.response?.data?.msg || "Error");
     }
   };
 
-  // RESET PASSWORD
+  // ================= RESET =================
   const handleForgotPassword = async () => {
     const email = prompt("Enter your email:");
     const newPassword = prompt("Enter new password:");
-
     if (!email || !newPassword) return;
 
     try {
@@ -102,7 +105,6 @@ export default function Auth() {
         email,
         newPassword,
       });
-
       alert(res.data.msg);
     } catch (err) {
       alert(err.response?.data?.msg || "Error");
@@ -115,7 +117,6 @@ export default function Auth() {
       <div className="top-header">
         <div className="brand">
           <img src={logo} alt="DevHire Logo" />
-          
         </div>
 
         <div className="nav-buttons">
@@ -135,121 +136,181 @@ export default function Auth() {
         </div>
       </div>
 
-
       <div className="container">
-        {/* Login */}
-        <div
-          className={`form-container ${!isLogin ? "slide-in-right" : ""}`}
-          id="loginForm"
-          style={{
-            display: isLogin ? "flex" : "none",
-            transform: isLogin ? "translateX(0)" : "translateX(-100%)",
-          }}
-        >
-          <h2>
-            <i className="fas fa-right-to-bracket"></i> Login
-          </h2>
+        {/* ================= LOGIN ================= */}
+        {isLogin && (
+          <div className="form-container">
+            <h2>Login</h2>
 
-          <div className="input-group">
-            <i className="fas fa-envelope"></i>
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              onChange={handleLoginChange}
-            />
+            <div className="input-group">
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={loginData.email}
+                onChange={handleLoginChange}
+              />
+            </div>
+
+            <div className="input-group">
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                value={loginData.password}
+                onChange={handleLoginChange}
+              />
+            </div>
+
+            <button className="forgot-password" onClick={handleForgotPassword}>
+              Forgot Password?
+            </button>
+
+            <button onClick={handleLogin}>Login</button>
           </div>
+        )}
 
-          <div className="input-group">
-            <i className="fas fa-lock"></i>
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              onChange={handleLoginChange}
-            />
+        {/* ================= SIGNUP ================= */}
+        {!isLogin && (
+          <div className="form-container">
+            <h2>Sign Up</h2>
+
+            {/* ROLE */}
+            <div className="role-select">
+              <label>
+                <input
+                  type="radio"
+                  name="role"
+                  value="jobseeker"
+                  checked={signupData.role === "jobseeker"}
+                  onChange={handleSignupChange}
+                />
+                Job Seeker
+              </label>
+
+              <label>
+                <input
+                  type="radio"
+                  name="role"
+                  value="employer"
+                  checked={signupData.role === "employer"}
+                  onChange={handleSignupChange}
+                />
+                Employer
+              </label>
+            </div>
+
+            {/* Job Seeker */}
+            {signupData.role === "jobseeker" && (
+              <>
+                <div className="input-group">
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Full Name"
+                    value={signupData.name}
+                    onChange={handleSignupChange}
+                  />
+                </div>
+
+                <div className="input-group">
+                  <input
+                    type="text"
+                    name="location"
+                    placeholder="City / Country"
+                    value={signupData.location}
+                    onChange={handleSignupChange}
+                  />
+                </div>
+              </>
+            )}
+
+            {/* Employer */}
+            {signupData.role === "employer" && (
+              <>
+                <div className="input-group">
+                  <input
+                    type="text"
+                    name="companyName"
+                    placeholder="Company Name"
+                    value={signupData.companyName}
+                    onChange={handleSignupChange}
+                  />
+                </div>
+
+                <div className="input-group">
+                  <input
+                    type="text"
+                    name="contactPerson"
+                    placeholder="Contact Person"
+                    value={signupData.contactPerson}
+                    onChange={handleSignupChange}
+                  />
+                </div>
+
+                <div className="input-group">
+                  <input
+                    type="text"
+                    name="companyLocation"
+                    placeholder="Company Location"
+                    value={signupData.companyLocation}
+                    onChange={handleSignupChange}
+                  />
+                </div>
+              </>
+            )}
+
+            {/* COMMON */}
+            <div className="input-group">
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={signupData.email}
+                onChange={handleSignupChange}
+              />
+            </div>
+
+            <div className="input-group">
+              <input
+                type="text"
+                name="phone"
+                placeholder="Phone Number"
+                value={signupData.phone}
+                onChange={handleSignupChange}
+              />
+            </div>
+
+            <div className="input-group">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Password"
+                value={signupData.password}
+                onChange={handleSignupChange}
+              />
+              <span onClick={() => setShowPassword(!showPassword)}>👁</span>
+            </div>
+
+            <div className="input-group">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                value={signupData.confirmPassword}
+                onChange={handleSignupChange}
+              />
+              <span onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                👁
+              </span>
+            </div>
+
+            <button onClick={handleSignup}>Sign Up</button>
           </div>
-
-          <button className="forgot-password" onClick={handleForgotPassword}>
-            Forgot Password?
-          </button>
-
-          <button type="button" onClick={handleLogin}>
-            Login
-          </button>
-        </div>
-
-        {/* Signup */}
-        <div
-          className={`form-container ${isLogin ? "slide-in-left" : ""}`}
-          id="signupForm"
-          style={{
-            display: isLogin ? "none" : "flex",
-            transform: isLogin ? "translateX(100%)" : "translateX(0)",
-          }}
-        >
-          <h2>
-            <i className="fas fa-user-plus"></i> Sign Up
-          </h2>
-
-          <div className="input-group">
-            <i className="fas fa-user"></i>
-            <input
-              type="text"
-              name="name"
-              placeholder="Full Name"
-              value={signupData.name}
-              onChange={handleSignupChange}
-            />
-          </div>
-
-          <div className="input-group">
-            <i className="fas fa-envelope"></i>
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={signupData.email}
-              onChange={handleSignupChange}
-            />
-          </div>
-
-          <div className="input-group">
-            <i className="fas fa-lock"></i>
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              placeholder="Password"
-              value={signupData.password}
-              onChange={handleSignupChange}
-            />
-          </div>
-
-          <div className="input-group">
-            <i className="fas fa-lock"></i>
-            <input
-              type={showConfirmPassword ? "text" : "password"}
-              name="confirmPassword"
-              placeholder="Confirm Password"
-              value={signupData.confirmPassword}
-              onChange={handleSignupChange}
-            />
-          </div>
-
-          <small className="password-hint">
-            8+ chars, uppercase, number & special character.
-          </small>
-
-          <button type="button" onClick={handleSignup}>
-            Sign Up
-          </button>
-        </div>
+        )}
 
         {/* Overlay */}
-        <div
-          className="overlay-container"
-          style={{ left: isLogin ? "50%" : "0" }}
-        >
+        <div className="overlay-container">
           <h2>{isLogin ? "Welcome Back!" : "Hello, Friend!"}</h2>
 
           <p>

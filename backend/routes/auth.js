@@ -5,19 +5,29 @@ const User = require("../models/User");
 
 const router = express.Router();
 
-
-// RESEND SETUP
-
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-
-// SIGNUP
-
+// ================= SIGNUP =================
 router.post("/signup", async (req, res) => {
   try {
     console.log("✅ Signup API called");
 
-    const { name, email, password } = req.body;
+    let {
+      role,
+      name,
+      email,
+      password,
+      phone,
+      location,
+      companyName,
+      contactPerson,
+      companyLocation,
+    } = req.body;
+
+    // ⭐ employer → use company name as main name
+    if (role === "employer") {
+      name = companyName;
+    }
 
     if (!name || !email || !password) {
       return res.status(400).json({ msg: "All fields required" });
@@ -25,7 +35,6 @@ router.post("/signup", async (req, res) => {
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      console.log("❌ User already exists");
       return res.status(400).json({ msg: "User already exists" });
     }
 
@@ -33,24 +42,25 @@ router.post("/signup", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const user = new User({
+      role,
       name,
       email,
       password: hashedPassword,
+      phone,
+      location,
+      companyName,
+      contactPerson,
+      companyLocation,
     });
 
     await user.save();
-    console.log("✅ User saved in DB");
+    console.log("✅ User saved");
 
-    // send success immediately
     res.json({ msg: "Registration successful ✅" });
 
-    
-    // EMAIL IN BACKGROUND
-    
+    // send mail in background
     setImmediate(async () => {
       try {
-        console.log("📩 Sending email using Resend...");
-
         await resend.emails.send({
           from: "onboarding@resend.dev",
           to: email,
@@ -58,29 +68,27 @@ router.post("/signup", async (req, res) => {
           html: `
             <div style="font-family: Arial; padding:20px;">
               <h2>Hello ${name} 👋</h2>
-              <p>Your registration has been completed successfully.</p>
-              <p>You can now login to your account.</p>
+              <p>Your account has been created successfully.</p>
+              <p>You can now login.</p>
               <br/>
-              <p>Regards,<br/><b>Job Portal Team</b></p>
+              <p><b>Job Portal Team</b></p>
             </div>
           `,
         });
 
         console.log("✅ Email sent");
-      } catch (mailError) {
-        console.log("⚠ Email failed but user registered:", mailError.message);
+      } catch (err) {
+        console.log("⚠ Email error:", err.message);
       }
     });
 
   } catch (error) {
     console.log("❌ SERVER ERROR:", error);
-    return res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ msg: "Server error" });
   }
 });
 
-
-// LOGIN
-
+// ================= LOGIN =================
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -91,15 +99,17 @@ router.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ msg: "Wrong Password" });
 
-    return res.json({ msg: "Login successful" });
+    res.json({
+      msg: "Login successful",
+      role: user.role,
+    });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ msg: "Server error" });
   }
 });
 
-
-// RESET PASSWORD
+// ================= RESET =================
 router.post("/reset-password", async (req, res) => {
   try {
     const { email, newPassword } = req.body;
@@ -112,9 +122,9 @@ router.post("/reset-password", async (req, res) => {
 
     await user.save();
 
-    return res.json({ msg: "Password updated successfully" });
+    res.json({ msg: "Password updated successfully" });
   } catch (error) {
-    return res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ msg: "Server error" });
   }
 });
 

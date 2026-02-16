@@ -17,10 +17,9 @@ body {
   background-image: url("https://wallpapercave.com/wp/wp4390828.jpg");
   background-size: cover;
   background-position: center;
-  animation: bgPan 15s ease-in-out infinite alternate;
 }
 
-/* color overlay */
+/* overlay */
 body::before {
   content: "";
   position: absolute;
@@ -28,17 +27,11 @@ body::before {
   background: linear-gradient(
     180deg,
     rgba(102, 126, 234, 0.6),
-    rgba(118, 75, 162, 0.6),
-    rgba(72, 160, 207, 0.6)
+    rgba(118, 75, 162, 0.6)
   );
   mix-blend-mode: multiply;
   pointer-events: none;
   z-index: 0;
-}
-
-@keyframes bgPan {
-  from { background-position: 0% 0%; }
-  to { background-position: 100% 100%; }
 }
 
 /* ================= HEADER ================= */
@@ -53,31 +46,17 @@ body::before {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(0,0,0,0.35);
+  background: rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(10px);
   z-index: 1000;
 }
 
 .brand img {
-  height: 150px;
-  width: 120px;
-  width: auto;
+  height: 50px;
   object-fit: contain;
-  transition: transform 0.3s ease, filter 0.3s ease;
 }
 
-.brand img:hover {
-  transform: scale(1.08);
-  filter: drop-shadow(0 0 6px rgba(255,255,255,0.5));
-}
-
-.logo {
-  font-size: 20px;
-  font-weight: bold;
-  color: white;
-}
-
-/* nav buttons */
+/* nav */
 .nav-buttons button {
   margin-left: 15px;
   padding: 8px 18px;
@@ -103,45 +82,27 @@ body::before {
 
 .container {
   margin-top: 90px;
-  width: 800px;
-  height: 500px;
-  background: #fff;
+  width: 900px;
+  min-height: 520px;
+  background: white;
   border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   overflow: hidden;
   display: flex;
   position: relative;
-  animation: fadeIn 0.8s ease;
   z-index: 2;
-  transition: 0.3s ease;
-}
-
-.container:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 25px 50px rgba(0,0,0,0.25);
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ================= FORM ================= */
 
 .form-container {
-  position: absolute;
   width: 50%;
-  padding: 50px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 100%;
-  top: 0;
-  z-index: 2;
+  overflow-y: auto; /* important */
 }
-
-#loginForm { left: 0; }
-#signupForm { right: 0; }
 
 .form-container h2 {
   margin-bottom: 20px;
@@ -149,6 +110,12 @@ body::before {
 }
 
 /* ================= INPUT ================= */
+
+.input-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
 
 .form-container input {
   margin: 10px 0;
@@ -158,14 +125,42 @@ body::before {
   transition: 0.3s;
 }
 
-.form-container input:hover {
-  transform: scale(1.02);
-}
-
 .form-container input:focus {
   border-color: #667eea;
   box-shadow: 0 0 8px rgba(102, 126, 234, 0.5);
   outline: none;
+}
+
+/* password eye */
+.input-group span {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.input-group span:hover {
+  opacity: 1;
+}
+
+/* ================= ROLE ================= */
+
+.role-select {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 6px;
+  background: rgba(102, 126, 234, 0.08);
+  display: flex;
+  justify-content: space-around;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.role-select input {
+  margin-right: 6px;
 }
 
 /* ================= BUTTON ================= */
@@ -180,71 +175,44 @@ body::before {
   cursor: pointer;
   transition: 0.3s ease;
   font-weight: bold;
-  letter-spacing: 1px;
 }
 
 .form-container button:hover {
-  transform: translateY(-2px) scale(1.05);
+  transform: scale(1.05);
 }
 
-.form-container button:active {
-  transform: scale(0.97);
-}
-
-/* ================= FORGOT PASSWORD ================= */
+/* ================= FORGOT ================= */
 
 .forgot-password {
   background: none;
   border: none;
   margin-top: 8px;
-  font-size: 11px;
+  font-size: 12px;
   color: #667eea;
   cursor: pointer;
   text-align: left;
-  align-self: flex-start;
 }
 
 .forgot-password:hover {
   text-decoration: underline;
-  color: #764ba2;
-}
-
-/* ================= PASSWORD HINT ================= */
-
-.password-hint {
-  margin-top: 6px;
-  font-size: 11px;
-  background: rgba(102, 126, 234, 0.08);
-  padding: 8px 10px;
-  border-radius: 6px;
-  color: #555;
-  transition: 0.3s;
-}
-
-input:focus ~ .password-hint {
-  background: rgba(102, 126, 234, 0.15);
-  color: #4f46e5;
 }
 
 /* ================= OVERLAY ================= */
 
 .overlay-container {
-  position: absolute;
   width: 50%;
-  height: 100%;
-  left: 50%;
-  top: 0;
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 50px;
-  z-index: 1;
+  padding: 40px;
 }
 
-.overlay-container h2 { margin-bottom: 20px; }
+.overlay-container h2 {
+  margin-bottom: 20px;
+}
 
 .overlay-container p {
   margin-bottom: 20px;
@@ -269,18 +237,17 @@ input:focus ~ .password-hint {
 /* ================= RESPONSIVE ================= */
 
 @media (max-width: 900px) {
-  body { padding: 20px; }
+  body {
+    padding: 20px;
+  }
 
   .container {
     width: 100%;
-    height: auto;
     flex-direction: column;
   }
 
   .form-container,
   .overlay-container {
-    position: relative;
     width: 100%;
-    left: 0 !important;
   }
 }
