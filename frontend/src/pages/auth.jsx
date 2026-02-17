@@ -332,11 +332,20 @@ export default function Auth() {
 
         <div className="overlay-container">
           <h2>{isLogin ? "Welcome Back!" : "Hello, Friend!"}</h2>
-          <p>
-            {isLogin
-              ? "To keep connected, please login with your personal info"
-              : "Enter your details and start your journey with us"}
+          <p className="overlay-text">
+            {isLogin ? (
+              <>
+                <span className="highlight">Welcome back!</span>
+                Sign in to explore jobs, manage applications, and grow your career.
+              </>
+            ) : (
+              <>
+                <span className="highlight">Join DevHire today!</span>
+                Create your account and connect with top employers worldwide.
+              </>
+            )}
           </p>
+
           <button onClick={() => setIsLogin(!isLogin)}>
             {isLogin ? "Switch to Sign Up" : "Switch to Login"}
           </button>
