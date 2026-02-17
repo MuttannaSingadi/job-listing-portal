@@ -5,7 +5,6 @@ import logo from "../assets/image.png";
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
-
   const API = "https://job-listing-portal-iu9g.onrender.com";
 
   // ================= SIGNUP =================
@@ -37,6 +36,11 @@ export default function Auth() {
       return;
     }
 
+    if (signupData.phone.length !== 12) {
+      alert("Phone number must be exactly 12 digits");
+      return;
+    }
+
     if (signupData.password !== signupData.confirmPassword) {
       alert("Passwords do not match");
       return;
@@ -47,7 +51,6 @@ export default function Auth() {
 
       alert("Registration successful ✅");
 
-      // reset form
       setSignupData({
         role: "jobseeker",
         name: "",
@@ -86,9 +89,6 @@ export default function Auth() {
     try {
       const res = await axios.post(`${API}/api/auth/login`, loginData);
       alert(res.data.msg);
-
-      // ⭐ in future you can redirect based on role
-      // const role = res.data.role;
     } catch (err) {
       alert(err.response?.data?.msg || "Error");
     }
@@ -261,6 +261,7 @@ export default function Auth() {
             )}
 
             {/* COMMON */}
+
             <div className="input-group">
               <input
                 type="email"
@@ -271,16 +272,24 @@ export default function Auth() {
               />
             </div>
 
+            {/* PHONE WITH 12 DIGIT LIMIT */}
             <div className="input-group">
               <input
-                type="text"
+                type="tel"
                 name="phone"
                 placeholder="Phone Number"
                 value={signupData.phone}
-                onChange={handleSignupChange}
+                maxLength={12}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, "");
+                  if (value.length <= 12) {
+                    setSignupData({ ...signupData, phone: value });
+                  }
+                }}
               />
             </div>
 
+            {/* PASSWORD */}
             <div className="input-group">
               <input
                 type={showPassword ? "text" : "password"}
@@ -292,6 +301,7 @@ export default function Auth() {
               <span onClick={() => setShowPassword(!showPassword)}>👁</span>
             </div>
 
+            {/* CONFIRM PASSWORD */}
             <div className="input-group">
               <input
                 type={showConfirmPassword ? "text" : "password"}
