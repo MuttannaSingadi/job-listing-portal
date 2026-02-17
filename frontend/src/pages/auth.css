@@ -1,11 +1,11 @@
-/* ================= GLOBAL ================= */
-
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
 }
+
+/* ================= BACKGROUND ================= */
 
 body {
   display: flex;
@@ -17,10 +17,9 @@ body {
   background-image: url("https://wallpapercave.com/wp/wp4390828.jpg");
   background-size: cover;
   background-position: center;
-  padding: 20px;
 }
 
-/* Background Overlay */
+/* overlay */
 body::before {
   content: "";
   position: absolute;
@@ -53,12 +52,13 @@ body::before {
 }
 
 .brand img {
-  height: 60px;
+  height: 50px;
   object-fit: contain;
 }
 
+/* nav */
 .nav-buttons button {
-  margin-left: 10px;
+  margin-left: 15px;
   padding: 8px 18px;
   border-radius: 20px;
   border: none;
@@ -78,12 +78,11 @@ body::before {
   color: white;
 }
 
-/* ================= MAIN CONTAINER ================= */
+/* ================= CONTAINER ================= */
 
 .container {
-  margin-top: 100px;
-  width: 100%;
-  max-width: 900px;
+  margin-top: 90px;
+  width: 900px;
   min-height: 520px;
   background: white;
   border-radius: 12px;
@@ -94,7 +93,7 @@ body::before {
   z-index: 2;
 }
 
-/* ================= FORM SECTION ================= */
+/* ================= FORM ================= */
 
 .form-container {
   width: 50%;
@@ -102,6 +101,7 @@ body::before {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow-y: auto; /* important */
 }
 
 .form-container h2 {
@@ -119,23 +119,22 @@ body::before {
 
 .form-container input {
   margin: 10px 0;
-  padding: 14px;
+  padding: 12px;
   border: 1px solid #ccc;
-  border-radius: 6px;
+  border-radius: 5px;
   transition: 0.3s;
-  font-size: 14px;
 }
 
 .form-container input:focus {
   border-color: #667eea;
-  box-shadow: 0 0 8px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 0 8px rgba(102, 126, 234, 0.5);
   outline: none;
 }
 
-/* Password Eye */
+/* password eye */
 .input-group span {
   position: absolute;
-  right: 12px;
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
@@ -151,7 +150,7 @@ body::before {
 
 .role-select {
   margin: 10px 0;
-  padding: 12px;
+  padding: 10px;
   border-radius: 6px;
   background: rgba(102, 126, 234, 0.08);
   display: flex;
@@ -160,11 +159,15 @@ body::before {
   font-size: 14px;
 }
 
+.role-select input {
+  margin-right: 6px;
+}
+
 /* ================= BUTTON ================= */
 
 .form-container button {
   margin-top: 20px;
-  padding: 14px;
+  padding: 12px 20px;
   border: none;
   border-radius: 25px;
   background: linear-gradient(135deg, #667eea, #764ba2);
@@ -172,20 +175,19 @@ body::before {
   cursor: pointer;
   transition: 0.3s ease;
   font-weight: bold;
-  font-size: 15px;
 }
 
 .form-container button:hover {
   transform: scale(1.05);
 }
 
-/* ================= FORGOT PASSWORD ================= */
+/* ================= FORGOT ================= */
 
 .forgot-password {
   background: none;
   border: none;
   margin-top: 8px;
-  font-size: 13px;
+  font-size: 12px;
   color: #667eea;
   cursor: pointer;
   text-align: left;
@@ -195,7 +197,7 @@ body::before {
   text-decoration: underline;
 }
 
-/* ================= OVERLAY SECTION ================= */
+/* ================= OVERLAY ================= */
 
 .overlay-container {
   width: 50%;
@@ -206,7 +208,6 @@ body::before {
   justify-content: center;
   align-items: center;
   padding: 40px;
-  text-align: center;
 }
 
 .overlay-container h2 {
@@ -215,6 +216,7 @@ body::before {
 
 .overlay-container p {
   margin-bottom: 20px;
+  text-align: center;
 }
 
 .overlay-container button {
@@ -222,7 +224,7 @@ body::before {
   color: #764ba2;
   font-weight: bold;
   border: none;
-  padding: 12px 22px;
+  padding: 10px 20px;
   border-radius: 20px;
   cursor: pointer;
   transition: 0.3s;
@@ -232,88 +234,20 @@ body::before {
   transform: scale(1.05);
 }
 
-/* ================= TABLET ================= */
+/* ================= RESPONSIVE ================= */
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
+  body {
+    padding: 20px;
+  }
 
   .container {
+    width: 100%;
     flex-direction: column;
-    min-height: auto;
   }
 
   .form-container,
   .overlay-container {
     width: 100%;
-  }
-
-  .form-container {
-    padding: 30px 20px;
-  }
-
-  .overlay-container {
-    padding: 30px 20px;
-  }
-
-  .role-select {
-    flex-direction: column;
-    gap: 8px;
-    align-items: flex-start;
-  }
-}
-
-/* ================= MOBILE ================= */
-
-@media (max-width: 480px) {
-
-  body {
-    padding: 15px;
-    align-items: flex-start;
-  }
-
-  .top-header {
-    flex-direction: column;
-    height: auto;
-    padding: 10px 15px;
-    gap: 8px;
-  }
-
-  .brand img {
-    height: 45px;
-  }
-
-  .nav-buttons {
-    display: flex;
-    gap: 8px;
-  }
-
-  .nav-buttons button {
-    padding: 6px 12px;
-    font-size: 12px;
-  }
-
-  .container {
-    margin-top: 120px;
-  }
-
-  .form-container {
-    padding: 25px 15px;
-  }
-
-  .form-container h2 {
-    font-size: 20px;
-    text-align: center;
-  }
-
-  .form-container input {
-    padding: 14px;
-  }
-
-  .form-container button,
-  .overlay-container button {
-    width: 100%;
-  }
-
-  .forgot-password {
-    text-align: center;
   }
 }
