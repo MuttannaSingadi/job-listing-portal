@@ -1,11 +1,11 @@
+/* ================= GLOBAL ================= */
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
 }
-
-/* ================= BACKGROUND ================= */
 
 body {
   display: flex;
@@ -17,9 +17,10 @@ body {
   background-image: url("https://wallpapercave.com/wp/wp4390828.jpg");
   background-size: cover;
   background-position: center;
+  padding: 20px;
 }
 
-/* overlay */
+/* Background Overlay */
 body::before {
   content: "";
   position: absolute;
@@ -41,37 +42,50 @@ body::before {
   top: 0;
   left: 0;
   width: 100%;
-  height: 70px;
-  padding: 0 40px;
+  height: 110px; /* Balanced header height */
+  padding: 0 60px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   z-index: 1000;
 }
 
-.brand img {
-  height: 150px;
-  object-fit: contain;
-  margin-left:-10px;
+.brand {
+  display: flex;
+  align-items: center;
 }
 
-/* nav */
+.brand img {
+  height: 90px;   /* Bigger than buttons */
+  width: auto;
+  object-fit: contain;
+}
+
+/* Navigation Buttons */
+
+.nav-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .nav-buttons button {
-  margin-left: 10px;
-  padding: 8px 18px;
-  border-radius: 20px;
+  padding: 8px 20px;
+  border-radius: 22px;
   border: none;
   cursor: pointer;
   background: white;
   color: #764ba2;
-  font-weight: bold;
-  transition: 0.3s ease;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
 }
 
 .nav-buttons button:hover {
-  transform: scale(1.05);
+  transform: translateY(-2px);
 }
 
 .nav-buttons .active {
@@ -79,11 +93,12 @@ body::before {
   color: white;
 }
 
-/* ================= CONTAINER ================= */
+/* ================= MAIN CONTAINER ================= */
 
 .container {
-  margin-top: 90px;
-  width: 900px;
+  margin-top: 170px; /* Adjusted for header */
+  width: 100%;
+  max-width: 900px;
   min-height: 520px;
   background: white;
   border-radius: 12px;
@@ -94,7 +109,7 @@ body::before {
   z-index: 2;
 }
 
-/* ================= FORM ================= */
+/* ================= FORM SECTION ================= */
 
 .form-container {
   width: 50%;
@@ -102,7 +117,6 @@ body::before {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  overflow-y: auto; /* important */
 }
 
 .form-container h2 {
@@ -120,22 +134,24 @@ body::before {
 
 .form-container input {
   margin: 10px 0;
-  padding: 12px;
+  padding: 14px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 6px;
   transition: 0.3s;
+  font-size: 14px;
 }
 
 .form-container input:focus {
   border-color: #667eea;
-  box-shadow: 0 0 8px rgba(102, 126, 234, 0.5);
+  box-shadow: 0 0 8px rgba(102, 126, 234, 0.4);
   outline: none;
 }
 
-/* password eye */
+/* Password Eye */
+
 .input-group span {
   position: absolute;
-  right: 10px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
@@ -151,7 +167,7 @@ body::before {
 
 .role-select {
   margin: 10px 0;
-  padding: 10px;
+  padding: 12px;
   border-radius: 6px;
   background: rgba(102, 126, 234, 0.08);
   display: flex;
@@ -160,15 +176,11 @@ body::before {
   font-size: 14px;
 }
 
-.role-select input {
-  margin-right: 6px;
-}
-
 /* ================= BUTTON ================= */
 
 .form-container button {
   margin-top: 20px;
-  padding: 12px 20px;
+  padding: 14px;
   border: none;
   border-radius: 25px;
   background: linear-gradient(135deg, #667eea, #764ba2);
@@ -176,19 +188,20 @@ body::before {
   cursor: pointer;
   transition: 0.3s ease;
   font-weight: bold;
+  font-size: 15px;
 }
 
 .form-container button:hover {
   transform: scale(1.05);
 }
 
-/* ================= FORGOT ================= */
+/* ================= FORGOT PASSWORD ================= */
 
 .forgot-password {
   background: none;
   border: none;
   margin-top: 8px;
-  font-size: 12px;
+  font-size: 13px;
   color: #667eea;
   cursor: pointer;
   text-align: left;
@@ -198,7 +211,7 @@ body::before {
   text-decoration: underline;
 }
 
-/* ================= OVERLAY ================= */
+/* ================= OVERLAY SECTION ================= */
 
 .overlay-container {
   width: 50%;
@@ -209,6 +222,7 @@ body::before {
   justify-content: center;
   align-items: center;
   padding: 40px;
+  text-align: center;
 }
 
 .overlay-container h2 {
@@ -217,7 +231,6 @@ body::before {
 
 .overlay-container p {
   margin-bottom: 20px;
-  text-align: center;
 }
 
 .overlay-container button {
@@ -225,7 +238,7 @@ body::before {
   color: #764ba2;
   font-weight: bold;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 22px;
   border-radius: 20px;
   cursor: pointer;
   transition: 0.3s;
@@ -235,20 +248,74 @@ body::before {
   transform: scale(1.05);
 }
 
-/* ================= RESPONSIVE ================= */
+/* ================= TABLET ================= */
 
-@media (max-width: 900px) {
-  body {
-    padding: 20px;
-  }
+@media (max-width: 768px) {
 
   .container {
-    width: 100%;
     flex-direction: column;
+    min-height: auto;
   }
 
   .form-container,
   .overlay-container {
     width: 100%;
+  }
+
+  .form-container {
+    padding: 30px 20px;
+  }
+
+  .overlay-container {
+    padding: 30px 20px;
+  }
+
+  .role-select {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 480px) {
+
+  body {
+    padding: 15px;
+    align-items: flex-start;
+  }
+
+  .top-header {
+    flex-direction: column;
+    height: auto;
+    padding: 15px;
+    gap: 10px;
+  }
+
+  .brand img {
+    height: 70px;
+  }
+
+  .nav-buttons button {
+    padding: 6px 14px;
+    font-size: 12px;
+  }
+
+  .container {
+    margin-top: 190px;
+  }
+
+  .form-container {
+    padding: 25px 15px;
+  }
+
+  .form-container button,
+  .overlay-container button {
+    width: 100%;
+  }
+
+  .forgot-password {
+    text-align: center;
   }
 }
