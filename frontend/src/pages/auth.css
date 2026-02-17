@@ -52,8 +52,9 @@ body::before {
 }
 
 .brand img {
-  height: 50px;
+  height: 150px;
   object-fit: contain;
+  margin-left: 2px;
 }
 
 /* nav */

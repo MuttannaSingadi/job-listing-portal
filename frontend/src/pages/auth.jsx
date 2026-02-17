@@ -242,7 +242,7 @@ export default function Auth() {
                   <input
                     type="text"
                     name="contactPerson"
-                    placeholder="Contact Person"
+                    placeholder="Full Name"
                     value={signupData.contactPerson}
                     onChange={handleSignupChange}
                   />
@@ -252,7 +252,7 @@ export default function Auth() {
                   <input
                     type="text"
                     name="companyLocation"
-                    placeholder="Company Location"
+                    placeholder="Location"
                     value={signupData.companyLocation}
                     onChange={handleSignupChange}
                   />
