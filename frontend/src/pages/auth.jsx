@@ -31,16 +31,36 @@ export default function Auth() {
   const handleSignup = async (e) => {
     e.preventDefault();
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+
     if (!signupData.email || !signupData.password) {
       alert("Email & Password required");
       return;
     }
 
-    if (signupData.phone.length !== 12) {
+    // Email validation
+    if (!emailRegex.test(signupData.email)) {
+      alert("Enter valid email (example@gmail.com)");
+      return;
+    }
+
+    // Phone validation
+    if (!/^\d{12}$/.test(signupData.phone)) {
       alert("Phone number must be exactly 12 digits");
       return;
     }
 
+    // Password strength validation
+    if (!passwordRegex.test(signupData.password)) {
+      alert(
+        "Password must contain:\n• 8+ characters\n• 1 uppercase\n• 1 lowercase\n• 1 number\n• 1 special character"
+      );
+      return;
+    }
+
+    // Confirm password
     if (signupData.password !== signupData.confirmPassword) {
       alert("Passwords do not match");
       return;
@@ -48,7 +68,6 @@ export default function Auth() {
 
     try {
       await axios.post(`${API}/api/auth/signup`, signupData);
-
       alert("Registration successful ✅");
 
       setSignupData({
@@ -137,7 +156,7 @@ export default function Auth() {
       </div>
 
       <div className="container">
-        {/* ================= LOGIN ================= */}
+        {/* LOGIN */}
         {isLogin && (
           <div className="form-container">
             <h2>Login</h2>
@@ -170,12 +189,11 @@ export default function Auth() {
           </div>
         )}
 
-        {/* ================= SIGNUP ================= */}
+        {/* SIGNUP */}
         {!isLogin && (
           <div className="form-container">
             <h2>Sign Up</h2>
 
-            {/* ROLE */}
             <div className="role-select">
               <label>
                 <input
@@ -200,7 +218,6 @@ export default function Auth() {
               </label>
             </div>
 
-            {/* Job Seeker */}
             {signupData.role === "jobseeker" && (
               <>
                 <div className="input-group">
@@ -225,7 +242,6 @@ export default function Auth() {
               </>
             )}
 
-            {/* Employer */}
             {signupData.role === "employer" && (
               <>
                 <div className="input-group">
@@ -260,8 +276,6 @@ export default function Auth() {
               </>
             )}
 
-            {/* COMMON */}
-
             <div className="input-group">
               <input
                 type="email"
@@ -272,7 +286,6 @@ export default function Auth() {
               />
             </div>
 
-            {/* PHONE WITH 12 DIGIT LIMIT */}
             <div className="input-group">
               <input
                 type="tel"
@@ -289,7 +302,6 @@ export default function Auth() {
               />
             </div>
 
-            {/* PASSWORD */}
             <div className="input-group">
               <input
                 type={showPassword ? "text" : "password"}
@@ -301,7 +313,6 @@ export default function Auth() {
               <span onClick={() => setShowPassword(!showPassword)}>👁</span>
             </div>
 
-            {/* CONFIRM PASSWORD */}
             <div className="input-group">
               <input
                 type={showConfirmPassword ? "text" : "password"}
@@ -319,16 +330,13 @@ export default function Auth() {
           </div>
         )}
 
-        {/* Overlay */}
         <div className="overlay-container">
           <h2>{isLogin ? "Welcome Back!" : "Hello, Friend!"}</h2>
-
           <p>
             {isLogin
               ? "To keep connected, please login with your personal info"
               : "Enter your details and start your journey with us"}
           </p>
-
           <button onClick={() => setIsLogin(!isLogin)}>
             {isLogin ? "Switch to Sign Up" : "Switch to Login"}
           </button>
