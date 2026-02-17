@@ -1,3 +1,5 @@
+/* ================= GLOBAL ================= */
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -5,33 +7,15 @@
   font-family: Arial, sans-serif;
 }
 
-/* ================= BACKGROUND ================= */
-
 body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   min-height: 100vh;
-  overflow-x: hidden;
-  position: relative;
   background-image: url("https://wallpapercave.com/wp/wp4390828.jpg");
   background-size: cover;
   background-position: center;
-}
-
-/* overlay */
-body::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(102, 126, 234, 0.6),
-    rgba(118, 75, 162, 0.6)
-  );
-  mix-blend-mode: multiply;
-  pointer-events: none;
-  z-index: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
 }
 
 /* ================= HEADER ================= */
@@ -41,8 +25,8 @@ body::before {
   top: 0;
   left: 0;
   width: 100%;
-  height: 70px;
-  padding: 0 40px;
+  height: 75px; /* Compact header */
+  padding: 0 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -53,24 +37,26 @@ body::before {
 
 .brand img {
   height: 50px;
-  object-fit: contain;
+  width: auto;
 }
 
-/* nav */
+/* Navigation Buttons */
+
+.nav-buttons {
+  display: flex;
+  gap: 8px;
+}
+
 .nav-buttons button {
-  margin-left: 15px;
-  padding: 8px 18px;
-  border-radius: 20px;
+  padding: 6px 14px;
+  border-radius: 18px;
   border: none;
   cursor: pointer;
   background: white;
   color: #764ba2;
-  font-weight: bold;
+  font-weight: 600;
+  font-size: 12px;
   transition: 0.3s ease;
-}
-
-.nav-buttons button:hover {
-  transform: scale(1.05);
 }
 
 .nav-buttons .active {
@@ -78,176 +64,134 @@ body::before {
   color: white;
 }
 
-/* ================= CONTAINER ================= */
+/* ================= MAIN CONTAINER ================= */
 
 .container {
-  margin-top: 90px;
-  width: 900px;
-  min-height: 520px;
+  margin-top: 100px; /* Proper spacing below header */
+  width: 100%;
+  max-width: 420px; /* Perfect mobile width */
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  border-radius: 20px;
   overflow: hidden;
-  display: flex;
-  position: relative;
-  z-index: 2;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
 }
 
-/* ================= FORM ================= */
+/* ================= FORM SECTION ================= */
 
 .form-container {
-  width: 50%;
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow-y: auto; /* important */
+  padding: 30px 20px;
 }
 
 .form-container h2 {
   margin-bottom: 20px;
-  color: #333;
-}
-
-/* ================= INPUT ================= */
-
-.input-group {
-  position: relative;
-  display: flex;
-  flex-direction: column;
+  text-align: center;
 }
 
 .form-container input {
-  margin: 10px 0;
+  width: 100%;
+  margin: 12px 0;
   padding: 12px;
+  border-radius: 8px;
   border: 1px solid #ccc;
-  border-radius: 5px;
-  transition: 0.3s;
+  font-size: 14px;
 }
 
 .form-container input:focus {
   border-color: #667eea;
-  box-shadow: 0 0 8px rgba(102, 126, 234, 0.5);
   outline: none;
 }
 
-/* password eye */
-.input-group span {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  font-size: 14px;
-  opacity: 0.7;
-}
-
-.input-group span:hover {
-  opacity: 1;
-}
-
-/* ================= ROLE ================= */
-
-.role-select {
-  margin: 10px 0;
-  padding: 10px;
-  border-radius: 6px;
-  background: rgba(102, 126, 234, 0.08);
-  display: flex;
-  justify-content: space-around;
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.role-select input {
-  margin-right: 6px;
-}
-
-/* ================= BUTTON ================= */
+/* Buttons */
 
 .form-container button {
-  margin-top: 20px;
-  padding: 12px 20px;
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px;
   border: none;
-  border-radius: 25px;
+  border-radius: 30px;
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
-  cursor: pointer;
-  transition: 0.3s ease;
   font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
 }
-
-.form-container button:hover {
-  transform: scale(1.05);
-}
-
-/* ================= FORGOT ================= */
 
 .forgot-password {
+  margin-top: 10px;
+  font-size: 12px;
   background: none;
   border: none;
-  margin-top: 8px;
-  font-size: 12px;
   color: #667eea;
-  cursor: pointer;
   text-align: left;
+  cursor: pointer;
 }
 
-.forgot-password:hover {
-  text-decoration: underline;
-}
-
-/* ================= OVERLAY ================= */
+/* ================= OVERLAY SECTION ================= */
 
 .overlay-container {
-  width: 50%;
+  padding: 30px 20px;
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 40px;
+  text-align: center;
 }
 
 .overlay-container h2 {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .overlay-container p {
+  font-size: 14px;
   margin-bottom: 20px;
-  text-align: center;
 }
 
 .overlay-container button {
   background: white;
   color: #764ba2;
-  font-weight: bold;
-  border: none;
-  padding: 10px 20px;
+  padding: 10px 18px;
   border-radius: 20px;
+  border: none;
+  font-weight: bold;
   cursor: pointer;
-  transition: 0.3s;
 }
 
-.overlay-container button:hover {
-  transform: scale(1.05);
-}
+/* ================= DESKTOP VERSION ================= */
 
-/* ================= RESPONSIVE ================= */
+@media (min-width: 768px) {
 
-@media (max-width: 900px) {
   body {
-    padding: 20px;
+    align-items: center;
+  }
+
+  .top-header {
+    height: 90px;
+    padding: 0 50px;
+  }
+
+  .brand img {
+    height: 70px;
+  }
+
+  .nav-buttons button {
+    font-size: 14px;
+    padding: 8px 20px;
   }
 
   .container {
-    width: 100%;
-    flex-direction: column;
+    margin-top: 140px;
+    max-width: 900px;
+    display: flex;
   }
 
   .form-container,
   .overlay-container {
-    width: 100%;
+    width: 50%;
+  }
+
+  .form-container {
+    padding: 40px;
+  }
+
+  .overlay-container {
+    padding: 40px;
   }
 }
