@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./auth.css";
 import axios from "axios";
 import logo from "../assets/image.png";
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
+  const navigate = useNavigate();
   const API = "https://job-listing-portal-iu9g.onrender.com";
 
   // ================= SIGNUP =================
@@ -40,19 +42,16 @@ export default function Auth() {
       return;
     }
 
-    // Email validation
     if (!emailRegex.test(signupData.email)) {
       alert("Enter valid email (example@gmail.com)");
       return;
     }
 
-    // Phone validation
     if (!/^\d{12}$/.test(signupData.phone)) {
       alert("Phone number must be exactly 12 digits");
       return;
     }
 
-    // Password strength validation
     if (!passwordRegex.test(signupData.password)) {
       alert(
         "Password must contain:\n• 8+ characters\n• 1 uppercase\n• 1 lowercase\n• 1 number\n• 1 special character"
@@ -60,7 +59,6 @@ export default function Auth() {
       return;
     }
 
-    // Confirm password
     if (signupData.password !== signupData.confirmPassword) {
       alert("Passwords do not match");
       return;
@@ -107,7 +105,17 @@ export default function Auth() {
 
     try {
       const res = await axios.post(`${API}/api/auth/login`, loginData);
+
+      // Save token if exists
+      if (res.data.token) {
+        localStorage.setItem("token", res.data.token);
+      }
+
       alert(res.data.msg);
+
+      // Redirect to Home
+      navigate("/");
+
     } catch (err) {
       alert(err.response?.data?.msg || "Error");
     }
@@ -332,19 +340,6 @@ export default function Auth() {
 
         <div className="overlay-container">
           <h2>{isLogin ? "Welcome Back!" : "Hello, Friend!"}</h2>
-          <p className="overlay-text">
-            {isLogin ? (
-              <>
-                <span className="highlight">Welcome back!</span>
-                Sign in to explore jobs, manage applications, and grow your career.
-              </>
-            ) : (
-              <>
-                <span className="highlight">Join DevHire today!</span>
-                Create your account and connect with top employers worldwide.
-              </>
-            )}
-          </p>
 
           <button onClick={() => setIsLogin(!isLogin)}>
             {isLogin ? "Switch to Sign Up" : "Switch to Login"}
