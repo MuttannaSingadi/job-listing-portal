@@ -1,0 +1,123 @@
+/* ================= PAGE BACKGROUND ================= */
+
+.jobs-page {
+  padding: 100px 40px;
+  background: #e9edf3;
+  min-height: 100vh;
+}
+
+/* ================= SECTION TITLE ================= */
+
+.jobs-title {
+  text-align: center;
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 60px;
+  color: #1f2937;
+}
+
+/* ================= GRID LAYOUT ================= */
+
+.jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* ================= JOB CARD ================= */
+
+.job-card {
+  background: #f3f4f6;
+  padding: 40px;
+  border-radius: 30px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+  transition: 0.3s ease;
+}
+
+.job-card:hover {
+  transform: translateY(-8px);
+}
+
+/* ================= TITLE ================= */
+
+.job-card h3 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+/* ================= COMPANY ================= */
+
+.company {
+  font-size: 18px;
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+/* ================= DETAILS ROW ================= */
+
+.details {
+  display: flex;
+  gap: 25px;
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+/* ================= DESCRIPTION ================= */
+
+.description {
+  font-size: 18px;
+  line-height: 1.7;
+  margin-bottom: 25px;
+}
+
+/* ================= TAGS ================= */
+
+.tags {
+  margin-bottom: 25px;
+}
+
+.tags span {
+  background: #e5e7eb;
+  padding: 10px 22px;
+  border-radius: 30px;
+  font-size: 16px;
+  margin-right: 12px;
+  color: #4f46e5;
+  font-weight: 500;
+}
+
+/* ================= APPLY BUTTON ================= */
+
+.apply-btn {
+  padding: 15px 40px;
+  border-radius: 50px;
+  border: none;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  background: linear-gradient(to right, #2563eb, #6d28d9);
+  color: white;
+  transition: 0.3s;
+}
+
+.apply-btn:hover {
+  opacity: 0.9;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 1100px) {
+  .jobs-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .jobs-grid {
+    grid-template-columns: 1fr;
+  }
+}

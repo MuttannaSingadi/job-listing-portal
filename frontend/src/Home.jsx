@@ -33,6 +33,7 @@ export default function Home() {
           <div className="nav-buttons">
             <Link to="/jobs"><button>Jobs</button></Link>
             <Link to="/companies"><button>Companies</button></Link>
+            <Link to="/admin"><button>Admin</button></Link>
 
             {!isLoggedIn && (
               <Link to="/auth"><button>Login</button></Link>
