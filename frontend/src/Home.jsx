@@ -31,7 +31,6 @@ export default function Home() {
         <div className="nav-right">
 
           <div className="nav-buttons">
-            <Link to="/"><button>Home</button></Link>
             <Link to="/jobs"><button>Jobs</button></Link>
             <Link to="/companies"><button>Companies</button></Link>
 
