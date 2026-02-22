@@ -184,9 +184,18 @@ export default function Admin() {
                   <strong>Description:</strong> {job.description}
                 </p>
 
-                <p className="skills">
-                  <strong>Skills:</strong> {job.skills || "Not specified"}
-                </p>
+                <div className="skills">
+                  <strong>Skills:</strong>
+                  <div className="skill-tags">
+                    {job.skills
+                      ? job.skills.split(",").map((skill, index) => (
+                        <span key={index} className="skill-tag">
+                          {skill.trim()}
+                        </span>
+                      ))
+                      : " Not specified"}
+                  </div>
+                </div>
               </div>
             ))
           )}
