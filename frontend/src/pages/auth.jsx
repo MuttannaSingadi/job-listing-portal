@@ -66,7 +66,6 @@ export default function Auth() {
 
     try {
       await axios.post(`${API}/api/auth/signup`, signupData);
-
       alert("Registration successful ✅");
 
       setSignupData({
@@ -83,7 +82,6 @@ export default function Auth() {
       });
 
       setIsLogin(true);
-
     } catch (err) {
       alert(err.response?.data?.msg || "Error");
     }
@@ -108,14 +106,23 @@ export default function Auth() {
     try {
       const res = await axios.post(`${API}/api/auth/login`, loginData);
 
+      console.log("LOGIN RESPONSE:", res.data);
+
       if (res.data.token) {
         localStorage.setItem("token", res.data.token);
+        console.log("TOKEN SAVED:", localStorage.getItem("token"));
+      } else {
+        alert("Token not received");
+        return;
       }
 
       alert(res.data.msg);
+
       navigate("/");
+      window.location.reload(); // Important Fix
 
     } catch (err) {
+      console.log("LOGIN ERROR:", err);
       alert(err.response?.data?.msg || "Error");
     }
   };
@@ -163,7 +170,6 @@ export default function Auth() {
       </div>
 
       <div className="container">
-
         {/* LOGIN */}
         {isLogin && (
           <div className="form-container">
@@ -343,12 +349,10 @@ export default function Auth() {
 
         <div className="overlay-container">
           <h2>{isLogin ? "Welcome Back!" : "Hello, Friend!"}</h2>
-
           <button onClick={() => setIsLogin(!isLogin)}>
             {isLogin ? "Switch to Sign Up" : "Switch to Login"}
           </button>
         </div>
-
       </div>
     </>
   );
