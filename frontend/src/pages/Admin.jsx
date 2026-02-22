@@ -72,7 +72,7 @@ export default function Admin() {
         skills: ""
       });
 
-      fetchJobs(); // refresh job list
+      fetchJobs();
 
     } catch (error) {
       alert(error.response?.data?.msg || "Not authorized ❌");
@@ -83,7 +83,7 @@ export default function Admin() {
     <div className="admin-page">
       <h2>Admin - Post New Job</h2>
 
-      {/* ✅ POST JOB FORM */}
+      {/* 🔹 POST JOB FORM */}
       <form className="admin-form" onSubmit={handleSubmit}>
         <input
           type="text"
@@ -150,7 +150,7 @@ export default function Admin() {
         <button type="submit">Post Job</button>
       </form>
 
-      {/* ✅ JOB LIST SECTION */}
+      {/* 🔹 JOB LIST SECTION */}
       <section className="jobs-section">
         <h2 className="section-title">All Posted Jobs</h2>
 
@@ -164,17 +164,29 @@ export default function Admin() {
                 <p className="company">{job.company}</p>
 
                 <div className="details">
-                  <span>{job.salary}</span>
-                  <span>{job.location}</span>
-                  <span>
+                  <div className="detail-item">
+                    💰 <strong>Salary:</strong> ₹{job.salary}
+                  </div>
+
+                  <div className="detail-item">
+                    📍 <strong>Location:</strong> {job.location}
+                  </div>
+
+                  <div className="detail-item">
+                    👨‍💻 <strong>Experience:</strong>{" "}
                     {job.experience === 0
                       ? "Fresher"
                       : `${job.experience} Years`}
-                  </span>
+                  </div>
                 </div>
 
-                <p className="desc">{job.description}</p>
-                <p><strong>Skills:</strong> {job.skills}</p>
+                <p className="desc">
+                  <strong>Description:</strong> {job.description}
+                </p>
+
+                <p className="skills">
+                  <strong>Skills:</strong> {job.skills || "Not specified"}
+                </p>
               </div>
             ))
           )}

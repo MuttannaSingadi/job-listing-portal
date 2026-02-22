@@ -1,3 +1,7 @@
+/* =========================
+   ADMIN PAGE
+========================= */
+
 .admin-page {
   padding: 120px 20px 60px 20px;
   min-height: 100vh;
@@ -10,6 +14,10 @@
   font-size: 28px;
   color: #1f2937;
 }
+
+/* =========================
+   FORM
+========================= */
 
 .admin-form {
   max-width: 500px;
@@ -25,6 +33,14 @@
   border-radius: 8px;
   border: 1px solid #ccc;
   font-size: 14px;
+  outline: none;
+  transition: 0.3s;
+}
+
+.admin-form input:focus,
+.admin-form textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
 .admin-form textarea {
@@ -45,4 +61,102 @@
 
 .admin-form button:hover {
   opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+/* =========================
+   JOB LIST SECTION
+========================= */
+
+.jobs-section {
+  margin-top: 60px;
+}
+
+.section-title {
+  font-size: 24px;
+  margin-bottom: 30px;
+  color: #111827;
+}
+
+/* =========================
+   JOB GRID
+========================= */
+
+.jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+}
+
+/* =========================
+   JOB CARD
+========================= */
+
+.job-card {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 18px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  transition: 0.3s ease;
+  text-align: left;
+}
+
+.job-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+}
+
+.job-card h3 {
+  font-size: 20px;
+  margin-bottom: 6px;
+  color: #1f2937;
+}
+
+.company {
+  color: #6b7280;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+/* =========================
+   JOB DETAILS
+========================= */
+
+.details {
+  margin-bottom: 15px;
+}
+
+.detail-item {
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #374151;
+}
+
+.desc {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+.skills {
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #111827;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+  .admin-page {
+    padding: 100px 15px 40px 15px;
+  }
+
+  .jobs-grid {
+    grid-template-columns: 1fr;
+  }
 }

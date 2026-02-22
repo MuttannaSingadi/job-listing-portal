@@ -11,7 +11,6 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [jobs, setJobs] = useState([]);
 
-  // ✅ NEW SEARCH STATE
   const [filters, setFilters] = useState({
     title: "",
     location: "",
@@ -19,13 +18,13 @@ export default function Home() {
     skills: ""
   });
 
-  // ✅ CHECK TOKEN ON LOAD
+  // ✅ CHECK TOKEN
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
   }, []);
 
-  // ✅ FETCH JOBS (DEFAULT LOAD)
+  // ✅ FETCH JOBS
   useEffect(() => {
     axios
       .get("http://localhost:5000/api/jobs")
@@ -37,7 +36,7 @@ export default function Home() {
       });
   }, []);
 
-  // ✅ HANDLE INPUT CHANGE
+  // ✅ HANDLE SEARCH INPUT
   const handleChange = (e) => {
     setFilters({
       ...filters,
@@ -54,7 +53,6 @@ export default function Home() {
       );
 
       setJobs(res.data);
-
     } catch (error) {
       console.log("Search error:", error);
     }
@@ -82,7 +80,7 @@ export default function Home() {
 
   return (
     <>
-      {/* NAVBAR */}
+      {/* ================= NAVBAR ================= */}
       <div className="top-header">
         <div className="brand">
           <Link to="/">
@@ -112,14 +110,13 @@ export default function Home() {
         </div>
       </div>
 
-      {/* HERO */}
+      {/* ================= HERO ================= */}
       <section className="hero">
         <div className="search-wrapper">
           <h1>Find Your Dream Job</h1>
           <p>Search thousands of jobs from top companies</p>
 
           <div className="search-box">
-
             <input
               type="text"
               name="title"
@@ -134,10 +131,7 @@ export default function Home() {
               onChange={handleChange}
             />
 
-            <select
-              name="experience"
-              onChange={handleChange}
-            >
+            <select name="experience" onChange={handleChange}>
               <option value="">Experience</option>
               <option value="0">Fresher</option>
               <option value="1">1 Year</option>
@@ -155,12 +149,11 @@ export default function Home() {
             <button onClick={handleSearch}>
               Search
             </button>
-
           </div>
         </div>
       </section>
 
-      {/* JOB SECTION */}
+      {/* ================= JOB SECTION ================= */}
       <section className="jobs-section">
         <h2 className="section-title">Recommended Jobs</h2>
 
@@ -174,17 +167,29 @@ export default function Home() {
                 <p className="company">{job.company}</p>
 
                 <div className="details">
-                  <span>{job.salary}</span>
-                  <span>{job.location}</span>
-                  <span>
+                  <div className="detail-item">
+                    💰 <strong>Salary:</strong> ₹{job.salary}
+                  </div>
+
+                  <div className="detail-item">
+                    📍 <strong>Location:</strong> {job.location}
+                  </div>
+
+                  <div className="detail-item">
+                    👨‍💻 <strong>Experience:</strong>{" "}
                     {job.experience === 0
                       ? "Fresher"
                       : `${job.experience} Years`}
-                  </span>
+                  </div>
                 </div>
 
-                <p className="desc">{job.description}</p>
-                <p><strong>Skills:</strong> {job.skills}</p>
+                <p className="desc">
+                  <strong>Description:</strong> {job.description}
+                </p>
+
+                <p className="skills">
+                  <strong>Skills:</strong> {job.skills || "Not specified"}
+                </p>
 
                 <button
                   className="apply-btn"
@@ -198,6 +203,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ================= FOOTER ================= */}
       <footer>
         © 2026 DevHire. All rights reserved.
       </footer>
