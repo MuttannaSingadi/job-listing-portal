@@ -86,6 +86,12 @@ export default function Home() {
         <div className="search-wrapper">
           <h1>Find Your Dream Job</h1>
           <p>Search thousands of jobs from top companies</p>
+
+          <div className="search-box">
+            <input type="text" placeholder="Search job title, skills..." />
+            <input type="text" placeholder="Location" />
+            <button>Search</button>
+          </div>
         </div>
       </section>
 
