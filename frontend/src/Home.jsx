@@ -11,13 +11,21 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [jobs, setJobs] = useState([]);
 
+  // ✅ NEW SEARCH STATE
+  const [filters, setFilters] = useState({
+    title: "",
+    location: "",
+    experience: "",
+    skills: ""
+  });
+
   // ✅ CHECK TOKEN ON LOAD
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
   }, []);
 
-  // ✅ FETCH JOBS
+  // ✅ FETCH JOBS (DEFAULT LOAD)
   useEffect(() => {
     axios
       .get("http://localhost:5000/api/jobs")
@@ -28,6 +36,29 @@ export default function Home() {
         console.log("Error fetching jobs:", err);
       });
   }, []);
+
+  // ✅ HANDLE INPUT CHANGE
+  const handleChange = (e) => {
+    setFilters({
+      ...filters,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  // ✅ SEARCH FUNCTION
+  const handleSearch = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:5000/api/jobs/search",
+        { params: filters }
+      );
+
+      setJobs(res.data);
+
+    } catch (error) {
+      console.log("Search error:", error);
+    }
+  };
 
   // ✅ LOGOUT
   const handleLogout = () => {
@@ -88,9 +119,43 @@ export default function Home() {
           <p>Search thousands of jobs from top companies</p>
 
           <div className="search-box">
-            <input type="text" placeholder="Search job title, skills..." />
-            <input type="text" placeholder="Location" />
-            <button>Search</button>
+
+            <input
+              type="text"
+              name="title"
+              placeholder="Job title"
+              onChange={handleChange}
+            />
+
+            <input
+              type="text"
+              name="location"
+              placeholder="Location"
+              onChange={handleChange}
+            />
+
+            <select
+              name="experience"
+              onChange={handleChange}
+            >
+              <option value="">Experience</option>
+              <option value="0">Fresher</option>
+              <option value="1">1 Year</option>
+              <option value="2">2 Years</option>
+              <option value="3">3 Years</option>
+            </select>
+
+            <input
+              type="text"
+              name="skills"
+              placeholder="Skills (React, Node...)"
+              onChange={handleChange}
+            />
+
+            <button onClick={handleSearch}>
+              Search
+            </button>
+
           </div>
         </div>
       </section>
@@ -101,7 +166,7 @@ export default function Home() {
 
         <div className="jobs-grid">
           {jobs.length === 0 ? (
-            <p>No jobs available 🚀</p>
+            <p>No jobs found 🚀</p>
           ) : (
             jobs.map((job) => (
               <div key={job._id} className="job-card">
@@ -111,9 +176,15 @@ export default function Home() {
                 <div className="details">
                   <span>{job.salary}</span>
                   <span>{job.location}</span>
+                  <span>
+                    {job.experience === 0
+                      ? "Fresher"
+                      : `${job.experience} Years`}
+                  </span>
                 </div>
 
                 <p className="desc">{job.description}</p>
+                <p><strong>Skills:</strong> {job.skills}</p>
 
                 <button
                   className="apply-btn"

@@ -9,16 +9,16 @@ const connectDB = require("./config/db");
 
 const app = express();
 
-// Connect Database
+// ✅ Connect Database
 connectDB();
 
-// Middleware
+// ✅ Middleware
 app.use(cors());
 app.use(express.json());
 
-// Routes
+// ✅ Routes
 app.use("/api/auth", require("./routes/auth"));
-app.use("/api/jobs", require("./routes/jobRoutes"));  // 👈 ADD THIS
+app.use("/api/jobs", require("./routes/jobRoutes"));
 
 const PORT = process.env.PORT || 5000;
 
