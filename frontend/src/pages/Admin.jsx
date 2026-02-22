@@ -11,8 +11,12 @@ export default function Admin() {
     company: "",
     salary: "",
     location: "",
-    description: ""
+    description: "",
+    experience: "",
+    skills: ""
   });
+
+  const [jobs, setJobs] = useState([]);
 
   // 🔐 Protect admin page
   useEffect(() => {
@@ -23,6 +27,20 @@ export default function Admin() {
       navigate("/auth");
     }
   }, [navigate]);
+
+  // ✅ Fetch All Jobs
+  const fetchJobs = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/jobs");
+      setJobs(res.data);
+    } catch (error) {
+      console.log("Error fetching jobs:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchJobs();
+  }, []);
 
   const handleChange = (e) => {
     setJob({ ...job, [e.target.name]: e.target.value });
@@ -49,8 +67,12 @@ export default function Admin() {
         company: "",
         salary: "",
         location: "",
-        description: ""
+        description: "",
+        experience: "",
+        skills: ""
       });
+
+      fetchJobs(); // refresh job list
 
     } catch (error) {
       alert(error.response?.data?.msg || "Not authorized ❌");
@@ -61,6 +83,7 @@ export default function Admin() {
     <div className="admin-page">
       <h2>Admin - Post New Job</h2>
 
+      {/* ✅ POST JOB FORM */}
       <form className="admin-form" onSubmit={handleSubmit}>
         <input
           type="text"
@@ -98,6 +121,24 @@ export default function Admin() {
           required
         />
 
+        <input
+          type="number"
+          name="experience"
+          placeholder="Experience (0 = Fresher)"
+          value={job.experience}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          type="text"
+          name="skills"
+          placeholder="Skills (React, Node, MongoDB)"
+          value={job.skills}
+          onChange={handleChange}
+          required
+        />
+
         <textarea
           name="description"
           placeholder="Job Description"
@@ -108,6 +149,37 @@ export default function Admin() {
 
         <button type="submit">Post Job</button>
       </form>
+
+      {/* ✅ JOB LIST SECTION */}
+      <section className="jobs-section">
+        <h2 className="section-title">All Posted Jobs</h2>
+
+        <div className="jobs-grid">
+          {jobs.length === 0 ? (
+            <p>No jobs available 🚀</p>
+          ) : (
+            jobs.map((job) => (
+              <div key={job._id} className="job-card">
+                <h3>{job.title}</h3>
+                <p className="company">{job.company}</p>
+
+                <div className="details">
+                  <span>{job.salary}</span>
+                  <span>{job.location}</span>
+                  <span>
+                    {job.experience === 0
+                      ? "Fresher"
+                      : `${job.experience} Years`}
+                  </span>
+                </div>
+
+                <p className="desc">{job.description}</p>
+                <p><strong>Skills:</strong> {job.skills}</p>
+              </div>
+            ))
+          )}
+        </div>
+      </section>
     </div>
   );
 }

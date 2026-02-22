@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 
-// ✅ IMPORT FIRST (VERY IMPORTANT)
+// ✅ IMPORT FIRST
 const { createJob, getJobs, searchJobs } = require("../controllers/jobController");
 const { protect } = require("../middleware/authMiddleware");
 
-// ✅ ROUTES AFTER IMPORT
-router.post("/create", createJob);
+// ✅ ROUTES
+router.post("/create", protect, createJob);   // protected create
 router.get("/", getJobs);
 router.get("/search", searchJobs);
 
