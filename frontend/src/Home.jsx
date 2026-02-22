@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import "./home.css";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import logo from "./assets/image.png";
 import profile from "./assets/image.png";
 
@@ -9,10 +11,35 @@ export default function Home() {
   const token = localStorage.getItem("token");
   const isLoggedIn = !!token;
 
+  const [jobs, setJobs] = useState([]);
+
+  // ================= FETCH JOBS =================
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/jobs")
+      .then((res) => {
+        setJobs(res.data.slice(0, 6)); // show only 6 jobs
+      })
+      .catch((err) => {
+        console.log("Error fetching jobs:", err);
+      });
+  }, []);
+
+  // ================= LOGOUT =================
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/");
-    window.location.reload();
+  };
+
+  // ================= APPLY =================
+  const handleApply = () => {
+    if (!isLoggedIn) {
+      alert("Please login to apply");
+      navigate("/auth");
+      return;
+    }
+
+    alert("Application submitted successfully ✅");
   };
 
   return (
@@ -20,14 +47,12 @@ export default function Home() {
       {/* ================= NAVBAR ================= */}
       <div className="top-header">
 
-        {/* LOGO */}
         <div className="brand">
           <Link to="/">
             <img src={logo} alt="DevHire Logo" />
           </Link>
         </div>
 
-        {/* RIGHT SIDE */}
         <div className="nav-right">
 
           <div className="nav-buttons">
@@ -40,7 +65,6 @@ export default function Home() {
             )}
           </div>
 
-          {/* PROFILE SECTION */}
           {isLoggedIn && (
             <div className="profile-section">
               <img src={profile} alt="Profile" className="profile-img" />
@@ -49,7 +73,6 @@ export default function Home() {
               </button>
             </div>
           )}
-
         </div>
       </div>
 
@@ -67,125 +90,36 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= JOB SECTION ================= */}
+      {/* ================= RECOMMENDED JOBS ================= */}
       <section className="jobs-section">
         <h2 className="section-title">Recommended Jobs</h2>
 
         <div className="jobs-grid">
 
-          <div className="job-card">
-            <h3>Frontend Developer</h3>
-            <p className="company">Tech Solutions ⭐ 4.2</p>
-            <div className="details">
-              <span>2-4 Years</span>
-              <span>₹ 5-8 LPA</span>
-              <span>Bangalore</span>
-            </div>
-            <p className="desc">
-              Looking for a React Developer with strong knowledge of JavaScript, HTML, CSS.
-            </p>
-            <div className="tags">
-              <span>React</span>
-              <span>JavaScript</span>
-              <span>CSS</span>
-            </div>
-            <button className="apply-btn">Apply Now</button>
-          </div>
+          {jobs.length === 0 ? (
+            <p>No jobs available 🚀</p>
+          ) : (
+            jobs.map((job) => (
+              <div key={job._id} className="job-card">
+                <h3>{job.title}</h3>
+                <p className="company">{job.company}</p>
 
-          <div className="job-card">
-            <h3>Frontend Developer</h3>
-            <p className="company">Tech Solutions ⭐ 4.2</p>
-            <div className="details">
-              <span>2-4 Years</span>
-              <span>₹ 5-8 LPA</span>
-              <span>Bangalore</span>
-            </div>
-            <p className="desc">
-              Looking for a React Developer with strong knowledge of JavaScript, HTML, CSS.
-            </p>
-            <div className="tags">
-              <span>React</span>
-              <span>JavaScript</span>
-              <span>CSS</span>
-            </div>
-            <button className="apply-btn">Apply Now</button>
-          </div>
+                <div className="details">
+                  <span>{job.salary}</span>
+                  <span>{job.location}</span>
+                </div>
 
-          <div className="job-card">
-            <h3>Frontend Developer</h3>
-            <p className="company">Tech Solutions ⭐ 4.2</p>
-            <div className="details">
-              <span>2-4 Years</span>
-              <span>₹ 5-8 LPA</span>
-              <span>Bangalore</span>
-            </div>
-            <p className="desc">
-              Looking for a React Developer with strong knowledge of JavaScript, HTML, CSS.
-            </p>
-            <div className="tags">
-              <span>React</span>
-              <span>JavaScript</span>
-              <span>CSS</span>
-            </div>
-            <button className="apply-btn">Apply Now</button>
-          </div>
+                <p className="desc">{job.description}</p>
 
-          <div className="job-card">
-            <h3>Frontend Developer</h3>
-            <p className="company">Tech Solutions ⭐ 4.2</p>
-            <div className="details">
-              <span>2-4 Years</span>
-              <span>₹ 5-8 LPA</span>
-              <span>Bangalore</span>
-            </div>
-            <p className="desc">
-              Looking for a React Developer with strong knowledge of JavaScript, HTML, CSS.
-            </p>
-            <div className="tags">
-              <span>React</span>
-              <span>JavaScript</span>
-              <span>CSS</span>
-            </div>
-            <button className="apply-btn">Apply Now</button>
-          </div>
-
-          <div className="job-card">
-            <h3>Frontend Developer</h3>
-            <p className="company">Tech Solutions ⭐ 4.2</p>
-            <div className="details">
-              <span>2-4 Years</span>
-              <span>₹ 5-8 LPA</span>
-              <span>Bangalore</span>
-            </div>
-            <p className="desc">
-              Looking for a React Developer with strong knowledge of JavaScript, HTML, CSS.
-            </p>
-            <div className="tags">
-              <span>React</span>
-              <span>JavaScript</span>
-              <span>CSS</span>
-            </div>
-            <button className="apply-btn">Apply Now</button>
-          </div>
-
-          <div className="job-card">
-            <h3>Frontend Developer</h3>
-            <p className="company">Tech Solutions ⭐ 4.2</p>
-            <div className="details">
-              <span>2-4 Years</span>
-              <span>₹ 5-8 LPA</span>
-              <span>Bangalore</span>
-            </div>
-            <p className="desc">
-              Looking for a React Developer with strong knowledge of JavaScript, HTML, CSS.
-            </p>
-            <div className="tags">
-              <span>React</span>
-              <span>JavaScript</span>
-              <span>CSS</span>
-            </div>
-            <button className="apply-btn">Apply Now</button>
-          </div>
+                <button
+                  className="apply-btn"
+                  onClick={handleApply}
+                >
+                  Apply Now
+                </button>
+              </div>
+            ))
+          )}
 
         </div>
       </section>

@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./admin.css";
 
 export default function Admin() {
+  const navigate = useNavigate();
+
   const [job, setJob] = useState({
     title: "",
     company: "",
@@ -10,6 +13,16 @@ export default function Admin() {
     location: "",
     description: ""
   });
+
+  // 🔐 Protect admin page
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("Please login first");
+      navigate("/auth");
+    }
+  }, [navigate]);
 
   const handleChange = (e) => {
     setJob({ ...job, [e.target.name]: e.target.value });
@@ -19,7 +32,16 @@ export default function Admin() {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:5000/api/jobs/create", job);
+      await axios.post(
+        "http://localhost:5000/api/jobs/create",
+        job,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        }
+      );
+
       alert("Job posted successfully ✅");
 
       setJob({
@@ -31,7 +53,7 @@ export default function Admin() {
       });
 
     } catch (error) {
-      alert("Error posting job");
+      alert(error.response?.data?.msg || "Not authorized ❌");
     }
   };
 
