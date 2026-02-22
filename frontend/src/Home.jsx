@@ -8,32 +8,39 @@ import profile from "./assets/image.png";
 export default function Home() {
 
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-  const isLoggedIn = !!token;
-
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [jobs, setJobs] = useState([]);
 
-  // ================= FETCH JOBS =================
+  // ✅ CHECK TOKEN ON LOAD
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  }, []);
+
+  // ✅ FETCH JOBS
   useEffect(() => {
     axios
       .get("http://localhost:5000/api/jobs")
       .then((res) => {
-        setJobs(res.data.slice(0, 6)); // show only 6 jobs
+        setJobs(res.data.slice(0, 6));
       })
       .catch((err) => {
         console.log("Error fetching jobs:", err);
       });
   }, []);
 
-  // ================= LOGOUT =================
+  // ✅ LOGOUT
   const handleLogout = () => {
     localStorage.removeItem("token");
+    setIsLoggedIn(false);
     navigate("/");
   };
 
-  // ================= APPLY =================
+  // ✅ APPLY
   const handleApply = () => {
-    if (!isLoggedIn) {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
       alert("Please login to apply");
       navigate("/auth");
       return;
@@ -44,9 +51,8 @@ export default function Home() {
 
   return (
     <>
-      {/* ================= NAVBAR ================= */}
+      {/* NAVBAR */}
       <div className="top-header">
-
         <div className="brand">
           <Link to="/">
             <img src={logo} alt="DevHire Logo" />
@@ -54,7 +60,6 @@ export default function Home() {
         </div>
 
         <div className="nav-right">
-
           <div className="nav-buttons">
             <Link to="/jobs"><button>Jobs</button></Link>
             <Link to="/companies"><button>Companies</button></Link>
@@ -76,26 +81,19 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ================= HERO ================= */}
+      {/* HERO */}
       <section className="hero">
         <div className="search-wrapper">
           <h1>Find Your Dream Job</h1>
           <p>Search thousands of jobs from top companies</p>
-
-          <div className="search-box">
-            <input type="text" placeholder="Search job title, skills..." />
-            <input type="text" placeholder="Location" />
-            <button>Search</button>
-          </div>
         </div>
       </section>
 
-      {/* ================= RECOMMENDED JOBS ================= */}
+      {/* JOB SECTION */}
       <section className="jobs-section">
         <h2 className="section-title">Recommended Jobs</h2>
 
         <div className="jobs-grid">
-
           {jobs.length === 0 ? (
             <p>No jobs available 🚀</p>
           ) : (
@@ -120,11 +118,9 @@ export default function Home() {
               </div>
             ))
           )}
-
         </div>
       </section>
 
-      {/* ================= FOOTER ================= */}
       <footer>
         © 2026 DevHire. All rights reserved.
       </footer>

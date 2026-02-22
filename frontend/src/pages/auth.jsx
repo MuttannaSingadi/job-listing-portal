@@ -66,6 +66,7 @@ export default function Auth() {
 
     try {
       await axios.post(`${API}/api/auth/signup`, signupData);
+
       alert("Registration successful ✅");
 
       setSignupData({
@@ -82,6 +83,7 @@ export default function Auth() {
       });
 
       setIsLogin(true);
+
     } catch (err) {
       alert(err.response?.data?.msg || "Error");
     }
@@ -106,14 +108,11 @@ export default function Auth() {
     try {
       const res = await axios.post(`${API}/api/auth/login`, loginData);
 
-      // Save token if exists
       if (res.data.token) {
         localStorage.setItem("token", res.data.token);
       }
 
       alert(res.data.msg);
-
-      // Redirect to Home
       navigate("/");
 
     } catch (err) {
@@ -140,7 +139,7 @@ export default function Auth() {
 
   return (
     <>
-      {/* Header */}
+      {/* HEADER */}
       <div className="top-header">
         <div className="brand">
           <img src={logo} alt="DevHire Logo" />
@@ -164,6 +163,7 @@ export default function Auth() {
       </div>
 
       <div className="container">
+
         {/* LOGIN */}
         {isLogin && (
           <div className="form-container">
@@ -189,7 +189,10 @@ export default function Auth() {
               />
             </div>
 
-            <button className="forgot-password" onClick={handleForgotPassword}>
+            <button
+              className="forgot-password"
+              onClick={handleForgotPassword}
+            >
               Forgot Password?
             </button>
 
@@ -345,6 +348,7 @@ export default function Auth() {
             {isLogin ? "Switch to Sign Up" : "Switch to Login"}
           </button>
         </div>
+
       </div>
     </>
   );
