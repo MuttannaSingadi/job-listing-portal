@@ -164,43 +164,37 @@
 
 @media (max-width: 600px) {
 
-  .admin-page h2 {
-    font-size: 22px;
+  body {
+    padding-top: 70px;
   }
 
-  .admin-form {
-    gap: 12px;
+  .top-header {
+    height: 70px;
+    padding: 0 15px;
+    flex-direction: row;
+    justify-content: space-between;
   }
 
-  .admin-form input,
-  .admin-form textarea {
-    font-size: 13px;
-    padding: 10px;
+  .brand img {
+    height: 40px;
   }
 
-  .admin-form button {
-    padding: 10px;
-    font-size: 14px;
+  .nav-right {
+    gap: 8px;
   }
 
-  .job-card {
-    padding: 18px;
+  .nav-buttons {
+    flex-direction: row;
+    gap: 6px;
   }
 
-  .job-card h3 {
-    font-size: 18px;
+  .nav-buttons button {
+    padding: 5px 10px;
+    font-size: 11px;
   }
 
-  .company {
-    font-size: 13px;
-  }
-
-  .desc {
-    font-size: 13px;
-  }
-
-  .skill-tag {
-    font-size: 12px;
-    padding: 4px 10px;
+  .profile-img {
+    width: 30px;
+    height: 30px;
   }
 }
