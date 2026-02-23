@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./admin.css";
 
-const API = import.meta.env.VITE_API_URL;
+// ✅ Fallback if env variable not set
+const API =
+  import.meta.env.VITE_API_URL ||
+  "https://YOUR_BACKEND_NAME.onrender.com"; // ← replace with your real backend URL
 
 export default function Admin() {
   const navigate = useNavigate();
@@ -15,7 +18,7 @@ export default function Admin() {
     location: "",
     description: "",
     experience: "",
-    skills: ""
+    skills: "",
   });
 
   const [jobs, setJobs] = useState([]);
@@ -63,8 +66,8 @@ export default function Admin() {
         job,
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
@@ -77,13 +80,12 @@ export default function Admin() {
         location: "",
         description: "",
         experience: "",
-        skills: ""
+        skills: "",
       });
 
       fetchJobs();
-
     } catch (error) {
-      console.log("POST ERROR:", error.response?.data);
+      console.log("POST ERROR:", error.response?.data || error.message);
       alert(error.response?.data?.msg || "Unauthorized ❌");
     }
   };
