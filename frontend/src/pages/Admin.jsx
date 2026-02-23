@@ -6,7 +6,7 @@ import "./admin.css";
 // ✅ Fallback if env variable not set
 const API =
   import.meta.env.VITE_API_URL ||
-  "https://YOUR_BACKEND_NAME.onrender.com"; // ← replace with your real backend URL
+  "https://job-listing-portal-iu9g.onrender.com";; // ← replace with your real backend URL
 
 export default function Admin() {
   const navigate = useNavigate();

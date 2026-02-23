@@ -121,3 +121,52 @@
     grid-template-columns: 1fr;
   }
 }
+/* ================= EXTRA MOBILE OPTIMIZATION ================= */
+
+@media (max-width: 600px) {
+
+  .jobs-page {
+    padding: 90px 20px;
+  }
+
+  .jobs-title {
+    font-size: 28px;
+    margin-bottom: 30px;
+  }
+
+  .job-card {
+    padding: 25px;
+    border-radius: 20px;
+  }
+
+  .job-card h3 {
+    font-size: 20px;
+  }
+
+  .company {
+    font-size: 15px;
+  }
+
+  .details {
+    flex-direction: column;
+    gap: 8px;
+    font-size: 14px;
+  }
+
+  .description {
+    font-size: 15px;
+  }
+
+  .tags span {
+    font-size: 13px;
+    padding: 6px 14px;
+    margin-bottom: 6px;
+    display: inline-block;
+  }
+
+  .apply-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+  }
+}

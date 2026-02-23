@@ -287,3 +287,75 @@ body {
   font-size: 12px;
   font-weight: 500;
 }
+
+/* ================= EXTRA MOBILE OPTIMIZATION ================= */
+
+@media (max-width: 600px) {
+
+  body {
+    padding-top: 90px;
+  }
+
+  .top-header {
+    height: auto;
+    padding: 12px 20px;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .brand img {
+    height: 45px;
+  }
+
+  .nav-buttons {
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+  }
+
+  .nav-buttons button {
+    width: 90%;
+  }
+
+  .container {
+    margin: 20px;
+    max-width: 100%;
+  }
+
+  .form-container {
+    padding: 25px 20px;
+  }
+
+  .form-container h2 {
+    font-size: 20px;
+  }
+
+  .form-container input {
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  .form-container button {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .role-select {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .overlay-container {
+    padding: 25px 20px;
+    border-radius: 0 0 20px 20px;
+  }
+
+  .overlay-container h2 {
+    font-size: 20px;
+  }
+
+  .overlay-container button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
