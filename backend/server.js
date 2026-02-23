@@ -12,20 +12,18 @@ const app = express();
 // Connect MongoDB
 connectDB();
 
-// CORS Configuration
+// Middleware
+app.use(express.json());
+
 app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://job-listing-portal-755q.vercel.app"
+      "https://job-listing-portal-755q.vercel.app",
     ],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true
+    credentials: true,
   })
 );
-
-// Middleware
-app.use(express.json());
 
 // Test Route
 app.get("/", (req, res) => {
@@ -36,6 +34,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/jobs", require("./routes/jobRoutes"));
 app.use("/api/applications", require("./routes/applicationRoutes"));
+
 // 404 Handler
 app.use((req, res) => {
   res.status(404).json({ message: "Route Not Found" });
