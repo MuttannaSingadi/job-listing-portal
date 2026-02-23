@@ -35,7 +35,7 @@ app.get("/", (req, res) => {
 // Routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/jobs", require("./routes/jobRoutes"));
-
+app.use("/api/applications", require("./routes/applicationRoutes"));
 // 404 Handler
 app.use((req, res) => {
   res.status(404).json({ message: "Route Not Found" });

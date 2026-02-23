@@ -22,17 +22,29 @@ export default function Jobs() {
   }, []);
 
   // 🔐 Apply button logic
-  const handleApply = (jobId) => {
-    const token = localStorage.getItem("token");
+  const handleApply = async (jobId) => {
+  const token = localStorage.getItem("token");
 
-    if (!token) {
-      alert("Please login to apply");
-      navigate("/auth");
-      return;
-    }
+  if (!token) {
+    alert("Please login to apply");
+    navigate("/auth");
+    return;
+  }
+
+  try {
+    await axios.post(
+      "https://job-listing-portal-iu9g.onrender.com/api/applications/apply",
+      {
+        jobId,
+        applicantEmail: "user@example.com", // later get from login user
+      }
+    );
 
     alert("Application submitted successfully ✅");
-  };
+  } catch (err) {
+    alert("Application failed ❌");
+  }
+};
 
   return (
     <div className="jobs-page">

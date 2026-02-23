@@ -12,6 +12,7 @@ export default function Admin() {
 
   const [active, setActive] = useState("dashboard");
   const [jobs, setJobs] = useState([]);
+  const [applications, setApplications] = useState([]);
 
   const [job, setJob] = useState({
     title: "",
@@ -23,30 +24,43 @@ export default function Admin() {
     skills: "",
   });
 
-  // Protect Admin
+  // 🔐 Protect Admin
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) navigate("/auth");
   }, [navigate]);
 
-  // Fetch jobs
+  // 📦 Fetch Jobs
   const fetchJobs = async () => {
     try {
       const res = await axios.get(`${API}/api/jobs`);
       setJobs(res.data);
     } catch (err) {
-      console.log(err.message);
+      console.log("Jobs fetch error:", err.message);
+    }
+  };
+
+  // 📦 Fetch Applications
+  const fetchApplications = async () => {
+    try {
+      const res = await axios.get(`${API}/api/applications`);
+      setApplications(res.data);
+    } catch (err) {
+      console.log("Applications fetch error:", err.message);
     }
   };
 
   useEffect(() => {
     fetchJobs();
+    fetchApplications();
   }, []);
 
+  // 📝 Handle form input
   const handleChange = (e) => {
     setJob({ ...job, [e.target.name]: e.target.value });
   };
 
+  // ➕ Post Job
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
@@ -86,6 +100,8 @@ export default function Admin() {
           <li onClick={() => setActive("dashboard")}>Dashboard</li>
           <li onClick={() => setActive("post")}>Post Job</li>
           <li onClick={() => setActive("manage")}>Manage Jobs</li>
+          <li onClick={() => setActive("applications")}>Applications</li>
+
           <li
             onClick={() => {
               localStorage.removeItem("token");
@@ -118,12 +134,12 @@ export default function Admin() {
               <p>{jobs.length}</p>
             </div>
             <div className="card">
-              <h3>System Status</h3>
-              <p>Active</p>
+              <h3>Total Applications</h3>
+              <p>{applications.length}</p>
             </div>
             <div className="card">
-              <h3>Platform</h3>
-              <p>DevHire Portal</p>
+              <h3>System Status</h3>
+              <p>Active</p>
             </div>
           </div>
         )}
@@ -160,6 +176,23 @@ export default function Admin() {
           </div>
         )}
 
+        {/* APPLICATIONS */}
+        {active === "applications" && (
+          <div className="jobs-grid">
+            {applications.length === 0 ? (
+              <p>No applications yet</p>
+            ) : (
+              applications.map((app) => (
+                <div key={app._id} className="job-card">
+                  <h4>{app.jobId?.title}</h4>
+                  <p>Applicant: {app.applicantEmail}</p>
+                  <p>Company: {app.jobId?.company}</p>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+
       </div>
 
       {/* PROFILE CARD */}
@@ -174,8 +207,8 @@ export default function Admin() {
             <span>Jobs</span>
           </div>
           <div>
-            <strong>124</strong>
-            <span>Users</span>
+            <strong>{applications.length}</strong>
+            <span>Applications</span>
           </div>
         </div>
       </div>
