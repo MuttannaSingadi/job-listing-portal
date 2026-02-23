@@ -1,12 +1,12 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
+  background: #f4f5fa;
 }
 
 .admin-wrapper {
   display: flex;
   min-height: 100vh;
-  background: #f4f5fa;
 }
 
 /* SIDEBAR */
@@ -28,9 +28,9 @@ body {
 
 .sidebar li {
   padding: 12px;
+  margin-bottom: 10px;
   cursor: pointer;
   border-radius: 6px;
-  margin-bottom: 10px;
 }
 
 .sidebar li:hover {
@@ -40,14 +40,13 @@ body {
 /* MAIN */
 .main {
   flex: 1;
-  padding: 20px 30px;
+  padding: 30px;
 }
 
 /* TOPBAR */
 .topbar {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   margin-bottom: 30px;
 }
 
@@ -60,8 +59,8 @@ body {
 
 .top-icons {
   display: flex;
-  align-items: center;
   gap: 15px;
+  align-items: center;
 }
 
 .profile-mini {
@@ -82,11 +81,35 @@ body {
 }
 
 .card {
+  flex: 1;
   background: white;
   padding: 25px;
   border-radius: 10px;
-  flex: 1;
   box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+/* POST FORM */
+.admin-form {
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-form input,
+.admin-form textarea {
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.admin-form button {
+  padding: 12px;
+  background: #4c1d95;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
 /* JOB GRID */
@@ -102,7 +125,7 @@ body {
   border-radius: 10px;
 }
 
-/* RIGHT PROFILE */
+/* PROFILE CARD */
 .profile-card {
   width: 250px;
   background: white;
@@ -130,7 +153,7 @@ body {
   margin-top: 20px;
 }
 
-.profile-stats div span {
+.profile-stats span {
   display: block;
   font-size: 12px;
   color: gray;
