@@ -5,7 +5,16 @@ const { Resend } = require("resend");
 const User = require("../models/User");
 
 const router = express.Router();
-const resend = new Resend(process.env.RESEND_API_KEY);
+
+// ✅ Safe Resend Initialization
+let resend = null;
+
+if (process.env.RESEND_API_KEY) {
+  resend = new Resend(process.env.RESEND_API_KEY);
+} else {
+  console.log("⚠️ RESEND_API_KEY not found. Email sending disabled.");
+}
+
 
 // ================= SIGNUP =================
 router.post("/signup", async (req, res) => {
@@ -59,27 +68,29 @@ router.post("/signup", async (req, res) => {
 
     res.status(201).json({ msg: "Registration successful ✅" });
 
-    // Send email in background
-    setImmediate(async () => {
-      try {
-        await resend.emails.send({
-          from: "onboarding@resend.dev",
-          to: email,
-          subject: "Registration Successful ✅",
-          html: `
-            <div style="font-family: Arial; padding:20px;">
-              <h2>Hello ${name} 👋</h2>
-              <p>Your account has been created successfully.</p>
-              <p>You can now login.</p>
-              <br/>
-              <p><b>Job Portal Team</b></p>
-            </div>
-          `,
-        });
-      } catch (err) {
-        console.log("Email error:", err.message);
-      }
-    });
+    // ✅ Send email only if resend exists
+    if (resend) {
+      setImmediate(async () => {
+        try {
+          await resend.emails.send({
+            from: "onboarding@resend.dev",
+            to: email,
+            subject: "Registration Successful ✅",
+            html: `
+              <div style="font-family: Arial; padding:20px;">
+                <h2>Hello ${name} 👋</h2>
+                <p>Your account has been created successfully.</p>
+                <p>You can now login.</p>
+                <br/>
+                <p><b>Job Portal Team</b></p>
+              </div>
+            `,
+          });
+        } catch (err) {
+          console.log("Email error:", err.message);
+        }
+      });
+    }
 
   } catch (error) {
     console.log("Signup Error:", error);
