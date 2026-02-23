@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./admin.css";
 
-const BASE_URL = "https://YOUR_BACKEND_URL.onrender.com";
+const API = import.meta.env.VITE_API_URL;
 
 export default function Admin() {
   const navigate = useNavigate();
@@ -23,20 +23,19 @@ export default function Admin() {
   // 🔐 Protect admin page
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     if (!token) {
       alert("Please login first");
       navigate("/auth");
     }
   }, [navigate]);
 
-  // ✅ Fetch All Jobs
+  // ✅ Fetch Jobs
   const fetchJobs = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/api/jobs`);
+      const res = await axios.get(`${API}/api/jobs`);
       setJobs(res.data);
     } catch (error) {
-      console.log("Error fetching jobs:", error);
+      console.log("Fetch error:", error.response?.data || error.message);
     }
   };
 
@@ -52,12 +51,19 @@ export default function Admin() {
     e.preventDefault();
 
     try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        alert("Login required");
+        return;
+      }
+
       await axios.post(
-        `${BASE_URL}/api/jobs/create`,
+        `${API}/api/jobs/create`,
         job,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`
+            Authorization: `Bearer ${token}`
           }
         }
       );
@@ -77,7 +83,8 @@ export default function Admin() {
       fetchJobs();
 
     } catch (error) {
-      alert(error.response?.data?.msg || "Not authorized ❌");
+      console.log("POST ERROR:", error.response?.data);
+      alert(error.response?.data?.msg || "Unauthorized ❌");
     }
   };
 
@@ -92,7 +99,7 @@ export default function Admin() {
         <input type="text" name="location" placeholder="Location" value={job.location} onChange={handleChange} required />
         <input type="number" name="experience" placeholder="Experience (0 = Fresher)" value={job.experience} onChange={handleChange} required />
         <input type="text" name="skills" placeholder="Skills (React, Node, MongoDB)" value={job.skills} onChange={handleChange} required />
-        <textarea name="description" placeholder="Job Description" value={job.description} onChange={handleChange} required></textarea>
+        <textarea name="description" placeholder="Job Description" value={job.description} onChange={handleChange} required />
         <button type="submit">Post Job</button>
       </form>
 
@@ -109,37 +116,23 @@ export default function Admin() {
                 <p className="company">{job.company}</p>
 
                 <div className="details">
-                  <div className="detail-item">
-                    💰 <strong>Salary:</strong> ₹{job.salary}
-                  </div>
-
-                  <div className="detail-item">
-                    📍 <strong>Location:</strong> {job.location}
-                  </div>
-
-                  <div className="detail-item">
-                    👨‍💻 <strong>Experience:</strong>{" "}
-                    {job.experience === 0
-                      ? "Fresher"
-                      : `${job.experience} Years`}
+                  <div>💰 ₹{job.salary}</div>
+                  <div>📍 {job.location}</div>
+                  <div>
+                    👨‍💻 {job.experience === 0 ? "Fresher" : `${job.experience} Years`}
                   </div>
                 </div>
 
-                <p className="desc">
-                  <strong>Description:</strong> {job.description}
-                </p>
+                <p className="desc">{job.description}</p>
 
-                <div className="skills">
-                  <strong>Skills:</strong>
-                  <div className="skill-tags">
-                    {job.skills
-                      ? job.skills.split(",").map((skill, index) => (
+                <div className="skill-tags">
+                  {job.skills
+                    ? job.skills.split(",").map((skill, index) => (
                         <span key={index} className="skill-tag">
                           {skill.trim()}
                         </span>
                       ))
-                      : " Not specified"}
-                  </div>
+                    : "Not specified"}
                 </div>
               </div>
             ))
