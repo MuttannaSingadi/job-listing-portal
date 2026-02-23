@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./admin.css";
 
+const BASE_URL = "https://YOUR_BACKEND_URL.onrender.com";
+
 export default function Admin() {
   const navigate = useNavigate();
 
@@ -31,7 +33,7 @@ export default function Admin() {
   // ✅ Fetch All Jobs
   const fetchJobs = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/jobs");
+      const res = await axios.get(`${BASE_URL}/api/jobs`);
       setJobs(res.data);
     } catch (error) {
       console.log("Error fetching jobs:", error);
@@ -51,7 +53,7 @@ export default function Admin() {
 
     try {
       await axios.post(
-        "http://localhost:5000/api/jobs/create",
+        `${BASE_URL}/api/jobs/create`,
         job,
         {
           headers: {
@@ -83,74 +85,17 @@ export default function Admin() {
     <div className="admin-page">
       <h2>Admin - Post New Job</h2>
 
-      {/* 🔹 POST JOB FORM */}
       <form className="admin-form" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="title"
-          placeholder="Job Title"
-          value={job.title}
-          onChange={handleChange}
-          required
-        />
-
-        <input
-          type="text"
-          name="company"
-          placeholder="Company Name"
-          value={job.company}
-          onChange={handleChange}
-          required
-        />
-
-        <input
-          type="text"
-          name="salary"
-          placeholder="Salary"
-          value={job.salary}
-          onChange={handleChange}
-          required
-        />
-
-        <input
-          type="text"
-          name="location"
-          placeholder="Location"
-          value={job.location}
-          onChange={handleChange}
-          required
-        />
-
-        <input
-          type="number"
-          name="experience"
-          placeholder="Experience (0 = Fresher)"
-          value={job.experience}
-          onChange={handleChange}
-          required
-        />
-
-        <input
-          type="text"
-          name="skills"
-          placeholder="Skills (React, Node, MongoDB)"
-          value={job.skills}
-          onChange={handleChange}
-          required
-        />
-
-        <textarea
-          name="description"
-          placeholder="Job Description"
-          value={job.description}
-          onChange={handleChange}
-          required
-        ></textarea>
-
+        <input type="text" name="title" placeholder="Job Title" value={job.title} onChange={handleChange} required />
+        <input type="text" name="company" placeholder="Company Name" value={job.company} onChange={handleChange} required />
+        <input type="text" name="salary" placeholder="Salary" value={job.salary} onChange={handleChange} required />
+        <input type="text" name="location" placeholder="Location" value={job.location} onChange={handleChange} required />
+        <input type="number" name="experience" placeholder="Experience (0 = Fresher)" value={job.experience} onChange={handleChange} required />
+        <input type="text" name="skills" placeholder="Skills (React, Node, MongoDB)" value={job.skills} onChange={handleChange} required />
+        <textarea name="description" placeholder="Job Description" value={job.description} onChange={handleChange} required></textarea>
         <button type="submit">Post Job</button>
       </form>
 
-      {/* 🔹 JOB LIST SECTION */}
       <section className="jobs-section">
         <h2 className="section-title">All Posted Jobs</h2>
 
