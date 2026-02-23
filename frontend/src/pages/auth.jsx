@@ -1,359 +1,221 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "./auth.css";
 import axios from "axios";
-import logo from "../assets/image.png";
+import "./admin.css";
 
-export default function Auth() {
-  const [isLogin, setIsLogin] = useState(true);
+// Backend API
+const API =
+  import.meta.env.VITE_API_URL ||
+  "https://job-listing-portal-iu9g.onrender.com";
+
+export default function Admin() {
   const navigate = useNavigate();
-  const API = "https://job-listing-portal-iu9g.onrender.com";
 
-  // ================= SIGNUP =================
-  const [signupData, setSignupData] = useState({
-    role: "jobseeker",
-    name: "",
+  // ================= STATES =================
+  const [activeSection, setActiveSection] = useState("dashboard");
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const [job, setJob] = useState({
+    title: "",
+    company: "",
+    salary: "",
     location: "",
-    companyName: "",
-    contactPerson: "",
-    companyLocation: "",
-    email: "",
-    phone: "",
-    password: "",
-    confirmPassword: "",
+    description: "",
+    experience: "",
+    skills: "",
   });
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  // ================= AUTH PROTECTION =================
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Please login first");
+      navigate("/auth");
+    }
+  }, [navigate]);
 
-  const handleSignupChange = (e) => {
-    setSignupData({ ...signupData, [e.target.name]: e.target.value });
+  // ================= FETCH JOBS =================
+  const fetchJobs = async () => {
+    try {
+      const res = await axios.get(`${API}/api/jobs`);
+      setJobs(res.data);
+      setLoading(false);
+    } catch (error) {
+      console.log("Fetch Error:", error);
+      setLoading(false);
+    }
   };
 
-  const handleSignup = async (e) => {
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
+  // ================= FORM HANDLING =================
+  const handleChange = (e) => {
+    setJob({ ...job, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
-
-    if (!signupData.email || !signupData.password) {
-      alert("Email & Password required");
-      return;
-    }
-
-    if (!emailRegex.test(signupData.email)) {
-      alert("Enter valid email (example@gmail.com)");
-      return;
-    }
-
-    if (!/^\d{12}$/.test(signupData.phone)) {
-      alert("Phone number must be exactly 12 digits");
-      return;
-    }
-
-    if (!passwordRegex.test(signupData.password)) {
-      alert(
-        "Password must contain:\n• 8+ characters\n• 1 uppercase\n• 1 lowercase\n• 1 number\n• 1 special character"
-      );
-      return;
-    }
-
-    if (signupData.password !== signupData.confirmPassword) {
-      alert("Passwords do not match");
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Login required");
       return;
     }
 
     try {
-      await axios.post(`${API}/api/auth/signup`, signupData);
-      alert("Registration successful ✅");
+      await axios.post(`${API}/api/jobs/create`, job, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-      setSignupData({
-        role: "jobseeker",
-        name: "",
+      alert("Job Posted Successfully ✅");
+
+      setJob({
+        title: "",
+        company: "",
+        salary: "",
         location: "",
-        companyName: "",
-        contactPerson: "",
-        companyLocation: "",
-        email: "",
-        phone: "",
-        password: "",
-        confirmPassword: "",
+        description: "",
+        experience: "",
+        skills: "",
       });
 
-      setIsLogin(true);
-    } catch (err) {
-      alert(err.response?.data?.msg || "Error");
+      fetchJobs();
+      setActiveSection("manage");
+    } catch (error) {
+      alert("Unauthorized ❌");
     }
   };
 
-  // ================= LOGIN =================
-  const [loginData, setLoginData] = useState({
-    email: "",
-    password: "",
-  });
-
-  const handleLoginChange = (e) => {
-    setLoginData({ ...loginData, [e.target.name]: e.target.value });
+  // ================= LOGOUT =================
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
   };
 
-  const handleLogin = async () => {
-    if (!loginData.email || !loginData.password) {
-      alert("Enter email & password");
-      return;
-    }
+  // ================= DELETE JOB =================
+  const handleDelete = async (id) => {
+    const token = localStorage.getItem("token");
 
     try {
-      const res = await axios.post(`${API}/api/auth/login`, loginData);
-
-      console.log("LOGIN RESPONSE:", res.data);
-
-      if (res.data.token) {
-        localStorage.setItem("token", res.data.token);
-        console.log("TOKEN SAVED:", localStorage.getItem("token"));
-      } else {
-        alert("Token not received");
-        return;
-      }
-
-      alert(res.data.msg);
-
-      navigate("/");
-      window.location.reload(); // Important Fix
-
-    } catch (err) {
-      console.log("LOGIN ERROR:", err);
-      alert(err.response?.data?.msg || "Error");
-    }
-  };
-
-  // ================= RESET =================
-  const handleForgotPassword = async () => {
-    const email = prompt("Enter your email:");
-    const newPassword = prompt("Enter new password:");
-    if (!email || !newPassword) return;
-
-    try {
-      const res = await axios.post(`${API}/api/auth/reset-password`, {
-        email,
-        newPassword,
+      await axios.delete(`${API}/api/jobs/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-      alert(res.data.msg);
-    } catch (err) {
-      alert(err.response?.data?.msg || "Error");
+
+      fetchJobs();
+    } catch (error) {
+      alert("Delete Failed ❌");
     }
   };
 
+  // ================= RENDER =================
   return (
-    <>
-      {/* HEADER */}
-      <div className="top-header">
-        <div className="brand">
-          <img src={logo} alt="DevHire Logo" />
+    <div className="admin-dashboard">
+
+      {/* ===== SIDEBAR ===== */}
+      <aside className="admin-sidebar">
+        <div className="sidebar-header">
+          <h2>Admin Dashboard</h2>
         </div>
 
-        <div className="nav-buttons">
-          <button
-            className={isLogin ? "active" : ""}
-            onClick={() => setIsLogin(true)}
-          >
-            Login
+        <nav className="sidebar-menu">
+          <button onClick={() => setActiveSection("dashboard")}>
+            Dashboard
           </button>
 
-          <button
-            className={!isLogin ? "active" : ""}
-            onClick={() => setIsLogin(false)}
-          >
-            Sign Up
+          <button onClick={() => setActiveSection("post")}>
+            Post Job
           </button>
-        </div>
-      </div>
 
-      <div className="container">
-        {/* LOGIN */}
-        {isLogin && (
-          <div className="form-container">
-            <h2>Login</h2>
+          <button onClick={() => setActiveSection("manage")}>
+            Manage Jobs
+          </button>
 
-            <div className="input-group">
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={loginData.email}
-                onChange={handleLoginChange}
-              />
+          <button onClick={handleLogout}>
+            Logout
+          </button>
+        </nav>
+      </aside>
+
+      {/* ===== MAIN CONTENT ===== */}
+      <main className="admin-main">
+
+        {/* ===== DASHBOARD SECTION ===== */}
+        {activeSection === "dashboard" && (
+          <section className="dashboard-section">
+            <h1>System Overview</h1>
+
+            <div className="stats-grid">
+              <div className="stat-card">
+                <h3>Total Jobs</h3>
+                <p>{jobs.length}</p>
+              </div>
+
+              <div className="stat-card">
+                <h3>System Status</h3>
+                <p>Active</p>
+              </div>
+
+              <div className="stat-card">
+                <h3>Last Updated</h3>
+                <p>{new Date().toLocaleDateString()}</p>
+              </div>
             </div>
-
-            <div className="input-group">
-              <input
-                type="password"
-                name="password"
-                placeholder="Password"
-                value={loginData.password}
-                onChange={handleLoginChange}
-              />
-            </div>
-
-            <button
-              className="forgot-password"
-              onClick={handleForgotPassword}
-            >
-              Forgot Password?
-            </button>
-
-            <button onClick={handleLogin}>Login</button>
-          </div>
+          </section>
         )}
 
-        {/* SIGNUP */}
-        {!isLogin && (
-          <div className="form-container">
-            <h2>Sign Up</h2>
+        {/* ===== POST JOB SECTION ===== */}
+        {activeSection === "post" && (
+          <section className="post-section">
+            <h1>Post New Job</h1>
 
-            <div className="role-select">
-              <label>
-                <input
-                  type="radio"
-                  name="role"
-                  value="jobseeker"
-                  checked={signupData.role === "jobseeker"}
-                  onChange={handleSignupChange}
-                />
-                Job Seeker
-              </label>
-
-              <label>
-                <input
-                  type="radio"
-                  name="role"
-                  value="employer"
-                  checked={signupData.role === "employer"}
-                  onChange={handleSignupChange}
-                />
-                Employer
-              </label>
-            </div>
-
-            {signupData.role === "jobseeker" && (
-              <>
-                <div className="input-group">
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="Full Name"
-                    value={signupData.name}
-                    onChange={handleSignupChange}
-                  />
-                </div>
-
-                <div className="input-group">
-                  <input
-                    type="text"
-                    name="location"
-                    placeholder="City / Country"
-                    value={signupData.location}
-                    onChange={handleSignupChange}
-                  />
-                </div>
-              </>
-            )}
-
-            {signupData.role === "employer" && (
-              <>
-                <div className="input-group">
-                  <input
-                    type="text"
-                    name="companyName"
-                    placeholder="Company Name"
-                    value={signupData.companyName}
-                    onChange={handleSignupChange}
-                  />
-                </div>
-
-                <div className="input-group">
-                  <input
-                    type="text"
-                    name="contactPerson"
-                    placeholder="Full Name"
-                    value={signupData.contactPerson}
-                    onChange={handleSignupChange}
-                  />
-                </div>
-
-                <div className="input-group">
-                  <input
-                    type="text"
-                    name="companyLocation"
-                    placeholder="Location"
-                    value={signupData.companyLocation}
-                    onChange={handleSignupChange}
-                  />
-                </div>
-              </>
-            )}
-
-            <div className="input-group">
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={signupData.email}
-                onChange={handleSignupChange}
-              />
-            </div>
-
-            <div className="input-group">
-              <input
-                type="tel"
-                name="phone"
-                placeholder="Phone Number"
-                value={signupData.phone}
-                maxLength={12}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/\D/g, "");
-                  if (value.length <= 12) {
-                    setSignupData({ ...signupData, phone: value });
-                  }
-                }}
-              />
-            </div>
-
-            <div className="input-group">
-              <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                placeholder="Password"
-                value={signupData.password}
-                onChange={handleSignupChange}
-              />
-              <span onClick={() => setShowPassword(!showPassword)}>👁</span>
-            </div>
-
-            <div className="input-group">
-              <input
-                type={showConfirmPassword ? "text" : "password"}
-                name="confirmPassword"
-                placeholder="Confirm Password"
-                value={signupData.confirmPassword}
-                onChange={handleSignupChange}
-              />
-              <span onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-                👁
-              </span>
-            </div>
-
-            <button onClick={handleSignup}>Sign Up</button>
-          </div>
+            <form className="admin-form" onSubmit={handleSubmit}>
+              <input type="text" name="title" placeholder="Job Title" value={job.title} onChange={handleChange} required />
+              <input type="text" name="company" placeholder="Company Name" value={job.company} onChange={handleChange} required />
+              <input type="text" name="salary" placeholder="Salary" value={job.salary} onChange={handleChange} required />
+              <input type="text" name="location" placeholder="Location" value={job.location} onChange={handleChange} required />
+              <input type="number" name="experience" placeholder="Experience (0 = Fresher)" value={job.experience} onChange={handleChange} required />
+              <input type="text" name="skills" placeholder="Skills" value={job.skills} onChange={handleChange} required />
+              <textarea name="description" placeholder="Job Description" value={job.description} onChange={handleChange} required />
+              <button type="submit">Post Job</button>
+            </form>
+          </section>
         )}
 
-        <div className="overlay-container">
-          <h2>{isLogin ? "Welcome Back!" : "Hello, Friend!"}</h2>
-          <button onClick={() => setIsLogin(!isLogin)}>
-            {isLogin ? "Switch to Sign Up" : "Switch to Login"}
-          </button>
-        </div>
-      </div>
-    </>
+        {/* ===== MANAGE JOBS SECTION ===== */}
+        {activeSection === "manage" && (
+          <section className="manage-section">
+            <h1>Manage Jobs</h1>
+
+            {loading ? (
+              <p>Loading jobs...</p>
+            ) : jobs.length === 0 ? (
+              <p>No jobs available 🚀</p>
+            ) : (
+              <div className="jobs-grid">
+                {jobs.map((item) => (
+                  <div key={item._id} className="job-card">
+                    <h3>{item.title}</h3>
+                    <p>{item.company}</p>
+                    <p>₹ {item.salary}</p>
+                    <p>{item.location}</p>
+
+                    <button
+                      className="delete-btn"
+                      onClick={() => handleDelete(item._id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
+
+      </main>
+    </div>
   );
 }
