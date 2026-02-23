@@ -24,12 +24,12 @@ export default function Home() {
     setIsLoggedIn(!!token);
   }, []);
 
-  // ✅ FETCH JOBS
+  // ✅ FETCH JOBS (FIXED URL)
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/jobs")
+      .get("https://job-listing-portal-iu9g.onrender.com/api/jobs")
       .then((res) => {
-        setJobs(res.data.slice(0, 6));
+        setJobs(res.data);   // show all jobs
       })
       .catch((err) => {
         console.log("Error fetching jobs:", err);
@@ -44,11 +44,11 @@ export default function Home() {
     });
   };
 
-  // ✅ SEARCH FUNCTION
+  // ✅ SEARCH FUNCTION (FIXED URL)
   const handleSearch = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5000/api/jobs/search",
+        "https://job-listing-portal-iu9g.onrender.com/api/jobs/search",
         { params: filters }
       );
 
@@ -203,7 +203,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= FOOTER ================= */}
       <footer>
         © 2026 DevHire. All rights reserved.
       </footer>
