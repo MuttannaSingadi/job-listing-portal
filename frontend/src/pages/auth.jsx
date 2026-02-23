@@ -3,18 +3,12 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./admin.css";
 
-// Backend API
 const API =
   import.meta.env.VITE_API_URL ||
   "https://job-listing-portal-iu9g.onrender.com";
 
 export default function Admin() {
   const navigate = useNavigate();
-
-  // ================= STATES =================
-  const [activeSection, setActiveSection] = useState("dashboard");
-  const [jobs, setJobs] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   const [job, setJob] = useState({
     title: "",
@@ -26,7 +20,10 @@ export default function Admin() {
     skills: "",
   });
 
-  // ================= AUTH PROTECTION =================
+  const [jobs, setJobs] = useState([]);
+  const [activeSection, setActiveSection] = useState("dashboard");
+
+  // 🔐 Protect admin page
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -35,15 +32,13 @@ export default function Admin() {
     }
   }, [navigate]);
 
-  // ================= FETCH JOBS =================
+  // Fetch Jobs
   const fetchJobs = async () => {
     try {
       const res = await axios.get(`${API}/api/jobs`);
       setJobs(res.data);
-      setLoading(false);
     } catch (error) {
-      console.log("Fetch Error:", error);
-      setLoading(false);
+      console.log(error.message);
     }
   };
 
@@ -51,7 +46,6 @@ export default function Admin() {
     fetchJobs();
   }, []);
 
-  // ================= FORM HANDLING =================
   const handleChange = (e) => {
     setJob({ ...job, [e.target.name]: e.target.value });
   };
@@ -59,18 +53,14 @@ export default function Admin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("Login required");
-      return;
-    }
-
     try {
+      const token = localStorage.getItem("token");
+
       await axios.post(`${API}/api/jobs/create`, job, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      alert("Job Posted Successfully ✅");
+      alert("Job posted successfully ✅");
 
       setJob({
         title: "",
@@ -89,38 +79,16 @@ export default function Admin() {
     }
   };
 
-  // ================= LOGOUT =================
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/");
-  };
-
-  // ================= DELETE JOB =================
-  const handleDelete = async (id) => {
-    const token = localStorage.getItem("token");
-
-    try {
-      await axios.delete(`${API}/api/jobs/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      fetchJobs();
-    } catch (error) {
-      alert("Delete Failed ❌");
-    }
-  };
-
-  // ================= RENDER =================
   return (
     <div className="admin-dashboard">
 
-      {/* ===== SIDEBAR ===== */}
-      <aside className="admin-sidebar">
+      {/* SIDEBAR */}
+      <div className="admin-sidebar">
         <div className="sidebar-header">
-          <h2>Admin Dashboard</h2>
+          <h2>Admin Panel</h2>
         </div>
 
-        <nav className="sidebar-menu">
+        <div className="sidebar-menu">
           <button onClick={() => setActiveSection("dashboard")}>
             Dashboard
           </button>
@@ -133,19 +101,21 @@ export default function Admin() {
             Manage Jobs
           </button>
 
-          <button onClick={handleLogout}>
+          <button onClick={() => {
+            localStorage.removeItem("token");
+            navigate("/");
+          }}>
             Logout
           </button>
-        </nav>
-      </aside>
+        </div>
+      </div>
 
-      {/* ===== MAIN CONTENT ===== */}
-      <main className="admin-main">
+      {/* MAIN CONTENT */}
+      <div className="admin-main">
 
-        {/* ===== DASHBOARD SECTION ===== */}
         {activeSection === "dashboard" && (
-          <section className="dashboard-section">
-            <h1>System Overview</h1>
+          <div className="dashboard-section">
+            <h1>Admin Dashboard</h1>
 
             <div className="stats-grid">
               <div className="stat-card">
@@ -157,65 +127,46 @@ export default function Admin() {
                 <h3>System Status</h3>
                 <p>Active</p>
               </div>
-
-              <div className="stat-card">
-                <h3>Last Updated</h3>
-                <p>{new Date().toLocaleDateString()}</p>
-              </div>
             </div>
-          </section>
+          </div>
         )}
 
-        {/* ===== POST JOB SECTION ===== */}
         {activeSection === "post" && (
-          <section className="post-section">
+          <div className="post-section">
             <h1>Post New Job</h1>
 
             <form className="admin-form" onSubmit={handleSubmit}>
-              <input type="text" name="title" placeholder="Job Title" value={job.title} onChange={handleChange} required />
-              <input type="text" name="company" placeholder="Company Name" value={job.company} onChange={handleChange} required />
-              <input type="text" name="salary" placeholder="Salary" value={job.salary} onChange={handleChange} required />
-              <input type="text" name="location" placeholder="Location" value={job.location} onChange={handleChange} required />
-              <input type="number" name="experience" placeholder="Experience (0 = Fresher)" value={job.experience} onChange={handleChange} required />
-              <input type="text" name="skills" placeholder="Skills" value={job.skills} onChange={handleChange} required />
+              <input name="title" placeholder="Job Title" value={job.title} onChange={handleChange} required />
+              <input name="company" placeholder="Company Name" value={job.company} onChange={handleChange} required />
+              <input name="salary" placeholder="Salary" value={job.salary} onChange={handleChange} required />
+              <input name="location" placeholder="Location" value={job.location} onChange={handleChange} required />
+              <input name="experience" placeholder="Experience (0 = Fresher)" value={job.experience} onChange={handleChange} required />
+              <input name="skills" placeholder="Skills (React, Node, MongoDB)" value={job.skills} onChange={handleChange} required />
               <textarea name="description" placeholder="Job Description" value={job.description} onChange={handleChange} required />
               <button type="submit">Post Job</button>
             </form>
-          </section>
+          </div>
         )}
 
-        {/* ===== MANAGE JOBS SECTION ===== */}
         {activeSection === "manage" && (
-          <section className="manage-section">
+          <div className="manage-section">
             <h1>Manage Jobs</h1>
 
-            {loading ? (
-              <p>Loading jobs...</p>
-            ) : jobs.length === 0 ? (
-              <p>No jobs available 🚀</p>
-            ) : (
-              <div className="jobs-grid">
-                {jobs.map((item) => (
-                  <div key={item._id} className="job-card">
-                    <h3>{item.title}</h3>
-                    <p>{item.company}</p>
-                    <p>₹ {item.salary}</p>
-                    <p>{item.location}</p>
-
-                    <button
-                      className="delete-btn"
-                      onClick={() => handleDelete(item._id)}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </section>
+            <div className="jobs-grid">
+              {jobs.map((job) => (
+                <div key={job._id} className="job-card">
+                  <h3>{job.title}</h3>
+                  <p>{job.company}</p>
+                  <p>₹ {job.salary}</p>
+                  <p>{job.location}</p>
+                  <p>{job.experience} Years</p>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
 
-      </main>
+      </div>
     </div>
   );
 }
