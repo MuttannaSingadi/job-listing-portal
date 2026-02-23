@@ -21,6 +21,7 @@ export default function Admin() {
   });
 
   const [jobs, setJobs] = useState([]);
+  const [activeSection, setActiveSection] = useState("dashboard");
 
   // 🔐 Protect admin page
   useEffect(() => {
@@ -37,7 +38,7 @@ export default function Admin() {
       const res = await axios.get(`${API}/api/jobs`);
       setJobs(res.data);
     } catch (error) {
-      console.log("Fetch error:", error.response?.data || error.message);
+      console.log(error.message);
     }
   };
 
@@ -54,10 +55,6 @@ export default function Admin() {
 
     try {
       const token = localStorage.getItem("token");
-      if (!token) {
-        alert("Login required");
-        return;
-      }
 
       await axios.post(`${API}/api/jobs/create`, job, {
         headers: { Authorization: `Bearer ${token}` },
@@ -76,74 +73,100 @@ export default function Admin() {
       });
 
       fetchJobs();
+      setActiveSection("manage");
     } catch (error) {
-      alert(error.response?.data?.msg || "Unauthorized ❌");
+      alert("Unauthorized ❌");
     }
   };
 
   return (
-    <div className="admin-page">
+    <div className="admin-dashboard">
 
-      {/* DASHBOARD HEADER */}
-      <div className="dashboard-header">
-        <h1>Admin Dashboard</h1>
-        <p>Total Jobs Posted: {jobs.length}</p>
-      </div>
+      {/* SIDEBAR */}
+      <div className="admin-sidebar">
+        <div className="sidebar-header">
+          <h2>Admin Panel</h2>
+        </div>
 
-      {/* POST JOB SECTION */}
-      <div className="dashboard-card">
-        <h2>Post New Job</h2>
+        <div className="sidebar-menu">
+          <button onClick={() => setActiveSection("dashboard")}>
+            Dashboard
+          </button>
 
-        <form className="admin-form" onSubmit={handleSubmit}>
-          <input type="text" name="title" placeholder="Job Title" value={job.title} onChange={handleChange} required />
-          <input type="text" name="company" placeholder="Company Name" value={job.company} onChange={handleChange} required />
-          <input type="text" name="salary" placeholder="Salary" value={job.salary} onChange={handleChange} required />
-          <input type="text" name="location" placeholder="Location" value={job.location} onChange={handleChange} required />
-          <input type="number" name="experience" placeholder="Experience (0 = Fresher)" value={job.experience} onChange={handleChange} required />
-          <input type="text" name="skills" placeholder="Skills (React, Node, MongoDB)" value={job.skills} onChange={handleChange} required />
-          <textarea name="description" placeholder="Job Description" value={job.description} onChange={handleChange} required />
-          <button type="submit">Post Job</button>
-        </form>
-      </div>
+          <button onClick={() => setActiveSection("post")}>
+            Post Job
+          </button>
 
-      {/* JOB LIST SECTION */}
-      <div className="dashboard-card">
-        <h2>All Posted Jobs</h2>
+          <button onClick={() => setActiveSection("manage")}>
+            Manage Jobs
+          </button>
 
-        <div className="jobs-grid">
-          {jobs.length === 0 ? (
-            <p>No jobs available 🚀</p>
-          ) : (
-            jobs.map((job) => (
-              <div key={job._id} className="job-card">
-                <h3>{job.title}</h3>
-                <p className="company">{job.company}</p>
-
-                <div className="details">
-                  <div>💰 ₹{job.salary}</div>
-                  <div>📍 {job.location}</div>
-                  <div>
-                    👨‍💻 {job.experience === 0 ? "Fresher" : `${job.experience} Years`}
-                  </div>
-                </div>
-
-                <p className="desc">{job.description}</p>
-
-                <div className="skill-tags">
-                  {job.skills
-                    ? job.skills.split(",").map((skill, index) => (
-                        <span key={index} className="skill-tag">
-                          {skill.trim()}
-                        </span>
-                      ))
-                    : "Not specified"}
-                </div>
-              </div>
-            ))
-          )}
+          <button onClick={() => {
+            localStorage.removeItem("token");
+            navigate("/");
+          }}>
+            Logout
+          </button>
         </div>
       </div>
 
+      {/* MAIN CONTENT */}
+      <div className="admin-main">
+
+        {activeSection === "dashboard" && (
+          <div className="dashboard-section">
+            <h1>Admin Dashboard</h1>
+
+            <div className="stats-grid">
+              <div className="stat-card">
+                <h3>Total Jobs</h3>
+                <p>{jobs.length}</p>
+              </div>
+
+              <div className="stat-card">
+                <h3>System Status</h3>
+                <p>Active</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeSection === "post" && (
+          <div className="post-section">
+            <h1>Post New Job</h1>
+
+            <form className="admin-form" onSubmit={handleSubmit}>
+              <input name="title" placeholder="Job Title" value={job.title} onChange={handleChange} required />
+              <input name="company" placeholder="Company Name" value={job.company} onChange={handleChange} required />
+              <input name="salary" placeholder="Salary" value={job.salary} onChange={handleChange} required />
+              <input name="location" placeholder="Location" value={job.location} onChange={handleChange} required />
+              <input name="experience" placeholder="Experience (0 = Fresher)" value={job.experience} onChange={handleChange} required />
+              <input name="skills" placeholder="Skills (React, Node, MongoDB)" value={job.skills} onChange={handleChange} required />
+              <textarea name="description" placeholder="Job Description" value={job.description} onChange={handleChange} required />
+              <button type="submit">Post Job</button>
+            </form>
+          </div>
+        )}
+
+        {activeSection === "manage" && (
+          <div className="manage-section">
+            <h1>Manage Jobs</h1>
+
+            <div className="jobs-grid">
+              {jobs.map((job) => (
+                <div key={job._id} className="job-card">
+                  <h3>{job.title}</h3>
+                  <p>{job.company}</p>
+                  <p>₹ {job.salary}</p>
+                  <p>{job.location}</p>
+                  <p>{job.experience} Years</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+      </div>
     </div>
   );
 }
