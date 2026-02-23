@@ -3,10 +3,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./admin.css";
 
-// ✅ Fallback if env variable not set
 const API =
   import.meta.env.VITE_API_URL ||
-  "https://job-listing-portal-iu9g.onrender.com";; // ← replace with your real backend URL
+  "https://job-listing-portal-iu9g.onrender.com";
 
 export default function Admin() {
   const navigate = useNavigate();
@@ -32,7 +31,7 @@ export default function Admin() {
     }
   }, [navigate]);
 
-  // ✅ Fetch Jobs
+  // Fetch Jobs
   const fetchJobs = async () => {
     try {
       const res = await axios.get(`${API}/api/jobs`);
@@ -55,21 +54,14 @@ export default function Admin() {
 
     try {
       const token = localStorage.getItem("token");
-
       if (!token) {
         alert("Login required");
         return;
       }
 
-      await axios.post(
-        `${API}/api/jobs/create`,
-        job,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.post(`${API}/api/jobs/create`, job, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       alert("Job posted successfully ✅");
 
@@ -85,28 +77,38 @@ export default function Admin() {
 
       fetchJobs();
     } catch (error) {
-      console.log("POST ERROR:", error.response?.data || error.message);
       alert(error.response?.data?.msg || "Unauthorized ❌");
     }
   };
 
   return (
     <div className="admin-page">
-      <h2>Admin - Post New Job</h2>
 
-      <form className="admin-form" onSubmit={handleSubmit}>
-        <input type="text" name="title" placeholder="Job Title" value={job.title} onChange={handleChange} required />
-        <input type="text" name="company" placeholder="Company Name" value={job.company} onChange={handleChange} required />
-        <input type="text" name="salary" placeholder="Salary" value={job.salary} onChange={handleChange} required />
-        <input type="text" name="location" placeholder="Location" value={job.location} onChange={handleChange} required />
-        <input type="number" name="experience" placeholder="Experience (0 = Fresher)" value={job.experience} onChange={handleChange} required />
-        <input type="text" name="skills" placeholder="Skills (React, Node, MongoDB)" value={job.skills} onChange={handleChange} required />
-        <textarea name="description" placeholder="Job Description" value={job.description} onChange={handleChange} required />
-        <button type="submit">Post Job</button>
-      </form>
+      {/* DASHBOARD HEADER */}
+      <div className="dashboard-header">
+        <h1>Admin Dashboard</h1>
+        <p>Total Jobs Posted: {jobs.length}</p>
+      </div>
 
-      <section className="jobs-section">
-        <h2 className="section-title">All Posted Jobs</h2>
+      {/* POST JOB SECTION */}
+      <div className="dashboard-card">
+        <h2>Post New Job</h2>
+
+        <form className="admin-form" onSubmit={handleSubmit}>
+          <input type="text" name="title" placeholder="Job Title" value={job.title} onChange={handleChange} required />
+          <input type="text" name="company" placeholder="Company Name" value={job.company} onChange={handleChange} required />
+          <input type="text" name="salary" placeholder="Salary" value={job.salary} onChange={handleChange} required />
+          <input type="text" name="location" placeholder="Location" value={job.location} onChange={handleChange} required />
+          <input type="number" name="experience" placeholder="Experience (0 = Fresher)" value={job.experience} onChange={handleChange} required />
+          <input type="text" name="skills" placeholder="Skills (React, Node, MongoDB)" value={job.skills} onChange={handleChange} required />
+          <textarea name="description" placeholder="Job Description" value={job.description} onChange={handleChange} required />
+          <button type="submit">Post Job</button>
+        </form>
+      </div>
+
+      {/* JOB LIST SECTION */}
+      <div className="dashboard-card">
+        <h2>All Posted Jobs</h2>
 
         <div className="jobs-grid">
           {jobs.length === 0 ? (
@@ -140,7 +142,8 @@ export default function Admin() {
             ))
           )}
         </div>
-      </section>
+      </div>
+
     </div>
   );
 }
