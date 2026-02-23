@@ -10,7 +10,7 @@ export default function Jobs() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/jobs")
+      .get("https://job-listing-portal-iu9g.onrender.com/api/jobs")
       .then((res) => {
         setJobs(res.data);
         setLoading(false);
@@ -32,7 +32,6 @@ export default function Jobs() {
     }
 
     alert("Application submitted successfully ✅");
-    // Later we can connect this to backend
   };
 
   return (
@@ -46,12 +45,16 @@ export default function Jobs() {
       ) : (
         <div className="jobs-grid">
           {jobs.map((job) => (
-            <div key={job.id} className="job-card">
+            <div key={job._id} className="job-card">
               <h3>{job.title}</h3>
               <p className="company">{job.company} ⭐ 4.2</p>
 
               <div className="details">
-                <span>2-4 Years</span>
+                <span>
+                  {job.experience === 0
+                    ? "Fresher"
+                    : `${job.experience} Years`}
+                </span>
                 <span>₹ {job.salary}</span>
                 <span>{job.location}</span>
               </div>
@@ -59,14 +62,12 @@ export default function Jobs() {
               <p className="description">{job.description}</p>
 
               <div className="tags">
-                <span>React</span>
-                <span>JavaScript</span>
-                <span>CSS</span>
+                <span>{job.skills || "Skills not specified"}</span>
               </div>
 
               <button
                 className="apply-btn"
-                onClick={() => handleApply(job.id)}
+                onClick={() => handleApply(job._id)}
               >
                 Apply Now
               </button>
