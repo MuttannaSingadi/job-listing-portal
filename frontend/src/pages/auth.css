@@ -290,15 +290,24 @@ body {
 
 /* ================= AUTH MOBILE FIX ================= */
 
-@media (max-width: 600px) {
+/* ================= FINAL MOBILE AUTH FIX ================= */
+@media (max-width: 767px) {
 
   body {
     padding-top: 80px;
   }
 
   .container {
-    margin: 20px 15px;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 20px 15px !important;
     border-radius: 15px;
+  }
+
+  .form-container,
+  .overlay-container {
+    width: 100% !important;
   }
 
   .form-container {
@@ -307,7 +316,6 @@ body {
 
   .form-container h2 {
     font-size: 20px;
-    margin-bottom: 15px;
   }
 
   .input-group {
@@ -324,30 +332,23 @@ body {
     font-size: 14px;
   }
 
-  .forgot-password {
-    font-size: 12px;
+  .role-select {
+    flex-direction: column;
+    gap: 8px;
+    font-size: 13px;
   }
 
-  /* FIX OVERLAY HEIGHT */
   .overlay-container {
     padding: 20px 15px;
-    min-height: auto;
+    border-radius: 0 0 15px 15px;
   }
 
   .overlay-container h2 {
     font-size: 18px;
-    margin-bottom: 10px;
   }
 
   .overlay-container button {
     padding: 8px 14px;
-    font-size: 13px;
-  }
-
-  /* FIX ROLE SECTION */
-  .role-select {
-    flex-direction: column;
-    gap: 8px;
     font-size: 13px;
   }
 
