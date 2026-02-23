@@ -12,8 +12,20 @@ const app = express();
 // ✅ Connect Database
 connectDB();
 
+// ✅ Proper CORS Configuration
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://job-listing-portal-75q.vercel.app"
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true
+  })
+);
+
 // ✅ Middleware
-app.use(cors());
 app.use(express.json());
 
 // ✅ Routes
