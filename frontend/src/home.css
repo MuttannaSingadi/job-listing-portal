@@ -312,3 +312,35 @@ footer {
     width: 100%;
   }
 }
+/* Hide mobile profile in desktop */
+.mobile-profile {
+  display: none;
+}
+
+/* Hide desktop profile in mobile */
+.desktop-profile {
+  display: flex;
+}
+
+/* ================= MOBILE FIX ================= */
+@media (max-width: 768px) {
+
+  /* Show profile outside menu */
+  .mobile-profile {
+    display: block;
+    position: absolute;
+    left: 70px;
+  }
+
+  .mobile-profile img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid white;
+  }
+
+  /* Hide desktop profile inside menu */
+  .desktop-profile {
+    display: none !important;
+  }
+}

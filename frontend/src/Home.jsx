@@ -86,7 +86,14 @@ export default function Home() {
           </Link>
         </div>
 
-        {/* Hamburger Icon */}
+        {/* Mobile Profile (Outside Menu) */}
+        {isLoggedIn && (
+          <div className="mobile-profile">
+            <img src={profile} alt="Profile" />
+          </div>
+        )}
+
+        {/* Hamburger */}
         <div
           className="hamburger"
           onClick={() => setMenuOpen(!menuOpen)}
@@ -94,18 +101,15 @@ export default function Home() {
           ☰
         </div>
 
-        {/* Navigation Menu */}
         <div className={`nav-right ${menuOpen ? "open" : ""}`}>
-          <Link to="/jobs" onClick={() => setMenuOpen(false)}>Jobs</Link>
-          <Link to="/companies" onClick={() => setMenuOpen(false)}>Companies</Link>
-          <Link to="/admin" onClick={() => setMenuOpen(false)}>Admin</Link>
+          <Link to="/jobs">Jobs</Link>
+          <Link to="/companies">Companies</Link>
+          <Link to="/admin">Admin</Link>
+          {!isLoggedIn && <Link to="/auth">Login</Link>}
 
-          {!isLoggedIn && (
-            <Link to="/auth" onClick={() => setMenuOpen(false)}>Login</Link>
-          )}
-
+          {/* Desktop Profile Only */}
           {isLoggedIn && (
-            <div className="profile-section">
+            <div className="profile-section desktop-profile">
               <img src={profile} alt="Profile" />
               <button onClick={handleLogout}>Logout</button>
             </div>
