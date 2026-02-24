@@ -105,9 +105,15 @@ export default function Home() {
           <Link to="/jobs">Jobs</Link>
           <Link to="/companies">Companies</Link>
           <Link to="/admin">Admin</Link>
+
           {!isLoggedIn && <Link to="/auth">Login</Link>}
 
-          {/* Desktop Profile Only */}
+          {isLoggedIn && (
+            <button className="mobile-logout" onClick={handleLogout}>
+              Logout
+            </button>
+          )}
+
           {isLoggedIn && (
             <div className="profile-section desktop-profile">
               <img src={profile} alt="Profile" />

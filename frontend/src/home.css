@@ -388,3 +388,21 @@ footer {
     color: white;
   }
 }
+.mobile-logout {
+  display: none;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .mobile-logout {
+    display: block;
+    background: white;
+    color: #244a66;
+    padding: 8px 12px;
+    border-radius: 20px;
+    border: none;
+    font-weight: 600;
+    margin-top: 10px;
+    cursor: pointer;
+  }
+}
