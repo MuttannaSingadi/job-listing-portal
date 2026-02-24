@@ -89,7 +89,12 @@ export default function Home() {
         {/* Mobile Profile (Outside Menu) */}
         {isLoggedIn && (
           <div className="mobile-profile">
-            <img src={profile} alt="Profile" />
+            <img
+              src={profile}
+              alt="Profile"
+              onClick={handleProfileClick}
+              style={{ cursor: "pointer" }}
+            />
           </div>
         )}
 
@@ -108,15 +113,22 @@ export default function Home() {
 
           {!isLoggedIn && <Link to="/auth">Login</Link>}
 
+          {/* Mobile Logout */}
           {isLoggedIn && (
             <button className="mobile-logout" onClick={handleLogout}>
               Logout
             </button>
           )}
 
+          {/* Desktop Profile */}
           {isLoggedIn && (
             <div className="profile-section desktop-profile">
-              <img src={profile} alt="Profile" />
+              <img
+                src={profile}
+                alt="Profile"
+                onClick={handleProfileClick}
+                style={{ cursor: "pointer" }}
+              />
               <button onClick={handleLogout}>Logout</button>
             </div>
           )}
