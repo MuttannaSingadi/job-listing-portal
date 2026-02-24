@@ -10,6 +10,7 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [jobs, setJobs] = useState([]);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [followedCompanies, setFollowedCompanies] = useState([]);
 
   const [filters, setFilters] = useState({
     title: "",
@@ -18,11 +19,13 @@ export default function Home() {
     skills: "",
   });
 
+  // Check Login
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
   }, []);
 
+  // Fetch Jobs
   useEffect(() => {
     axios
       .get("https://job-listing-portal-iu9g.onrender.com/api/jobs")
@@ -50,6 +53,7 @@ export default function Home() {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
     navigate("/");
+    setMenuOpen(false);
   };
 
   const handleApply = () => {
@@ -62,9 +66,19 @@ export default function Home() {
     alert("Application submitted successfully ✅");
   };
 
+  const handleFollow = (company) => {
+    if (followedCompanies.includes(company)) {
+      setFollowedCompanies(
+        followedCompanies.filter((c) => c !== company)
+      );
+    } else {
+      setFollowedCompanies([...followedCompanies, company]);
+    }
+  };
+
   return (
     <>
-      {/* NAVBAR */}
+      {/* ================= NAVBAR ================= */}
       <div className="top-header">
         <div className="brand">
           <Link to="/">
@@ -72,7 +86,7 @@ export default function Home() {
           </Link>
         </div>
 
-        {/* Hamburger */}
+        {/* Hamburger Icon */}
         <div
           className="hamburger"
           onClick={() => setMenuOpen(!menuOpen)}
@@ -80,13 +94,15 @@ export default function Home() {
           ☰
         </div>
 
-        {/* Menu */}
+        {/* Navigation Menu */}
         <div className={`nav-right ${menuOpen ? "open" : ""}`}>
-          <Link to="/jobs">Jobs</Link>
-          <Link to="/companies">Companies</Link>
-          <Link to="/admin">Admin</Link>
+          <Link to="/jobs" onClick={() => setMenuOpen(false)}>Jobs</Link>
+          <Link to="/companies" onClick={() => setMenuOpen(false)}>Companies</Link>
+          <Link to="/admin" onClick={() => setMenuOpen(false)}>Admin</Link>
 
-          {!isLoggedIn && <Link to="/auth">Login</Link>}
+          {!isLoggedIn && (
+            <Link to="/auth" onClick={() => setMenuOpen(false)}>Login</Link>
+          )}
 
           {isLoggedIn && (
             <div className="profile-section">
@@ -97,28 +113,40 @@ export default function Home() {
         </div>
       </div>
 
-      {/* HERO */}
+      {/* ================= HERO ================= */}
       <section className="hero">
         <div className="search-wrapper">
           <h1>Find Your Dream Job</h1>
           <p>Search thousands of jobs from top companies</p>
 
           <div className="search-box">
-            <input name="title" placeholder="Job title" onChange={handleChange} />
-            <input name="location" placeholder="Location" onChange={handleChange} />
+            <input
+              name="title"
+              placeholder="Job title"
+              onChange={handleChange}
+            />
+            <input
+              name="location"
+              placeholder="Location"
+              onChange={handleChange}
+            />
             <select name="experience" onChange={handleChange}>
               <option value="">Experience</option>
               <option value="0">Fresher</option>
               <option value="1">1 Year</option>
               <option value="2">2 Years</option>
             </select>
-            <input name="skills" placeholder="Skills" onChange={handleChange} />
+            <input
+              name="skills"
+              placeholder="Skills"
+              onChange={handleChange}
+            />
             <button onClick={handleSearch}>Search</button>
           </div>
         </div>
       </section>
 
-      {/* JOBS */}
+      {/* ================= JOBS ================= */}
       <section className="jobs-section">
         <h2 className="section-title">Recommended Jobs</h2>
 
@@ -140,15 +168,29 @@ export default function Home() {
 
               <p className="desc">{job.description}</p>
 
-              <button className="apply-btn" onClick={handleApply}>
-                Apply Now
-              </button>
+              <div className="card-actions">
+                <button onClick={handleApply}>Apply</button>
+
+                <button
+                  className={
+                    followedCompanies.includes(job.company)
+                      ? "follow active"
+                      : "follow"
+                  }
+                  onClick={() => handleFollow(job.company)}
+                >
+                  {followedCompanies.includes(job.company)
+                    ? "Following"
+                    : "Follow"}
+                </button>
+              </div>
             </div>
           ))}
         </div>
       </section>
 
-      <footer>© 2026 DevHire</footer>
+      {/* ================= FOOTER ================= */}
+      <footer>© 2026 DevHire. All rights reserved.</footer>
     </>
   );
 }
