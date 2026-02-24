@@ -19,13 +19,13 @@ export default function Home() {
     skills: "",
   });
 
-  // Check Login
+  // ✅ Check Login
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
   }, []);
 
-  // Fetch Jobs
+  // ✅ Fetch Jobs
   useEffect(() => {
     axios
       .get("https://job-listing-portal-iu9g.onrender.com/api/jobs")
@@ -74,14 +74,13 @@ export default function Home() {
     } else {
       setFollowedCompanies([...followedCompanies, company]);
     }
-
-    const handleProfileClick = () => {
-      navigate("/profile");
-      setMenuOpen(false); // close mobile menu
-    };
   };
 
-
+  // ✅ FIXED PROFILE CLICK
+  const handleProfileClick = () => {
+    navigate("/profile");
+    setMenuOpen(false);
+  };
 
   return (
     <>
@@ -114,11 +113,15 @@ export default function Home() {
         </div>
 
         <div className={`nav-right ${menuOpen ? "open" : ""}`}>
-          <Link to="/jobs">Jobs</Link>
-          <Link to="/companies">Companies</Link>
-          <Link to="/admin">Admin</Link>
+          <Link to="/jobs" onClick={() => setMenuOpen(false)}>Jobs</Link>
+          <Link to="/companies" onClick={() => setMenuOpen(false)}>Companies</Link>
+          <Link to="/admin" onClick={() => setMenuOpen(false)}>Admin</Link>
 
-          {!isLoggedIn && <Link to="/auth">Login</Link>}
+          {!isLoggedIn && (
+            <Link to="/auth" onClick={() => setMenuOpen(false)}>
+              Login
+            </Link>
+          )}
 
           {/* Mobile Logout */}
           {isLoggedIn && (
@@ -180,41 +183,45 @@ export default function Home() {
         <h2 className="section-title">Recommended Jobs</h2>
 
         <div className="jobs-grid">
-          {jobs.map((job) => (
-            <div key={job._id} className="job-card">
-              <h3>{job.title}</h3>
-              <p className="company">{job.company}</p>
+          {jobs.length === 0 ? (
+            <p>No jobs found 🚀</p>
+          ) : (
+            jobs.map((job) => (
+              <div key={job._id} className="job-card">
+                <h3>{job.title}</h3>
+                <p className="company">{job.company}</p>
 
-              <div className="details">
-                <span>₹ {job.salary}</span>
-                <span>{job.location}</span>
-                <span>
-                  {job.experience === 0
-                    ? "Fresher"
-                    : `${job.experience} Years`}
-                </span>
+                <div className="details">
+                  <span>₹ {job.salary}</span>
+                  <span>{job.location}</span>
+                  <span>
+                    {job.experience === 0
+                      ? "Fresher"
+                      : `${job.experience} Years`}
+                  </span>
+                </div>
+
+                <p className="desc">{job.description}</p>
+
+                <div className="card-actions">
+                  <button onClick={handleApply}>Apply</button>
+
+                  <button
+                    className={
+                      followedCompanies.includes(job.company)
+                        ? "follow active"
+                        : "follow"
+                    }
+                    onClick={() => handleFollow(job.company)}
+                  >
+                    {followedCompanies.includes(job.company)
+                      ? "Following"
+                      : "Follow"}
+                  </button>
+                </div>
               </div>
-
-              <p className="desc">{job.description}</p>
-
-              <div className="card-actions">
-                <button onClick={handleApply}>Apply</button>
-
-                <button
-                  className={
-                    followedCompanies.includes(job.company)
-                      ? "follow active"
-                      : "follow"
-                  }
-                  onClick={() => handleFollow(job.company)}
-                >
-                  {followedCompanies.includes(job.company)
-                    ? "Following"
-                    : "Follow"}
-                </button>
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </section>
 
