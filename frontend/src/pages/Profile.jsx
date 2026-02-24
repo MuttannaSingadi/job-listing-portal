@@ -1,62 +1,21 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState } from "react";
 import "./profile.css";
 
 export default function Profile() {
 
-  const [user, setUser] = useState({
-    name: "",
-    role: "",
-    location: "",
-    phone: "",
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const [basic, setBasic] = useState({
+    roleType: "",
+    experienceYears: "",
+    address: "",
     email: "",
+    phone: "",
+    available: false,
   });
 
   const [skills, setSkills] = useState([]);
   const [newSkill, setNewSkill] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const BACKEND_URL = "https://your-backend-url/api/profile"; // change this
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const token = localStorage.getItem("token");
-
-        const res = await axios.get(BACKEND_URL, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (res.data) {
-          setUser(res.data);
-          setSkills(res.data.skills || []);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchProfile();
-  }, []);
-
-  const handleUpdate = async () => {
-    try {
-      setLoading(true);
-      const token = localStorage.getItem("token");
-
-      await axios.post(
-        BACKEND_URL,
-        { ...user, skills },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      alert("Profile Updated Successfully ✅");
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
-  };
 
   const addSkill = () => {
     if (newSkill.trim() !== "") {
@@ -66,111 +25,91 @@ export default function Profile() {
   };
 
   const removeSkill = (index) => {
-    const updated = skills.filter((_, i) => i !== index);
-    setSkills(updated);
+    setSkills(skills.filter((_, i) => i !== index));
   };
 
   return (
-    <div className="profile-dashboard">
+    <>
+      <div className="mobile-header">
+        <button onClick={() => setMenuOpen(!menuOpen)}>☰</button>
+        <h2>My Profile</h2>
+      </div>
 
-      {/* ================= SIDEBAR ================= */}
-      <aside className="profile-sidebar">
-        <h2>Quick Links</h2>
-        <ul>
-          <li><a href="#personal">Personal Details</a></li>
-          <li><a href="#skills">Key Skills</a></li>
-          <li><a href="#employment">Employment</a></li>
-          <li><a href="#education">Education</a></li>
-          <li><a href="#projects">Projects</a></li>
-        </ul>
-      </aside>
+      <div className="profile-dashboard">
 
-      {/* ================= MAIN ================= */}
-      <main className="profile-main">
+        <aside className={`profile-sidebar ${menuOpen ? "active" : ""}`}>
+          <h2>Sections</h2>
+          <ul>
+            <li><a href="#basic">Basic Details</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#projects">Projects</a></li>
+          </ul>
+        </aside>
 
-        <h2 className="page-title">My Profile</h2>
+        <main className="profile-main">
 
-        {/* PERSONAL DETAILS */}
-        <div id="personal" className="profile-card">
-          <h3>Personal Details</h3>
+          {/* BASIC DETAILS */}
+          <div id="basic" className="profile-card">
+            <h3>Basic Details</h3>
 
-          <input type="text" placeholder="Full Name"
-            value={user.name}
-            onChange={(e) => setUser({ ...user, name: e.target.value })}
-          />
+            <select onChange={(e) => setBasic({ ...basic, roleType: e.target.value })}>
+              <option value="">Role Type</option>
+              <option>Fresher</option>
+              <option>Experienced</option>
+            </select>
 
-          <input type="text" placeholder="Role"
-            value={user.role}
-            onChange={(e) => setUser({ ...user, role: e.target.value })}
-          />
+            <input type="text" placeholder="Experience Years" />
+            <input type="text" placeholder="Address" />
+            <input type="email" placeholder="Email" />
+            <input type="text" placeholder="Phone" />
 
-          <input type="text" placeholder="Location"
-            value={user.location}
-            onChange={(e) => setUser({ ...user, location: e.target.value })}
-          />
-
-          <input type="text" placeholder="Phone"
-            value={user.phone}
-            onChange={(e) => setUser({ ...user, phone: e.target.value })}
-          />
-
-          <input type="email" placeholder="Email"
-            value={user.email}
-            onChange={(e) => setUser({ ...user, email: e.target.value })}
-          />
-        </div>
-
-        {/* SKILLS */}
-        <div id="skills" className="profile-card">
-          <h3>Key Skills</h3>
-
-          <div className="skill-input">
-            <input
-              type="text"
-              placeholder="Add Skill"
-              value={newSkill}
-              onChange={(e) => setNewSkill(e.target.value)}
-            />
-            <button onClick={addSkill}>Add</button>
+            <button className="primary-btn">Save Basic</button>
           </div>
 
-          <div className="tags">
-            {skills.map((skill, index) => (
-              <span key={index} className="tag">
-                {skill}
-                <button onClick={() => removeSkill(index)}>×</button>
-              </span>
-            ))}
+          {/* SKILLS */}
+          <div id="skills" className="profile-card">
+            <h3>Skills</h3>
+
+            <div className="skill-input">
+              <input
+                type="text"
+                placeholder="Add Skill"
+                value={newSkill}
+                onChange={(e) => setNewSkill(e.target.value)}
+              />
+              <button onClick={addSkill}>Add</button>
+            </div>
+
+            <div className="tags">
+              {skills.map((skill, index) => (
+                <span key={index} className="tag">
+                  {skill}
+                  <button onClick={() => removeSkill(index)}>×</button>
+                </span>
+              ))}
+            </div>
+
+            <button className="primary-btn">Save Skills</button>
           </div>
-        </div>
 
-        {/* EMPLOYMENT */}
-        <div id="employment" className="profile-card">
-          <h3>Employment</h3>
-          <p>Add your experience here...</p>
-        </div>
+          {/* EDUCATION */}
+          <div id="education" className="profile-card">
+            <h3>Education</h3>
+            <input type="text" placeholder="University" />
+            <input type="text" placeholder="Course" />
+            <button className="primary-btn">Save Education</button>
+          </div>
 
-        {/* EDUCATION */}
-        <div id="education" className="profile-card">
-          <h3>Education</h3>
-          <p>Add your education details here...</p>
-        </div>
+          {/* PROJECTS */}
+          <div id="projects" className="profile-card">
+            <h3>Projects</h3>
+            <input type="text" placeholder="Project Title" />
+            <button className="primary-btn">Save Project</button>
+          </div>
 
-        {/* PROJECTS */}
-        <div id="projects" className="profile-card">
-          <h3>Projects</h3>
-          <p>Add your project details here...</p>
-        </div>
-
-        {/* SAVE BUTTON */}
-        <div className="profile-card center">
-          <button className="primary-btn" onClick={handleUpdate}>
-            {loading ? "Saving..." : "Save Changes"}
-          </button>
-        </div>
-
-      </main>
-    </div>
+        </main>
+      </div>
+    </>
   );
 }
-
