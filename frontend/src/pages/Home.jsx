@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import "./home.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import logo from "./assets/image.png";
-import profile from "./assets/image.png";
+import logo from "../assets/image.png";
+import profile from "../assets/image.png";
 
 export default function Home() {
   const navigate = useNavigate();
