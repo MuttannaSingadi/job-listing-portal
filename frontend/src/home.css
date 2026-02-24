@@ -325,22 +325,40 @@ footer {
 /* ================= MOBILE FIX ================= */
 @media (max-width: 768px) {
 
-  /* Show profile outside menu */
-  .mobile-profile {
+  body {
+    padding-top: 80px;
+  }
+
+  .hamburger {
     display: block;
+  }
+
+  .nav-right {
     position: absolute;
-    left: 70px;
+    top: 75px;
+    right: 0;
+    background: #244a66;
+    width: 220px;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 0 0 0 12px;
+
+    /* IMPORTANT FIX */
+    display: flex;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-10px);
+    transition: 0.3s ease;
   }
 
-  .mobile-profile img {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 2px solid white;
+  .nav-right.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
   }
 
-  /* Hide desktop profile inside menu */
-  .desktop-profile {
-    display: none !important;
+  .nav-right a {
+    padding: 8px 0;
   }
+
 }
