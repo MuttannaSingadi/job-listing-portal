@@ -16,10 +16,8 @@ export default function Profile() {
   const [newSkill, setNewSkill] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const BACKEND_URL = "https://job-portal-backend.onrender.com/api/profile"; 
-  // 👉 Replace with your Render backend URL
+  const BACKEND_URL = "https://your-backend-url/api/profile"; // change this
 
-  // ================= FETCH PROFILE =================
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -30,25 +28,17 @@ export default function Profile() {
         });
 
         if (res.data) {
-          setUser({
-            name: res.data.name || "",
-            role: res.data.role || "",
-            location: res.data.location || "",
-            phone: res.data.phone || "",
-            email: res.data.email || "",
-          });
-
+          setUser(res.data);
           setSkills(res.data.skills || []);
         }
       } catch (error) {
-        console.log("Fetch error:", error);
+        console.log(error);
       }
     };
 
     fetchProfile();
   }, []);
 
-  // ================= HANDLE UPDATE =================
   const handleUpdate = async () => {
     try {
       setLoading(true);
@@ -57,21 +47,17 @@ export default function Profile() {
       await axios.post(
         BACKEND_URL,
         { ...user, skills },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       alert("Profile Updated Successfully ✅");
       setLoading(false);
-
     } catch (error) {
-      console.log("Update error:", error);
+      console.log(error);
       setLoading(false);
     }
   };
 
-  // ================= ADD SKILL =================
   const addSkill = () => {
     if (newSkill.trim() !== "") {
       setSkills([...skills, newSkill]);
@@ -79,7 +65,6 @@ export default function Profile() {
     }
   };
 
-  // ================= REMOVE SKILL =================
   const removeSkill = (index) => {
     const updated = skills.filter((_, i) => i !== index);
     setSkills(updated);
@@ -92,12 +77,11 @@ export default function Profile() {
       <aside className="profile-sidebar">
         <h2>Quick Links</h2>
         <ul>
-          <li>Resume</li>
-          <li>Key Skills</li>
-          <li>Employment</li>
-          <li>Education</li>
-          <li>Projects</li>
-          <li>Personal Details</li>
+          <li><a href="#personal">Personal Details</a></li>
+          <li><a href="#skills">Key Skills</a></li>
+          <li><a href="#employment">Employment</a></li>
+          <li><a href="#education">Education</a></li>
+          <li><a href="#projects">Projects</a></li>
         </ul>
       </aside>
 
@@ -106,48 +90,38 @@ export default function Profile() {
 
         <h2 className="page-title">My Profile</h2>
 
-        {/* ================= PERSONAL DETAILS ================= */}
-        <div className="profile-card">
+        {/* PERSONAL DETAILS */}
+        <div id="personal" className="profile-card">
           <h3>Personal Details</h3>
 
-          <input
-            type="text"
-            placeholder="Full Name"
+          <input type="text" placeholder="Full Name"
             value={user.name}
             onChange={(e) => setUser({ ...user, name: e.target.value })}
           />
 
-          <input
-            type="text"
-            placeholder="Role"
+          <input type="text" placeholder="Role"
             value={user.role}
             onChange={(e) => setUser({ ...user, role: e.target.value })}
           />
 
-          <input
-            type="text"
-            placeholder="Location"
+          <input type="text" placeholder="Location"
             value={user.location}
             onChange={(e) => setUser({ ...user, location: e.target.value })}
           />
 
-          <input
-            type="text"
-            placeholder="Phone"
+          <input type="text" placeholder="Phone"
             value={user.phone}
             onChange={(e) => setUser({ ...user, phone: e.target.value })}
           />
 
-          <input
-            type="email"
-            placeholder="Email"
+          <input type="email" placeholder="Email"
             value={user.email}
             onChange={(e) => setUser({ ...user, email: e.target.value })}
           />
         </div>
 
-        {/* ================= SKILLS ================= */}
-        <div className="profile-card">
+        {/* SKILLS */}
+        <div id="skills" className="profile-card">
           <h3>Key Skills</h3>
 
           <div className="skill-input">
@@ -164,19 +138,33 @@ export default function Profile() {
             {skills.map((skill, index) => (
               <span key={index} className="tag">
                 {skill}
-                <button onClick={() => removeSkill(index)}>❌</button>
+                <button onClick={() => removeSkill(index)}>×</button>
               </span>
             ))}
           </div>
         </div>
 
-        {/* ================= SAVE BUTTON ================= */}
-        <div className="profile-card">
-          <button 
-            className="primary-btn" 
-            onClick={handleUpdate}
-            disabled={loading}
-          >
+        {/* EMPLOYMENT */}
+        <div id="employment" className="profile-card">
+          <h3>Employment</h3>
+          <p>Add your experience here...</p>
+        </div>
+
+        {/* EDUCATION */}
+        <div id="education" className="profile-card">
+          <h3>Education</h3>
+          <p>Add your education details here...</p>
+        </div>
+
+        {/* PROJECTS */}
+        <div id="projects" className="profile-card">
+          <h3>Projects</h3>
+          <p>Add your project details here...</p>
+        </div>
+
+        {/* SAVE BUTTON */}
+        <div className="profile-card center">
+          <button className="primary-btn" onClick={handleUpdate}>
             {loading ? "Saving..." : "Save Changes"}
           </button>
         </div>
@@ -185,3 +173,4 @@ export default function Profile() {
     </div>
   );
 }
+

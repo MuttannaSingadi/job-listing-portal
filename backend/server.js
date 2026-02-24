@@ -1,6 +1,3 @@
-import profileRoutes from "./routes/profile.js";
-
-
 const dns = require("dns");
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
@@ -17,7 +14,6 @@ connectDB();
 
 // Middleware
 app.use(express.json());
-app.use("/api/profile", profileRoutes);
 
 app.use(
   cors({
