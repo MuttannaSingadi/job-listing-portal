@@ -10,7 +10,6 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [jobs, setJobs] = useState([]);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [followedCompanies, setFollowedCompanies] = useState([]);
 
   const [filters, setFilters] = useState({
     title: "",
@@ -63,16 +62,6 @@ export default function Home() {
     alert("Application submitted successfully ✅");
   };
 
-  const handleFollow = (company) => {
-    if (followedCompanies.includes(company)) {
-      setFollowedCompanies(
-        followedCompanies.filter((c) => c !== company)
-      );
-    } else {
-      setFollowedCompanies([...followedCompanies, company]);
-    }
-  };
-
   return (
     <>
       {/* NAVBAR */}
@@ -91,10 +80,12 @@ export default function Home() {
           ☰
         </div>
 
+        {/* Menu */}
         <div className={`nav-right ${menuOpen ? "open" : ""}`}>
           <Link to="/jobs">Jobs</Link>
           <Link to="/companies">Companies</Link>
           <Link to="/admin">Admin</Link>
+
           {!isLoggedIn && <Link to="/auth">Login</Link>}
 
           {isLoggedIn && (
@@ -149,21 +140,9 @@ export default function Home() {
 
               <p className="desc">{job.description}</p>
 
-              <div className="card-actions">
-                <button onClick={handleApply}>Apply</button>
-                <button
-                  className={
-                    followedCompanies.includes(job.company)
-                      ? "follow active"
-                      : "follow"
-                  }
-                  onClick={() => handleFollow(job.company)}
-                >
-                  {followedCompanies.includes(job.company)
-                    ? "Following"
-                    : "Follow"}
-                </button>
-              </div>
+              <button className="apply-btn" onClick={handleApply}>
+                Apply Now
+              </button>
             </div>
           ))}
         </div>
