@@ -1,127 +1,184 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import "./profile.css";
-import profileImg from "../assets/image.png";
 
 export default function Profile() {
-  const [user] = useState({
-    name: "Muttanna Singadi",
-    role: "Full Stack Developer | AI/ML Enthusiast",
-    location: "Bengaluru, India",
-    phone: "+91 9176761966",
-    email: "muttufs67@gmail.com",
+
+  const [user, setUser] = useState({
+    name: "",
+    role: "",
+    location: "",
+    phone: "",
+    email: "",
   });
 
-  const [skills] = useState([
-    "React",
-    "Node.js",
-    "MongoDB",
-    "Java",
-    "Python",
-    "Machine Learning",
-  ]);
+  const [skills, setSkills] = useState([]);
+  const [newSkill, setNewSkill] = useState("");
+  const [loading, setLoading] = useState(false);
 
+  const BACKEND_URL = "https://job-portal-backend.onrender.com/api/profile"; 
+  // 👉 Replace with your Render backend URL
+
+  // ================= FETCH PROFILE =================
   useEffect(() => {
-    // Future: Fetch user data from backend
-    // axios.get("/api/profile")
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const res = await axios.get(BACKEND_URL, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (res.data) {
+          setUser({
+            name: res.data.name || "",
+            role: res.data.role || "",
+            location: res.data.location || "",
+            phone: res.data.phone || "",
+            email: res.data.email || "",
+          });
+
+          setSkills(res.data.skills || []);
+        }
+      } catch (error) {
+        console.log("Fetch error:", error);
+      }
+    };
+
+    fetchProfile();
   }, []);
+
+  // ================= HANDLE UPDATE =================
+  const handleUpdate = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+
+      await axios.post(
+        BACKEND_URL,
+        { ...user, skills },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      alert("Profile Updated Successfully ✅");
+      setLoading(false);
+
+    } catch (error) {
+      console.log("Update error:", error);
+      setLoading(false);
+    }
+  };
+
+  // ================= ADD SKILL =================
+  const addSkill = () => {
+    if (newSkill.trim() !== "") {
+      setSkills([...skills, newSkill]);
+      setNewSkill("");
+    }
+  };
+
+  // ================= REMOVE SKILL =================
+  const removeSkill = (index) => {
+    const updated = skills.filter((_, i) => i !== index);
+    setSkills(updated);
+  };
 
   return (
     <div className="profile-dashboard">
-      
+
       {/* ================= SIDEBAR ================= */}
       <aside className="profile-sidebar">
         <h2>Quick Links</h2>
         <ul>
           <li>Resume</li>
-          <li>Resume Headline</li>
           <li>Key Skills</li>
+          <li>Employment</li>
           <li>Education</li>
-          <li>IT Skills</li>
           <li>Projects</li>
-          <li>Profile Summary</li>
-          <li>Accomplishments</li>
-          <li>Career Profile</li>
           <li>Personal Details</li>
         </ul>
       </aside>
 
-      {/* ================= MAIN CONTENT ================= */}
+      {/* ================= MAIN ================= */}
       <main className="profile-main">
 
-        {/* PROFILE HEADER */}
-        <div className="profile-header">
-          <div className="profile-left">
-            <img src={profileImg} alt="Profile" className="profile-avatar" />
-            <div>
-              <h2>{user.name}</h2>
-              <p className="role">{user.role}</p>
-              <p className="location">{user.location}</p>
-            </div>
-          </div>
+        <h2 className="page-title">My Profile</h2>
 
-          <div className="profile-right">
-            <p>📞 {user.phone}</p>
-            <p>✉️ {user.email}</p>
-          </div>
-        </div>
-
-        {/* RESUME */}
+        {/* ================= PERSONAL DETAILS ================= */}
         <div className="profile-card">
-          <div className="card-header">
-            <h3>Resume</h3>
-            <button className="primary-btn">Upload Resume</button>
-          </div>
+          <h3>Personal Details</h3>
+
+          <input
+            type="text"
+            placeholder="Full Name"
+            value={user.name}
+            onChange={(e) => setUser({ ...user, name: e.target.value })}
+          />
+
+          <input
+            type="text"
+            placeholder="Role"
+            value={user.role}
+            onChange={(e) => setUser({ ...user, role: e.target.value })}
+          />
+
+          <input
+            type="text"
+            placeholder="Location"
+            value={user.location}
+            onChange={(e) => setUser({ ...user, location: e.target.value })}
+          />
+
+          <input
+            type="text"
+            placeholder="Phone"
+            value={user.phone}
+            onChange={(e) => setUser({ ...user, phone: e.target.value })}
+          />
+
+          <input
+            type="email"
+            placeholder="Email"
+            value={user.email}
+            onChange={(e) => setUser({ ...user, email: e.target.value })}
+          />
         </div>
 
-        {/* SKILLS */}
+        {/* ================= SKILLS ================= */}
         <div className="profile-card">
           <h3>Key Skills</h3>
+
+          <div className="skill-input">
+            <input
+              type="text"
+              placeholder="Add Skill"
+              value={newSkill}
+              onChange={(e) => setNewSkill(e.target.value)}
+            />
+            <button onClick={addSkill}>Add</button>
+          </div>
+
           <div className="tags">
             {skills.map((skill, index) => (
               <span key={index} className="tag">
                 {skill}
+                <button onClick={() => removeSkill(index)}>❌</button>
               </span>
             ))}
           </div>
         </div>
 
-        {/* EXPERIENCE */}
+        {/* ================= SAVE BUTTON ================= */}
         <div className="profile-card">
-          <h3>Employment</h3>
-          <div className="profile-item">
-            <h4>AI/ML Intern</h4>
-            <p>Tech Company | 2025</p>
-          </div>
-          <div className="profile-item">
-            <h4>Full Stack Developer Intern</h4>
-            <p>Startup Company | 2024</p>
-          </div>
-        </div>
-
-        {/* EDUCATION */}
-        <div className="profile-card">
-          <h3>Education</h3>
-          <div className="profile-item">
-            <h4>MCA</h4>
-            <p>VTU University | 2023–2025</p>
-          </div>
-          <div className="profile-item">
-            <h4>BCA</h4>
-            <p>Karnataka University | 2020–2023</p>
-          </div>
-        </div>
-
-        {/* PROJECTS */}
-        <div className="profile-card">
-          <h3>Projects</h3>
-          <div className="profile-item">
-            <h4>MERN Job Portal</h4>
-            <p>Frontend: Vercel | Backend: Render</p>
-          </div>
-          <div className="profile-item">
-            <h4>Driver Distraction Alert System</h4>
-            <p>AI-based Mobile Detection System</p>
-          </div>
+          <button 
+            className="primary-btn" 
+            onClick={handleUpdate}
+            disabled={loading}
+          >
+            {loading ? "Saving..." : "Save Changes"}
+          </button>
         </div>
 
       </main>
