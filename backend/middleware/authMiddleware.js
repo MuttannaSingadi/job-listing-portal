@@ -4,7 +4,7 @@ const protect = (req, res, next) => {
   let token = req.headers.authorization;
 
   if (!token) {
-    return res.status(401).json({ msg: "Not authorized" });
+    return res.status(401).json({ message: "Not authorized" });
   }
 
   try {
@@ -12,12 +12,11 @@ const protect = (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    req.user = decoded;
+    req.user = decoded; // decoded should contain { id: user._id }
 
     next();
-
   } catch (error) {
-    return res.status(401).json({ msg: "Token invalid" });
+    return res.status(401).json({ message: "Token invalid" });
   }
 };
 

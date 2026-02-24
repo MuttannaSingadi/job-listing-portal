@@ -9,10 +9,10 @@ const connectDB = require("./config/db");
 
 const app = express();
 
-// Connect MongoDB
+/* ================= DATABASE ================= */
 connectDB();
 
-// Middleware
+/* ================= MIDDLEWARE ================= */
 app.use(express.json());
 
 app.use(
@@ -25,21 +25,23 @@ app.use(
   })
 );
 
-// Test Route
+/* ================= TEST ================= */
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-// Routes
+/* ================= ROUTES ================= */
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/jobs", require("./routes/jobRoutes"));
 app.use("/api/applications", require("./routes/applicationRoutes"));
+app.use("/api/profile", require("./routes/profile"));
 
-// 404 Handler
+/* ================= 404 ================= */
 app.use((req, res) => {
   res.status(404).json({ message: "Route Not Found" });
 });
 
+/* ================= START ================= */
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
