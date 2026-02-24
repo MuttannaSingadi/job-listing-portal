@@ -19,12 +19,6 @@ export default function Home() {
     skills: "",
   });
 
-  // ✅ ADD THIS FUNCTION (THIS WAS MISSING)
-  const handleProfileClick = () => {
-    navigate("/profile");
-    setMenuOpen(false);
-  };
-
   // Check Login
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -80,7 +74,14 @@ export default function Home() {
     } else {
       setFollowedCompanies([...followedCompanies, company]);
     }
+
+    const handleProfileClick = () => {
+      navigate("/profile");
+      setMenuOpen(false); // close mobile menu
+    };
   };
+
+
 
   return (
     <>
@@ -92,7 +93,7 @@ export default function Home() {
           </Link>
         </div>
 
-        {/* Mobile Profile */}
+        {/* Mobile Profile (Outside Menu) */}
         {isLoggedIn && (
           <div className="mobile-profile">
             <img
@@ -119,12 +120,14 @@ export default function Home() {
 
           {!isLoggedIn && <Link to="/auth">Login</Link>}
 
+          {/* Mobile Logout */}
           {isLoggedIn && (
             <button className="mobile-logout" onClick={handleLogout}>
               Logout
             </button>
           )}
 
+          {/* Desktop Profile */}
           {isLoggedIn && (
             <div className="profile-section desktop-profile">
               <img
@@ -139,7 +142,84 @@ export default function Home() {
         </div>
       </div>
 
-      {/* REST OF YOUR CODE UNCHANGED */}
+      {/* ================= HERO ================= */}
+      <section className="hero">
+        <div className="search-wrapper">
+          <h1>Find Your Dream Job</h1>
+          <p>Search thousands of jobs from top companies</p>
+
+          <div className="search-box">
+            <input
+              name="title"
+              placeholder="Job title"
+              onChange={handleChange}
+            />
+            <input
+              name="location"
+              placeholder="Location"
+              onChange={handleChange}
+            />
+            <select name="experience" onChange={handleChange}>
+              <option value="">Experience</option>
+              <option value="0">Fresher</option>
+              <option value="1">1 Year</option>
+              <option value="2">2 Years</option>
+            </select>
+            <input
+              name="skills"
+              placeholder="Skills"
+              onChange={handleChange}
+            />
+            <button onClick={handleSearch}>Search</button>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= JOBS ================= */}
+      <section className="jobs-section">
+        <h2 className="section-title">Recommended Jobs</h2>
+
+        <div className="jobs-grid">
+          {jobs.map((job) => (
+            <div key={job._id} className="job-card">
+              <h3>{job.title}</h3>
+              <p className="company">{job.company}</p>
+
+              <div className="details">
+                <span>₹ {job.salary}</span>
+                <span>{job.location}</span>
+                <span>
+                  {job.experience === 0
+                    ? "Fresher"
+                    : `${job.experience} Years`}
+                </span>
+              </div>
+
+              <p className="desc">{job.description}</p>
+
+              <div className="card-actions">
+                <button onClick={handleApply}>Apply</button>
+
+                <button
+                  className={
+                    followedCompanies.includes(job.company)
+                      ? "follow active"
+                      : "follow"
+                  }
+                  onClick={() => handleFollow(job.company)}
+                >
+                  {followedCompanies.includes(job.company)
+                    ? "Following"
+                    : "Follow"}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ================= FOOTER ================= */}
+      <footer>© 2026 DevHire. All rights reserved.</footer>
     </>
   );
 }
