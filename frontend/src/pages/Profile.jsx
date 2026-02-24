@@ -1,10 +1,99 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import "./profile.css";
 
 export default function Profile() {
+  const BACKEND_URL =
+    "https://job-listing-portal-iu9g.onrender.com/api/profile";
+
   const [active, setActive] = useState("resume");
   const [editMode, setEditMode] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+
+  /* ================= PROFILE STATE ================= */
+
+  const [profile, setProfile] = useState({
+    name: "",
+    role: "",
+    location: "",
+    email: "",
+    phone: "",
+    summary: "",
+    skills: [],
+    education: [],
+    experience: [],
+    projects: [],
+    certifications: [],
+    links: {
+      linkedin: "",
+      github: "",
+      portfolio: "",
+    },
+    personal: {
+      dob: "",
+      gender: "",
+      languages: "",
+    },
+  });
+
+  const [newSkill, setNewSkill] = useState("");
+
+  /* ================= FETCH PROFILE ================= */
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const res = await axios.get(BACKEND_URL, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (res.data) {
+          setProfile(res.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  /* ================= SAVE PROFILE ================= */
+
+  const saveProfile = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      await axios.put(BACKEND_URL, profile, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      alert("Profile Saved Successfully ✅");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  /* ================= ADD SKILL ================= */
+
+  const addSkill = () => {
+    if (newSkill.trim()) {
+      setProfile({
+        ...profile,
+        skills: [...profile.skills, newSkill],
+      });
+      setNewSkill("");
+    }
+  };
+
+  const handleScroll = (id) => {
+    setActive(id);
+    document.getElementById(id)?.scrollIntoView({
+      behavior: "smooth",
+    });
+  };
 
   const sections = [
     { name: "Resume", id: "resume" },
@@ -15,36 +104,41 @@ export default function Profile() {
     { name: "Projects", id: "projects" },
     { name: "Certifications", id: "certifications" },
     { name: "Online Links", id: "links" },
-    { name: "Personal Details", id: "personal" }
+    { name: "Personal Details", id: "personal" },
   ];
-
-  const handleScroll = (id) => {
-    setActive(id);
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-  };
 
   return (
     <div className={`dashboard ${darkMode ? "dark" : ""}`}>
-
       {/* TOPBAR */}
       <header className="topbar">
         <h2>My Profile</h2>
 
         <div className="top-actions">
-          <button onClick={() => setEditMode(!editMode)} className="edit-btn">
+          <button
+            onClick={() => setEditMode(!editMode)}
+            className="edit-btn"
+          >
             {editMode ? "View Mode" : "Edit Mode"}
           </button>
 
-          <button onClick={() => setDarkMode(!darkMode)} className="dark-btn">
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className="dark-btn"
+          >
             {darkMode ? "Light Mode" : "Dark Mode"}
           </button>
 
-          <div className="avatar">M</div>
+          <button onClick={saveProfile} className="primary-btn">
+            Save Profile
+          </button>
+
+          <div className="avatar">
+            {profile.name ? profile.name[0] : "M"}
+          </div>
         </div>
       </header>
 
       <div className="dashboard-body">
-
         {/* SIDEBAR */}
         <aside className="sidebar">
           <h3>Profile Sections</h3>
@@ -61,154 +155,195 @@ export default function Profile() {
           </ul>
         </aside>
 
-        {/* MAIN CONTENT */}
+        {/* MAIN */}
         <main className="main">
-
           {/* PROFILE HEADER */}
           <div className="profile-header">
             <div className="header-left">
-              <div className="big-avatar">M</div>
-              <div>
-                <h3>Muttanna Singadi</h3>
-                <p>Fresher</p>
-                <p>Bengaluru</p>
-                <p>muttufs67@gmail.com</p>
-                <p>9176761966</p>
+              <div className="big-avatar">
+                {profile.name ? profile.name[0] : "M"}
               </div>
-            </div>
 
-            <div className="completion">
-              <p>Profile Completion</p>
-              <div className="progress-bar">
-                <div className="progress-fill" style={{ width: "65%" }}></div>
+              <div>
+                <input
+                  value={profile.name}
+                  onChange={(e) =>
+                    setProfile({
+                      ...profile,
+                      name: e.target.value,
+                    })
+                  }
+                  placeholder="Full Name"
+                />
+
+                <input
+                  value={profile.role}
+                  onChange={(e) =>
+                    setProfile({
+                      ...profile,
+                      role: e.target.value,
+                    })
+                  }
+                  placeholder="Role"
+                />
+
+                <input
+                  value={profile.location}
+                  onChange={(e) =>
+                    setProfile({
+                      ...profile,
+                      location: e.target.value,
+                    })
+                  }
+                  placeholder="Location"
+                />
+
+                <input
+                  value={profile.email}
+                  onChange={(e) =>
+                    setProfile({
+                      ...profile,
+                      email: e.target.value,
+                    })
+                  }
+                  placeholder="Email"
+                />
+
+                <input
+                  value={profile.phone}
+                  onChange={(e) =>
+                    setProfile({
+                      ...profile,
+                      phone: e.target.value,
+                    })
+                  }
+                  placeholder="Phone"
+                />
               </div>
-              <span>65% Completed</span>
             </div>
           </div>
 
-          {/* RESUME */}
-          <section id="resume" className="card">
-            <h3>Resume</h3>
-            <div className="resume-box">
-              <p>Upload your latest resume (PDF)</p>
-              <label className="upload-btn">
-                Choose File
-                <input type="file" hidden />
-              </label>
-            </div>
-          </section>
-
-          {/* PROFILE SUMMARY */}
+          {/* SUMMARY */}
           <section id="summary" className="card">
             <h3>Profile Summary</h3>
-            <textarea placeholder="Write your professional summary..." />
-            <button className="primary-btn">Save Summary</button>
-          </section>
-
-          {/* EXPERIENCE */}
-          <section id="experience" className="card">
-            <h3>Experience</h3>
-
-            <div className="timeline">
-              <div className="timeline-item">
-                <div className="dot"></div>
-                <div>
-                  <h4>AI Intern</h4>
-                  <p>Tech Company • 2025</p>
-                </div>
-              </div>
-
-              <div className="timeline-item">
-                <div className="dot"></div>
-                <div>
-                  <h4>Full Stack Intern</h4>
-                  <p>Startup • 2024</p>
-                </div>
-              </div>
-            </div>
+            <textarea
+              value={profile.summary}
+              onChange={(e) =>
+                setProfile({
+                  ...profile,
+                  summary: e.target.value,
+                })
+              }
+              placeholder="Write your professional summary..."
+            />
           </section>
 
           {/* SKILLS */}
           <section id="skills" className="card">
             <h3>Skills</h3>
+
             <div className="row">
-              <input placeholder="Add Skill" />
-              <button className="primary-btn">Save</button>
+              <input
+                value={newSkill}
+                onChange={(e) => setNewSkill(e.target.value)}
+                placeholder="Add Skill"
+              />
+              <button
+                className="primary-btn"
+                onClick={addSkill}
+              >
+                Add
+              </button>
+            </div>
+
+            <div className="tags">
+              {profile.skills.map((skill, index) => (
+                <span key={index} className="tag">
+                  {skill}
+                </span>
+              ))}
             </div>
           </section>
 
-          {/* EDUCATION */}
-          <section id="education" className="card">
-            <h3>Education</h3>
-
-            <div className="grid-3">
-              <select>
-                <option>Post Graduation</option>
-                <option>Graduation</option>
-              </select>
-              <input placeholder="University" />
-              <input placeholder="Course" />
-            </div>
-
-            <div className="grid-3">
-              <input placeholder="Specialization" />
-              <input placeholder="Course Type" />
-              <input type="date" />
-            </div>
-
-            <div className="grid-2">
-              <input type="date" />
-              <label className="checkbox">
-                <input type="checkbox" /> Completed
-              </label>
-            </div>
-
-            <button className="primary-btn">Add Education</button>
-          </section>
-
-          {/* PROJECTS */}
-          <section id="projects" className="card">
-            <h3>Projects</h3>
-            <div className="grid-2">
-              <input placeholder="Project Title" />
-              <select>
-                <option>Completed</option>
-                <option>In Progress</option>
-              </select>
-            </div>
-            <textarea placeholder="Project Description"></textarea>
-            <button className="primary-btn">Save Project</button>
-          </section>
-
-          {/* CERTIFICATIONS */}
-          <section id="certifications" className="card">
-            <h3>Certifications</h3>
-            <input placeholder="Certification Name" />
-            <input placeholder="Issuing Organization" />
-            <button className="primary-btn">Save Certification</button>
-          </section>
-
-          {/* ONLINE LINKS */}
+          {/* LINKS */}
           <section id="links" className="card">
-            <h3>Online Profiles</h3>
-            <input placeholder="LinkedIn URL" />
-            <input placeholder="GitHub URL" />
-            <button className="primary-btn">Save Links</button>
+            <h3>Online Links</h3>
+
+            <input
+              placeholder="LinkedIn URL"
+              value={profile.links.linkedin}
+              onChange={(e) =>
+                setProfile({
+                  ...profile,
+                  links: {
+                    ...profile.links,
+                    linkedin: e.target.value,
+                  },
+                })
+              }
+            />
+
+            <input
+              placeholder="GitHub URL"
+              value={profile.links.github}
+              onChange={(e) =>
+                setProfile({
+                  ...profile,
+                  links: {
+                    ...profile.links,
+                    github: e.target.value,
+                  },
+                })
+              }
+            />
           </section>
 
           {/* PERSONAL */}
           <section id="personal" className="card">
             <h3>Personal Details</h3>
-            <input type="date" />
-            <select>
-              <option>Male</option>
-              <option>Female</option>
-              <option>Other</option>
-            </select>
-            <input placeholder="Languages Known" />
-            <button className="primary-btn">Save Info</button>
-          </section>
 
+            <input
+              type="date"
+              value={profile.personal.dob}
+              onChange={(e) =>
+                setProfile({
+                  ...profile,
+                  personal: {
+                    ...profile.personal,
+                    dob: e.target.value,
+                  },
+                })
+              }
+            />
+
+            <input
+              placeholder="Gender"
+              value={profile.personal.gender}
+              onChange={(e) =>
+                setProfile({
+                  ...profile,
+                  personal: {
+                    ...profile.personal,
+                    gender: e.target.value,
+                  },
+                })
+              }
+            />
+
+            <input
+              placeholder="Languages Known"
+              value={profile.personal.languages}
+              onChange={(e) =>
+                setProfile({
+                  ...profile,
+                  personal: {
+                    ...profile.personal,
+                    languages: e.target.value,
+                  },
+                })
+              }
+            />
+          </section>
         </main>
       </div>
     </div>
