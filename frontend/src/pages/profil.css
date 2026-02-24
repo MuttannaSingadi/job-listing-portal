@@ -1,0 +1,184 @@
+* {
+  box-sizing: border-box;
+}
+
+.profile-dashboard {
+  display: flex;
+  min-height: 100vh;
+  background: #f3f4f6;
+  font-family: Arial, sans-serif;
+}
+
+/* SIDEBAR */
+.profile-sidebar {
+  width: 250px;
+  background: #1f2937;
+  color: white;
+  padding: 30px 20px;
+}
+
+.profile-sidebar h2 {
+  margin-bottom: 20px;
+}
+
+.profile-sidebar ul {
+  list-style: none;
+}
+
+.profile-sidebar li {
+  padding: 10px 0;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.profile-sidebar li:hover {
+  color: #60a5fa;
+}
+
+/* MAIN */
+.profile-main {
+  flex: 1;
+  padding: 40px;
+}
+
+/* HEADER */
+.profile-header {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.profile-left {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.profile-left img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.profile-right {
+  text-align: right;
+}
+
+/* CARD */
+.profile-card {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.profile-card h3 {
+  margin-bottom: 15px;
+}
+
+/* TAGS */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tags span {
+  background: #e5e7eb;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+}
+
+/* BUTTON */
+.primary-btn {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* ITEM */
+.profile-item {
+  margin-bottom: 10px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .profile-dashboard {
+    flex-direction: column;
+  }
+
+  .profile-sidebar {
+    width: 100%;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .profile-right {
+    text-align: center;
+  }
+}
+/* ===== BETTER MOBILE DESIGN ===== */
+@media (max-width: 768px) {
+
+  .profile-dashboard {
+    flex-direction: column;
+  }
+
+  .profile-sidebar {
+    width: 100%;
+    padding: 15px;
+  }
+
+  .profile-sidebar ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .profile-sidebar li {
+    background: #374151;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+  }
+
+  .profile-main {
+    padding: 20px;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .profile-left {
+    flex-direction: column;
+  }
+
+  .profile-left img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .profile-card {
+    padding: 18px;
+  }
+
+  .tags span {
+    font-size: 12px;
+  }
+}

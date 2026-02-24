@@ -3,6 +3,8 @@ import Auth from "./pages/auth";
 import Home from "./Home";
 import Admin from "./pages/Admin";
 import Jobs from "./pages/Jobs";
+import Profile from "./pages/Profile";
+
 
 function App() {
   return (
@@ -11,7 +13,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/Admin" element={<Admin />} />
-        <Route path="/jobs" element={<Jobs />} />      
+        <Route path="/jobs" element={<Jobs />} />  
+        <Route path="/profile" element={<Profile />} />    
       </Routes>
     </Router>
   );
