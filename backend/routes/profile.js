@@ -4,12 +4,22 @@ const router = express.Router();
 const Profile = require("../models/Profile");
 const { protect } = require("../middleware/authMiddleware");
 const multer = require("multer");
+const fs = require("fs");
+const path = require("path");
+
+/* ================= CREATE UPLOADS FOLDER ================= */
+
+const uploadDir = path.join(__dirname, "../uploads");
+
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 /* ================= MULTER CONFIG ================= */
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/");
+    cb(null, uploadDir);   // ✅ use absolute path
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + "-" + file.originalname);
@@ -56,7 +66,7 @@ router.put("/", protect, upload.single("resume"), async (req, res) => {
         try {
           updateData[field] = JSON.parse(updateData[field]);
         } catch (err) {
-          // ignore if already object
+          // ignore
         }
       }
     });
@@ -72,6 +82,7 @@ router.put("/", protect, upload.single("resume"), async (req, res) => {
     );
 
     res.json(updatedProfile);
+
   } catch (error) {
     console.error("UPDATE PROFILE ERROR:", error);
     res.status(500).json({ message: error.message });
