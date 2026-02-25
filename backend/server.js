@@ -5,6 +5,7 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const connectDB = require("./config/db");
 
 const app = express();
@@ -15,9 +16,6 @@ connectDB();
 /* ================= MIDDLEWARE ================= */
 app.use(express.json());
 
-// ✅ ADD THIS LINE FOR RESUME ACCESS
-app.use("/uploads", express.static("uploads"));
-
 app.use(
   cors({
     origin: [
@@ -26,6 +24,13 @@ app.use(
     ],
     credentials: true,
   })
+);
+
+/* ================= STATIC UPLOADS ================= */
+// 🔥 FIXED (absolute path)
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"))
 );
 
 /* ================= TEST ================= */
@@ -50,5 +55,3 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
-
-app.use("/uploads", express.static("uploads"));
