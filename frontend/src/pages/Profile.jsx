@@ -7,8 +7,8 @@ export default function Profile() {
     "https://job-listing-portal-iu9g.onrender.com/api/profile";
 
   const [active, setActive] = useState("resume");
-  const [editMode, setEditMode] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [editSection, setEditSection] = useState(null);
 
   const [profile, setProfile] = useState({
     name: "",
@@ -61,9 +61,7 @@ export default function Profile() {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (res.data) {
-          setProfile(res.data);
-        }
+        if (res.data) setProfile(res.data);
       } catch (error) {
         console.log(error);
       }
@@ -83,6 +81,7 @@ export default function Profile() {
       });
 
       alert("Profile Saved Successfully ✅");
+      setEditSection(null);
     } catch (error) {
       console.log(error);
     }
@@ -140,13 +139,10 @@ export default function Profile() {
   const sections = [
     { name: "Resume", id: "resume" },
     { name: "Profile Summary", id: "summary" },
-    { name: "Experience", id: "experience" },
     { name: "Skills", id: "skills" },
     { name: "Education", id: "education" },
     { name: "Projects", id: "projects" },
     { name: "Certifications", id: "certifications" },
-    { name: "Online Links", id: "links" },
-    { name: "Personal Details", id: "personal" },
   ];
 
   return (
@@ -156,17 +152,7 @@ export default function Profile() {
         <h2>My Profile</h2>
 
         <div className="top-actions">
-          <button
-            onClick={() => setEditMode(!editMode)}
-            className="edit-btn"
-          >
-            {editMode ? "View Mode" : "Edit Mode"}
-          </button>
-
-          <button
-            onClick={() => setDarkMode(!darkMode)}
-            className="dark-btn"
-          >
+          <button onClick={() => setDarkMode(!darkMode)} className="dark-btn">
             {darkMode ? "Light Mode" : "Dark Mode"}
           </button>
 
@@ -200,80 +186,59 @@ export default function Profile() {
         {/* MAIN */}
         <main className="main">
 
-          {/* PROFILE HEADER */}
-          <section id="resume" className="profile-header card">
-            <div className="big-avatar">
-              {profile.name ? profile.name[0] : "M"}
-            </div>
-
-            <div>
-              <input
-                value={profile.name}
-                onChange={(e) =>
-                  setProfile({ ...profile, name: e.target.value })
-                }
-                placeholder="Full Name"
-              />
-              <input
-                value={profile.role}
-                onChange={(e) =>
-                  setProfile({ ...profile, role: e.target.value })
-                }
-                placeholder="Role"
-              />
-              <input
-                value={profile.location}
-                onChange={(e) =>
-                  setProfile({ ...profile, location: e.target.value })
-                }
-                placeholder="Location"
-              />
-              <input
-                value={profile.email}
-                onChange={(e) =>
-                  setProfile({ ...profile, email: e.target.value })
-                }
-                placeholder="Email"
-              />
-              <input
-                value={profile.phone}
-                onChange={(e) =>
-                  setProfile({ ...profile, phone: e.target.value })
-                }
-                placeholder="Phone"
-              />
-            </div>
-          </section>
-
           {/* SUMMARY */}
           <section id="summary" className="card">
-            <h3>Profile Summary</h3>
-            <textarea
-              value={profile.summary}
-              onChange={(e) =>
-                setProfile({ ...profile, summary: e.target.value })
-              }
-              placeholder="Write your professional summary..."
-            />
+            <div className="section-header">
+              <h3>Profile Summary</h3>
+              <button
+                className="edit-btn"
+                onClick={() =>
+                  setEditSection(
+                    editSection === "summary" ? null : "summary"
+                  )
+                }
+              >
+                {editSection === "summary" ? "Cancel" : "Edit"}
+              </button>
+            </div>
+
+            {editSection === "summary" ? (
+              <textarea
+                value={profile.summary}
+                onChange={(e) =>
+                  setProfile({ ...profile, summary: e.target.value })
+                }
+              />
+            ) : (
+              <p>{profile.summary || "No summary added."}</p>
+            )}
           </section>
 
           {/* SKILLS */}
           <section id="skills" className="card">
-            <h3>Skills</h3>
-
-            <div className="row">
-              <input
-                value={newSkill}
-                onChange={(e) => setNewSkill(e.target.value)}
-                placeholder="Add Skill"
-              />
+            <div className="section-header">
+              <h3>Skills</h3>
               <button
-                className="primary-btn"
-                onClick={addSkill}
+                className="edit-btn"
+                onClick={() =>
+                  setEditSection(editSection === "skills" ? null : "skills")
+                }
               >
-                Add
+                {editSection === "skills" ? "Cancel" : "Edit"}
               </button>
             </div>
+
+            {editSection === "skills" && (
+              <div className="row">
+                <input
+                  value={newSkill}
+                  onChange={(e) => setNewSkill(e.target.value)}
+                />
+                <button onClick={addSkill} className="primary-btn">
+                  Add
+                </button>
+              </div>
+            )}
 
             {profile.skills.map((skill, index) => (
               <div key={index}>{skill}</div>
@@ -282,35 +247,60 @@ export default function Profile() {
 
           {/* EDUCATION */}
           <section id="education" className="card">
-            <h3>Education</h3>
+            <div className="section-header">
+              <h3>Education</h3>
+              <button
+                className="edit-btn"
+                onClick={() =>
+                  setEditSection(
+                    editSection === "education" ? null : "education"
+                  )
+                }
+              >
+                {editSection === "education" ? "Cancel" : "Edit"}
+              </button>
+            </div>
 
-            <input
-              placeholder="Degree"
-              value={newEducation.degree}
-              onChange={(e) =>
-                setNewEducation({ ...newEducation, degree: e.target.value })
-              }
-            />
-            <input
-              placeholder="Institution"
-              value={newEducation.institution}
-              onChange={(e) =>
-                setNewEducation({
-                  ...newEducation,
-                  institution: e.target.value,
-                })
-              }
-            />
-            <input
-              placeholder="Year"
-              value={newEducation.year}
-              onChange={(e) =>
-                setNewEducation({ ...newEducation, year: e.target.value })
-              }
-            />
-            <button onClick={addEducation} className="primary-btn">
-              Add Education
-            </button>
+            {editSection === "education" && (
+              <>
+                <input
+                  placeholder="Degree"
+                  value={newEducation.degree}
+                  onChange={(e) =>
+                    setNewEducation({
+                      ...newEducation,
+                      degree: e.target.value,
+                    })
+                  }
+                />
+                <input
+                  placeholder="Institution"
+                  value={newEducation.institution}
+                  onChange={(e) =>
+                    setNewEducation({
+                      ...newEducation,
+                      institution: e.target.value,
+                    })
+                  }
+                />
+                <input
+                  placeholder="Year"
+                  value={newEducation.year}
+                  onChange={(e) =>
+                    setNewEducation({
+                      ...newEducation,
+                      year: e.target.value,
+                    })
+                  }
+                />
+                <button
+                  onClick={addEducation}
+                  className="primary-btn"
+                >
+                  Add Education
+                </button>
+              </>
+            )}
 
             {profile.education.map((edu, index) => (
               <div key={index}>
@@ -321,28 +311,50 @@ export default function Profile() {
 
           {/* PROJECTS */}
           <section id="projects" className="card">
-            <h3>Projects</h3>
+            <div className="section-header">
+              <h3>Projects</h3>
+              <button
+                className="edit-btn"
+                onClick={() =>
+                  setEditSection(
+                    editSection === "projects" ? null : "projects"
+                  )
+                }
+              >
+                {editSection === "projects" ? "Cancel" : "Edit"}
+              </button>
+            </div>
 
-            <input
-              placeholder="Project Title"
-              value={newProject.title}
-              onChange={(e) =>
-                setNewProject({ ...newProject, title: e.target.value })
-              }
-            />
-            <textarea
-              placeholder="Description"
-              value={newProject.description}
-              onChange={(e) =>
-                setNewProject({
-                  ...newProject,
-                  description: e.target.value,
-                })
-              }
-            />
-            <button onClick={addProject} className="primary-btn">
-              Add Project
-            </button>
+            {editSection === "projects" && (
+              <>
+                <input
+                  placeholder="Title"
+                  value={newProject.title}
+                  onChange={(e) =>
+                    setNewProject({
+                      ...newProject,
+                      title: e.target.value,
+                    })
+                  }
+                />
+                <textarea
+                  placeholder="Description"
+                  value={newProject.description}
+                  onChange={(e) =>
+                    setNewProject({
+                      ...newProject,
+                      description: e.target.value,
+                    })
+                  }
+                />
+                <button
+                  onClick={addProject}
+                  className="primary-btn"
+                >
+                  Add Project
+                </button>
+              </>
+            )}
 
             {profile.projects.map((proj, index) => (
               <div key={index}>
@@ -353,41 +365,62 @@ export default function Profile() {
 
           {/* CERTIFICATIONS */}
           <section id="certifications" className="card">
-            <h3>Certifications</h3>
+            <div className="section-header">
+              <h3>Certifications</h3>
+              <button
+                className="edit-btn"
+                onClick={() =>
+                  setEditSection(
+                    editSection === "certifications"
+                      ? null
+                      : "certifications"
+                  )
+                }
+              >
+                {editSection === "certifications" ? "Cancel" : "Edit"}
+              </button>
+            </div>
 
-            <input
-              placeholder="Title"
-              value={newCertification.title}
-              onChange={(e) =>
-                setNewCertification({
-                  ...newCertification,
-                  title: e.target.value,
-                })
-              }
-            />
-            <input
-              placeholder="Organization"
-              value={newCertification.organization}
-              onChange={(e) =>
-                setNewCertification({
-                  ...newCertification,
-                  organization: e.target.value,
-                })
-              }
-            />
-            <input
-              placeholder="Year"
-              value={newCertification.year}
-              onChange={(e) =>
-                setNewCertification({
-                  ...newCertification,
-                  year: e.target.value,
-                })
-              }
-            />
-            <button onClick={addCertification} className="primary-btn">
-              Add Certification
-            </button>
+            {editSection === "certifications" && (
+              <>
+                <input
+                  placeholder="Title"
+                  value={newCertification.title}
+                  onChange={(e) =>
+                    setNewCertification({
+                      ...newCertification,
+                      title: e.target.value,
+                    })
+                  }
+                />
+                <input
+                  placeholder="Organization"
+                  value={newCertification.organization}
+                  onChange={(e) =>
+                    setNewCertification({
+                      ...newCertification,
+                      organization: e.target.value,
+                    })
+                  }
+                />
+                <input
+                  placeholder="Year"
+                  value={newCertification.year}
+                  onChange={(e) =>
+                    setNewCertification({
+                      ...newCertification,
+                      year: e.target.value,
+                    })
+                  }
+                />
+                <button
+                  onClick={addCertification}
+                  className="primary-btn"
+                >
+                  Add Certification
+                </button>
+              </>
+            )}
 
             {profile.certifications.map((cert, index) => (
               <div key={index}>
