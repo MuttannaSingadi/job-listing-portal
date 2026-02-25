@@ -10,8 +10,6 @@ export default function Profile() {
   const [editMode, setEditMode] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
 
-  /* ================= PROFILE STATE ================= */
-
   const [profile, setProfile] = useState({
     name: "",
     role: "",
@@ -37,6 +35,20 @@ export default function Profile() {
   });
 
   const [newSkill, setNewSkill] = useState("");
+  const [newEducation, setNewEducation] = useState({
+    degree: "",
+    institution: "",
+    year: "",
+  });
+  const [newProject, setNewProject] = useState({
+    title: "",
+    description: "",
+  });
+  const [newCertification, setNewCertification] = useState({
+    title: "",
+    organization: "",
+    year: "",
+  });
 
   /* ================= FETCH PROFILE ================= */
 
@@ -76,7 +88,7 @@ export default function Profile() {
     }
   };
 
-  /* ================= ADD SKILL ================= */
+  /* ================= ADD FUNCTIONS ================= */
 
   const addSkill = () => {
     if (newSkill.trim()) {
@@ -85,6 +97,36 @@ export default function Profile() {
         skills: [...profile.skills, newSkill],
       });
       setNewSkill("");
+    }
+  };
+
+  const addEducation = () => {
+    if (newEducation.degree && newEducation.institution) {
+      setProfile({
+        ...profile,
+        education: [...profile.education, newEducation],
+      });
+      setNewEducation({ degree: "", institution: "", year: "" });
+    }
+  };
+
+  const addProject = () => {
+    if (newProject.title) {
+      setProfile({
+        ...profile,
+        projects: [...profile.projects, newProject],
+      });
+      setNewProject({ title: "", description: "" });
+    }
+  };
+
+  const addCertification = () => {
+    if (newCertification.title) {
+      setProfile({
+        ...profile,
+        certifications: [...profile.certifications, newCertification],
+      });
+      setNewCertification({ title: "", organization: "", year: "" });
     }
   };
 
@@ -157,71 +199,51 @@ export default function Profile() {
 
         {/* MAIN */}
         <main className="main">
+
           {/* PROFILE HEADER */}
-          <div className="profile-header">
-            <div className="header-left">
-              <div className="big-avatar">
-                {profile.name ? profile.name[0] : "M"}
-              </div>
-
-              <div>
-                <input
-                  value={profile.name}
-                  onChange={(e) =>
-                    setProfile({
-                      ...profile,
-                      name: e.target.value,
-                    })
-                  }
-                  placeholder="Full Name"
-                />
-
-                <input
-                  value={profile.role}
-                  onChange={(e) =>
-                    setProfile({
-                      ...profile,
-                      role: e.target.value,
-                    })
-                  }
-                  placeholder="Role"
-                />
-
-                <input
-                  value={profile.location}
-                  onChange={(e) =>
-                    setProfile({
-                      ...profile,
-                      location: e.target.value,
-                    })
-                  }
-                  placeholder="Location"
-                />
-
-                <input
-                  value={profile.email}
-                  onChange={(e) =>
-                    setProfile({
-                      ...profile,
-                      email: e.target.value,
-                    })
-                  }
-                  placeholder="Email"
-                />
-
-                <input
-                  value={profile.phone}
-                  onChange={(e) =>
-                    setProfile({
-                      ...profile,
-                      phone: e.target.value,
-                    })
-                  }
-                  placeholder="Phone"
-                />
-              </div>
+          <section id="resume" className="profile-header card">
+            <div className="big-avatar">
+              {profile.name ? profile.name[0] : "M"}
             </div>
-          </div>
+
+            <div>
+              <input
+                value={profile.name}
+                onChange={(e) =>
+                  setProfile({ ...profile, name: e.target.value })
+                }
+                placeholder="Full Name"
+              />
+              <input
+                value={profile.role}
+                onChange={(e) =>
+                  setProfile({ ...profile, role: e.target.value })
+                }
+                placeholder="Role"
+              />
+              <input
+                value={profile.location}
+                onChange={(e) =>
+                  setProfile({ ...profile, location: e.target.value })
+                }
+                placeholder="Location"
+              />
+              <input
+                value={profile.email}
+                onChange={(e) =>
+                  setProfile({ ...profile, email: e.target.value })
+                }
+                placeholder="Email"
+              />
+              <input
+                value={profile.phone}
+                onChange={(e) =>
+                  setProfile({ ...profile, phone: e.target.value })
+                }
+                placeholder="Phone"
+              />
+            </div>
+          </section>
 
           {/* SUMMARY */}
           <section id="summary" className="card">
@@ -229,10 +251,7 @@ export default function Profile() {
             <textarea
               value={profile.summary}
               onChange={(e) =>
-                setProfile({
-                  ...profile,
-                  summary: e.target.value,
-                })
+                setProfile({ ...profile, summary: e.target.value })
               }
               placeholder="Write your professional summary..."
             />
@@ -256,94 +275,127 @@ export default function Profile() {
               </button>
             </div>
 
-            <div className="tags">
-              {profile.skills.map((skill, index) => (
-                <span key={index} className="tag">
-                  {skill}
-                </span>
-              ))}
-            </div>
+            {profile.skills.map((skill, index) => (
+              <div key={index}>{skill}</div>
+            ))}
           </section>
 
-          {/* LINKS */}
-          <section id="links" className="card">
-            <h3>Online Links</h3>
+          {/* EDUCATION */}
+          <section id="education" className="card">
+            <h3>Education</h3>
 
             <input
-              placeholder="LinkedIn URL"
-              value={profile.links.linkedin}
+              placeholder="Degree"
+              value={newEducation.degree}
               onChange={(e) =>
-                setProfile({
-                  ...profile,
-                  links: {
-                    ...profile.links,
-                    linkedin: e.target.value,
-                  },
+                setNewEducation({ ...newEducation, degree: e.target.value })
+              }
+            />
+            <input
+              placeholder="Institution"
+              value={newEducation.institution}
+              onChange={(e) =>
+                setNewEducation({
+                  ...newEducation,
+                  institution: e.target.value,
                 })
               }
             />
-
             <input
-              placeholder="GitHub URL"
-              value={profile.links.github}
+              placeholder="Year"
+              value={newEducation.year}
               onChange={(e) =>
-                setProfile({
-                  ...profile,
-                  links: {
-                    ...profile.links,
-                    github: e.target.value,
-                  },
-                })
+                setNewEducation({ ...newEducation, year: e.target.value })
               }
             />
+            <button onClick={addEducation} className="primary-btn">
+              Add Education
+            </button>
+
+            {profile.education.map((edu, index) => (
+              <div key={index}>
+                {edu.degree} - {edu.institution} ({edu.year})
+              </div>
+            ))}
           </section>
 
-          {/* PERSONAL */}
-          <section id="personal" className="card">
-            <h3>Personal Details</h3>
+          {/* PROJECTS */}
+          <section id="projects" className="card">
+            <h3>Projects</h3>
 
             <input
-              type="date"
-              value={profile.personal.dob}
+              placeholder="Project Title"
+              value={newProject.title}
               onChange={(e) =>
-                setProfile({
-                  ...profile,
-                  personal: {
-                    ...profile.personal,
-                    dob: e.target.value,
-                  },
+                setNewProject({ ...newProject, title: e.target.value })
+              }
+            />
+            <textarea
+              placeholder="Description"
+              value={newProject.description}
+              onChange={(e) =>
+                setNewProject({
+                  ...newProject,
+                  description: e.target.value,
                 })
               }
             />
+            <button onClick={addProject} className="primary-btn">
+              Add Project
+            </button>
 
-            <input
-              placeholder="Gender"
-              value={profile.personal.gender}
-              onChange={(e) =>
-                setProfile({
-                  ...profile,
-                  personal: {
-                    ...profile.personal,
-                    gender: e.target.value,
-                  },
-                })
-              }
-            />
-
-            <input
-              placeholder="Languages Known"
-              value={profile.personal.languages}
-              onChange={(e) =>
-                setProfile({
-                  ...profile,
-                  personal: {
-                    ...profile.personal,
-                    languages: e.target.value,
-                  },
-                })
-              }
-            />
+            {profile.projects.map((proj, index) => (
+              <div key={index}>
+                <strong>{proj.title}</strong> - {proj.description}
+              </div>
+            ))}
           </section>
+
+          {/* CERTIFICATIONS */}
+          <section id="certifications" className="card">
+            <h3>Certifications</h3>
+
+            <input
+              placeholder="Title"
+              value={newCertification.title}
+              onChange={(e) =>
+                setNewCertification({
+                  ...newCertification,
+                  title: e.target.value,
+                })
+              }
+            />
+            <input
+              placeholder="Organization"
+              value={newCertification.organization}
+              onChange={(e) =>
+                setNewCertification({
+                  ...newCertification,
+                  organization: e.target.value,
+                })
+              }
+            />
+            <input
+              placeholder="Year"
+              value={newCertification.year}
+              onChange={(e) =>
+                setNewCertification({
+                  ...newCertification,
+                  year: e.target.value,
+                })
+              }
+            />
+            <button onClick={addCertification} className="primary-btn">
+              Add Certification
+            </button>
+
+            {profile.certifications.map((cert, index) => (
+              <div key={index}>
+                {cert.title} - {cert.organization} ({cert.year})
+              </div>
+            ))}
+          </section>
+
         </main>
       </div>
     </div>
