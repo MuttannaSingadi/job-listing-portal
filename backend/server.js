@@ -15,6 +15,9 @@ connectDB();
 /* ================= MIDDLEWARE ================= */
 app.use(express.json());
 
+// ✅ ADD THIS LINE FOR RESUME ACCESS
+app.use("/uploads", express.static("uploads"));
+
 app.use(
   cors({
     origin: [

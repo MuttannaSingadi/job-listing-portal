@@ -7,8 +7,9 @@ export default function Profile() {
     "https://job-listing-portal-iu9g.onrender.com/api/profile";
 
   const [active, setActive] = useState("resume");
+  const [editMode, setEditMode] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
-  const [editSection, setEditSection] = useState(null);
+  const [resumeFile, setResumeFile] = useState(null);
 
   const [profile, setProfile] = useState({
     name: "",
@@ -17,6 +18,7 @@ export default function Profile() {
     email: "",
     phone: "",
     summary: "",
+    resume: "",
     skills: [],
     education: [],
     experience: [],
@@ -40,6 +42,11 @@ export default function Profile() {
     institution: "",
     year: "",
   });
+  const [newExperience, setNewExperience] = useState({
+    company: "",
+    role: "",
+    duration: "",
+  });
   const [newProject, setNewProject] = useState({
     title: "",
     description: "",
@@ -51,17 +58,17 @@ export default function Profile() {
   });
 
   /* ================= FETCH PROFILE ================= */
-
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem("token");
-
         const res = await axios.get(BACKEND_URL, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (res.data) setProfile(res.data);
+        if (res.data) {
+          setProfile(res.data);
+        }
       } catch (error) {
         console.log(error);
       }
@@ -71,17 +78,32 @@ export default function Profile() {
   }, []);
 
   /* ================= SAVE PROFILE ================= */
-
   const saveProfile = async () => {
     try {
       const token = localStorage.getItem("token");
+      const formData = new FormData();
 
-      await axios.put(BACKEND_URL, profile, {
-        headers: { Authorization: `Bearer ${token}` },
+      Object.keys(profile).forEach((key) => {
+        if (typeof profile[key] === "object") {
+          formData.append(key, JSON.stringify(profile[key]));
+        } else {
+          formData.append(key, profile[key]);
+        }
+      });
+
+      if (resumeFile) {
+        formData.append("resume", resumeFile);
+      }
+
+      await axios.put(BACKEND_URL, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
       });
 
       alert("Profile Saved Successfully ✅");
-      setEditSection(null);
+      setEditMode(false);
     } catch (error) {
       console.log(error);
     }
@@ -100,12 +122,22 @@ export default function Profile() {
   };
 
   const addEducation = () => {
-    if (newEducation.degree && newEducation.institution) {
+    if (newEducation.degree) {
       setProfile({
         ...profile,
         education: [...profile.education, newEducation],
       });
       setNewEducation({ degree: "", institution: "", year: "" });
+    }
+  };
+
+  const addExperience = () => {
+    if (newExperience.company) {
+      setProfile({
+        ...profile,
+        experience: [...profile.experience, newExperience],
+      });
+      setNewExperience({ company: "", role: "", duration: "" });
     }
   };
 
@@ -139,26 +171,35 @@ export default function Profile() {
   const sections = [
     { name: "Resume", id: "resume" },
     { name: "Profile Summary", id: "summary" },
+    { name: "Experience", id: "experience" },
     { name: "Skills", id: "skills" },
     { name: "Education", id: "education" },
     { name: "Projects", id: "projects" },
     { name: "Certifications", id: "certifications" },
+    { name: "Online Links", id: "links" },
+    { name: "Personal Details", id: "personal" },
   ];
 
   return (
     <div className={`dashboard ${darkMode ? "dark" : ""}`}>
-      {/* TOPBAR */}
+      {/* ================= TOPBAR ================= */}
       <header className="topbar">
         <h2>My Profile</h2>
 
         <div className="top-actions">
+          <button onClick={() => setEditMode(!editMode)} className="edit-btn">
+            {editMode ? "View Mode" : "Edit Mode"}
+          </button>
+
           <button onClick={() => setDarkMode(!darkMode)} className="dark-btn">
             {darkMode ? "Light Mode" : "Dark Mode"}
           </button>
 
-          <button onClick={saveProfile} className="primary-btn">
-            Save Profile
-          </button>
+          {editMode && (
+            <button onClick={saveProfile} className="primary-btn">
+              Save Profile
+            </button>
+          )}
 
           <div className="avatar">
             {profile.name ? profile.name[0] : "M"}
@@ -167,7 +208,7 @@ export default function Profile() {
       </header>
 
       <div className="dashboard-body">
-        {/* SIDEBAR */}
+        {/* ================= SIDEBAR ================= */}
         <aside className="sidebar">
           <h3>Profile Sections</h3>
           <ul>
@@ -183,250 +224,140 @@ export default function Profile() {
           </ul>
         </aside>
 
-        {/* MAIN */}
+        {/* ================= MAIN ================= */}
         <main className="main">
+
+          {/* RESUME */}
+          <section id="resume" className="card">
+            {editMode ? (
+              <>
+                <input value={profile.name} onChange={(e)=>setProfile({...profile,name:e.target.value})} placeholder="Name"/>
+                <input value={profile.role} onChange={(e)=>setProfile({...profile,role:e.target.value})} placeholder="Role"/>
+                <input value={profile.location} onChange={(e)=>setProfile({...profile,location:e.target.value})} placeholder="Location"/>
+                <input value={profile.email} onChange={(e)=>setProfile({...profile,email:e.target.value})} placeholder="Email"/>
+                <input value={profile.phone} onChange={(e)=>setProfile({...profile,phone:e.target.value})} placeholder="Phone"/>
+
+                <input type="file" accept=".pdf,.doc,.docx"
+                  onChange={(e)=>setResumeFile(e.target.files[0])}/>
+              </>
+            ) : (
+              <>
+                <h3>{profile.name}</h3>
+                <p>{profile.role}</p>
+                <p>{profile.location}</p>
+                <p>{profile.email}</p>
+                <p>{profile.phone}</p>
+
+                {profile.resume && (
+                  <a
+                    href={`https://job-listing-portal-iu9g.onrender.com${profile.resume}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="primary-btn"
+                  >
+                    View Resume
+                  </a>
+                )}
+              </>
+            )}
+          </section>
 
           {/* SUMMARY */}
           <section id="summary" className="card">
-            <div className="section-header">
-              <h3>Profile Summary</h3>
-              <button
-                className="edit-btn"
-                onClick={() =>
-                  setEditSection(
-                    editSection === "summary" ? null : "summary"
-                  )
-                }
-              >
-                {editSection === "summary" ? "Cancel" : "Edit"}
-              </button>
-            </div>
-
-            {editSection === "summary" ? (
-              <textarea
-                value={profile.summary}
-                onChange={(e) =>
-                  setProfile({ ...profile, summary: e.target.value })
-                }
-              />
+            <h3>Summary</h3>
+            {editMode ? (
+              <textarea value={profile.summary}
+                onChange={(e)=>setProfile({...profile,summary:e.target.value})}/>
             ) : (
-              <p>{profile.summary || "No summary added."}</p>
+              <p>{profile.summary}</p>
             )}
           </section>
 
           {/* SKILLS */}
           <section id="skills" className="card">
-            <div className="section-header">
-              <h3>Skills</h3>
-              <button
-                className="edit-btn"
-                onClick={() =>
-                  setEditSection(editSection === "skills" ? null : "skills")
-                }
-              >
-                {editSection === "skills" ? "Cancel" : "Edit"}
-              </button>
-            </div>
-
-            {editSection === "skills" && (
+            <h3>Skills</h3>
+            {editMode && (
               <div className="row">
-                <input
-                  value={newSkill}
-                  onChange={(e) => setNewSkill(e.target.value)}
-                />
-                <button onClick={addSkill} className="primary-btn">
-                  Add
-                </button>
+                <input value={newSkill}
+                  onChange={(e)=>setNewSkill(e.target.value)}/>
+                <button onClick={addSkill} className="primary-btn">Add</button>
               </div>
             )}
-
-            {profile.skills.map((skill, index) => (
-              <div key={index}>{skill}</div>
-            ))}
+            {profile.skills.map((skill,i)=><div key={i}>{skill}</div>)}
           </section>
 
           {/* EDUCATION */}
           <section id="education" className="card">
-            <div className="section-header">
-              <h3>Education</h3>
-              <button
-                className="edit-btn"
-                onClick={() =>
-                  setEditSection(
-                    editSection === "education" ? null : "education"
-                  )
-                }
-              >
-                {editSection === "education" ? "Cancel" : "Edit"}
-              </button>
-            </div>
-
-            {editSection === "education" && (
+            <h3>Education</h3>
+            {editMode && (
               <>
-                <input
-                  placeholder="Degree"
-                  value={newEducation.degree}
-                  onChange={(e) =>
-                    setNewEducation({
-                      ...newEducation,
-                      degree: e.target.value,
-                    })
-                  }
-                />
-                <input
-                  placeholder="Institution"
-                  value={newEducation.institution}
-                  onChange={(e) =>
-                    setNewEducation({
-                      ...newEducation,
-                      institution: e.target.value,
-                    })
-                  }
-                />
-                <input
-                  placeholder="Year"
-                  value={newEducation.year}
-                  onChange={(e) =>
-                    setNewEducation({
-                      ...newEducation,
-                      year: e.target.value,
-                    })
-                  }
-                />
-                <button
-                  onClick={addEducation}
-                  className="primary-btn"
-                >
-                  Add Education
-                </button>
+                <input placeholder="Degree" value={newEducation.degree}
+                  onChange={(e)=>setNewEducation({...newEducation,degree:e.target.value})}/>
+                <input placeholder="Institution" value={newEducation.institution}
+                  onChange={(e)=>setNewEducation({...newEducation,institution:e.target.value})}/>
+                <input placeholder="Year" value={newEducation.year}
+                  onChange={(e)=>setNewEducation({...newEducation,year:e.target.value})}/>
+                <button onClick={addEducation} className="primary-btn">Add</button>
               </>
             )}
+            {profile.education.map((edu,i)=>
+              <div key={i}>{edu.degree} - {edu.institution} ({edu.year})</div>
+            )}
+          </section>
 
-            {profile.education.map((edu, index) => (
-              <div key={index}>
-                {edu.degree} - {edu.institution} ({edu.year})
-              </div>
-            ))}
+          {/* EXPERIENCE */}
+          <section id="experience" className="card">
+            <h3>Experience</h3>
+            {editMode && (
+              <>
+                <input placeholder="Company" value={newExperience.company}
+                  onChange={(e)=>setNewExperience({...newExperience,company:e.target.value})}/>
+                <input placeholder="Role" value={newExperience.role}
+                  onChange={(e)=>setNewExperience({...newExperience,role:e.target.value})}/>
+                <input placeholder="Duration" value={newExperience.duration}
+                  onChange={(e)=>setNewExperience({...newExperience,duration:e.target.value})}/>
+                <button onClick={addExperience} className="primary-btn">Add</button>
+              </>
+            )}
+            {profile.experience.map((exp,i)=>
+              <div key={i}>{exp.role} at {exp.company} ({exp.duration})</div>
+            )}
           </section>
 
           {/* PROJECTS */}
           <section id="projects" className="card">
-            <div className="section-header">
-              <h3>Projects</h3>
-              <button
-                className="edit-btn"
-                onClick={() =>
-                  setEditSection(
-                    editSection === "projects" ? null : "projects"
-                  )
-                }
-              >
-                {editSection === "projects" ? "Cancel" : "Edit"}
-              </button>
-            </div>
-
-            {editSection === "projects" && (
+            <h3>Projects</h3>
+            {editMode && (
               <>
-                <input
-                  placeholder="Title"
-                  value={newProject.title}
-                  onChange={(e) =>
-                    setNewProject({
-                      ...newProject,
-                      title: e.target.value,
-                    })
-                  }
-                />
-                <textarea
-                  placeholder="Description"
-                  value={newProject.description}
-                  onChange={(e) =>
-                    setNewProject({
-                      ...newProject,
-                      description: e.target.value,
-                    })
-                  }
-                />
-                <button
-                  onClick={addProject}
-                  className="primary-btn"
-                >
-                  Add Project
-                </button>
+                <input placeholder="Title" value={newProject.title}
+                  onChange={(e)=>setNewProject({...newProject,title:e.target.value})}/>
+                <textarea placeholder="Description" value={newProject.description}
+                  onChange={(e)=>setNewProject({...newProject,description:e.target.value})}/>
+                <button onClick={addProject} className="primary-btn">Add</button>
               </>
             )}
-
-            {profile.projects.map((proj, index) => (
-              <div key={index}>
-                <strong>{proj.title}</strong> - {proj.description}
-              </div>
-            ))}
+            {profile.projects.map((proj,i)=>
+              <div key={i}><strong>{proj.title}</strong> - {proj.description}</div>
+            )}
           </section>
 
           {/* CERTIFICATIONS */}
           <section id="certifications" className="card">
-            <div className="section-header">
-              <h3>Certifications</h3>
-              <button
-                className="edit-btn"
-                onClick={() =>
-                  setEditSection(
-                    editSection === "certifications"
-                      ? null
-                      : "certifications"
-                  )
-                }
-              >
-                {editSection === "certifications" ? "Cancel" : "Edit"}
-              </button>
-            </div>
-
-            {editSection === "certifications" && (
+            <h3>Certifications</h3>
+            {editMode && (
               <>
-                <input
-                  placeholder="Title"
-                  value={newCertification.title}
-                  onChange={(e) =>
-                    setNewCertification({
-                      ...newCertification,
-                      title: e.target.value,
-                    })
-                  }
-                />
-                <input
-                  placeholder="Organization"
-                  value={newCertification.organization}
-                  onChange={(e) =>
-                    setNewCertification({
-                      ...newCertification,
-                      organization: e.target.value,
-                    })
-                  }
-                />
-                <input
-                  placeholder="Year"
-                  value={newCertification.year}
-                  onChange={(e) =>
-                    setNewCertification({
-                      ...newCertification,
-                      year: e.target.value,
-                    })
-                  }
-                />
-                <button
-                  onClick={addCertification}
-                  className="primary-btn"
-                >
-                  Add Certification
-                </button>
+                <input placeholder="Title" value={newCertification.title}
+                  onChange={(e)=>setNewCertification({...newCertification,title:e.target.value})}/>
+                <input placeholder="Organization" value={newCertification.organization}
+                  onChange={(e)=>setNewCertification({...newCertification,organization:e.target.value})}/>
+                <input placeholder="Year" value={newCertification.year}
+                  onChange={(e)=>setNewCertification({...newCertification,year:e.target.value})}/>
+                <button onClick={addCertification} className="primary-btn">Add</button>
               </>
             )}
-
-            {profile.certifications.map((cert, index) => (
-              <div key={index}>
-                {cert.title} - {cert.organization} ({cert.year})
-              </div>
-            ))}
+            {profile.certifications.map((cert,i)=>
+              <div key={i}>{cert.title} - {cert.organization} ({cert.year})</div>
+            )}
           </section>
 
         </main>
