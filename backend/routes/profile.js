@@ -39,12 +39,33 @@ router.get("/", protect, async (req, res) => {
 router.put(
   "/",
   protect,
-  upload.single("resume"), // ✅ Added upload middleware
+  upload.single("resume"),
   async (req, res) => {
     try {
-      const updateData = req.body;
+      const updateData = { ...req.body };
 
-      // If resume uploaded, save path
+      // 🔥 Convert JSON strings back to real objects/arrays
+      const fieldsToParse = [
+        "skills",
+        "education",
+        "experience",
+        "projects",
+        "certifications",
+        "links",
+        "personal",
+      ];
+
+      fieldsToParse.forEach((field) => {
+        if (updateData[field]) {
+          try {
+            updateData[field] = JSON.parse(updateData[field]);
+          } catch (err) {
+            // if already object, ignore
+          }
+        }
+      });
+
+      // If resume uploaded
       if (req.file) {
         updateData.resume = `/uploads/${req.file.filename}`;
       }
@@ -57,6 +78,7 @@ router.put(
 
       res.json(updatedProfile);
     } catch (error) {
+      console.error("PROFILE UPDATE ERROR:", error);
       res.status(500).json({ message: error.message });
     }
   }
