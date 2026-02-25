@@ -78,36 +78,37 @@ export default function Profile() {
   }, []);
 
   /* ================= SAVE PROFILE ================= */
-  const saveProfile = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const formData = new FormData();
+ const saveProfile = async () => {
+  try {
+    const token = localStorage.getItem("token");
 
-      Object.keys(profile).forEach((key) => {
-        if (typeof profile[key] === "object") {
-          formData.append(key, JSON.stringify(profile[key]));
-        } else {
-          formData.append(key, profile[key]);
-        }
-      });
+    const formData = new FormData();
 
-      if (resumeFile) {
-        formData.append("resume", resumeFile);
+    Object.keys(profile).forEach((key) => {
+      if (typeof profile[key] === "object") {
+        formData.append(key, JSON.stringify(profile[key]));
+      } else {
+        formData.append(key, profile[key]);
       }
+    });
 
-      await axios.put(BACKEND_URL, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      alert("Profile Saved Successfully ✅");
-      setEditMode(false);
-    } catch (error) {
-      console.log(error);
+    if (resumeFile) {
+      formData.append("resume", resumeFile);
     }
-  };
+
+    await axios.put(BACKEND_URL, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        // ❌ REMOVE Content-Type
+      },
+    });
+
+    alert("Profile Saved Successfully ✅");
+    setEditMode(false);
+  } catch (error) {
+    console.log("SAVE ERROR:", error.response?.data || error);
+  }
+};
 
   /* ================= ADD FUNCTIONS ================= */
 
