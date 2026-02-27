@@ -12,10 +12,28 @@ const cloudinary = require("../config/cloudinary");
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: {
-    folder: "resumes",
-    resource_type: "raw", // IMPORTANT for PDF/DOC
-    allowed_formats: ["pdf", "doc", "docx"],
+  params: async (req, file) => {
+    const originalName = file.originalname;
+
+    // Get file name without extension
+    const nameWithoutExt =
+      originalName.substring(0, originalName.lastIndexOf(".")) ||
+      originalName;
+
+    // Get file extension
+    const extension = originalName.split(".").pop();
+
+    return {
+      folder: "resumes",
+      resource_type: "raw",
+      allowed_formats: ["pdf", "doc", "docx"],
+
+      // ✅ Keep original filename
+      public_id: nameWithoutExt,
+
+      // ✅ Keep original extension
+      format: extension,
+    };
   },
 });
 
