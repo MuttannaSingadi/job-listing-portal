@@ -25,7 +25,7 @@ export default function Admin() {
     skills: "",
   });
 
-  /* ================= AUTH PROTECT ================= */
+  /* ================= AUTH CHECK ================= */
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) navigate("/auth");
@@ -38,7 +38,7 @@ export default function Admin() {
       const res = await axios.get(`${API}/api/jobs`);
       setJobs(res.data);
     } catch (err) {
-      console.log("Jobs fetch error:", err.message);
+      console.log(err.message);
     }
   };
 
@@ -47,21 +47,19 @@ export default function Admin() {
       const res = await axios.get(`${API}/api/applications`);
       setApplications(res.data);
     } catch (err) {
-      console.log("Applications fetch error:", err.message);
+      console.log(err.message);
     }
   };
 
   const fetchProfiles = async () => {
     try {
       const token = localStorage.getItem("token");
-
       const res = await axios.get(`${API}/api/admin/profiles`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
       setProfiles(res.data);
     } catch (err) {
-      console.log("Profiles fetch error:", err.message);
+      console.log("Profile fetch error:", err.message);
     }
   };
 
@@ -71,7 +69,7 @@ export default function Admin() {
     fetchProfiles();
   }, []);
 
-  /* ================= HANDLE FORM ================= */
+  /* ================= POST JOB ================= */
 
   const handleChange = (e) => {
     setJob({ ...job, [e.target.name]: e.target.value });
@@ -105,22 +103,18 @@ export default function Admin() {
     }
   };
 
-  /* ================= UI ================= */
-
   return (
     <div className="admin-wrapper">
 
       {/* SIDEBAR */}
       <div className="sidebar">
         <h2 className="brand">DevHire</h2>
-
         <ul>
           <li onClick={() => setActive("dashboard")}>Dashboard</li>
           <li onClick={() => setActive("post")}>Post Job</li>
           <li onClick={() => setActive("manage")}>Manage Jobs</li>
           <li onClick={() => setActive("applications")}>Applications</li>
           <li onClick={() => setActive("profiles")}>Candidates</li>
-
           <li
             onClick={() => {
               localStorage.removeItem("token");
@@ -132,7 +126,7 @@ export default function Admin() {
         </ul>
       </div>
 
-      {/* MAIN */}
+      {/* MAIN SECTION */}
       <div className="main">
 
         {/* TOPBAR */}
@@ -163,52 +157,20 @@ export default function Admin() {
         {active === "post" && (
           <div className="post-section">
             <h2>Post New Job</h2>
-
             <form className="admin-form" onSubmit={handleSubmit}>
               <input name="title" placeholder="Job Title" value={job.title} onChange={handleChange} required />
               <input name="company" placeholder="Company Name" value={job.company} onChange={handleChange} required />
               <input name="salary" placeholder="Salary" value={job.salary} onChange={handleChange} required />
               <input name="location" placeholder="Location" value={job.location} onChange={handleChange} required />
               <input name="experience" placeholder="Experience" value={job.experience} onChange={handleChange} required />
-              <input name="skills" placeholder="Skills (React, Node)" value={job.skills} onChange={handleChange} required />
+              <input name="skills" placeholder="Skills" value={job.skills} onChange={handleChange} required />
               <textarea name="description" placeholder="Job Description" value={job.description} onChange={handleChange} required />
               <button type="submit">Post Job</button>
             </form>
           </div>
         )}
 
-        {/* MANAGE JOBS */}
-        {active === "manage" && (
-          <div className="jobs-grid">
-            {jobs.map((job) => (
-              <div key={job._id} className="job-card">
-                <h4>{job.title}</h4>
-                <p>{job.company}</p>
-                <p>₹ {job.salary}</p>
-                <p>{job.location}</p>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* APPLICATIONS */}
-        {active === "applications" && (
-          <div className="jobs-grid">
-            {applications.length === 0 ? (
-              <p>No applications yet</p>
-            ) : (
-              applications.map((app) => (
-                <div key={app._id} className="job-card">
-                  <h4>{app.jobId?.title}</h4>
-                  <p>Applicant: {app.applicantEmail}</p>
-                  <p>Company: {app.jobId?.company}</p>
-                </div>
-              ))
-            )}
-          </div>
-        )}
-
-        {/* CANDIDATES / PROFILES */}
+        {/* CANDIDATES */}
         {active === "profiles" && (
           <div className="jobs-grid">
             {profiles.length === 0 ? (
@@ -216,12 +178,46 @@ export default function Admin() {
             ) : (
               profiles.map((profile) => (
                 <div key={profile._id} className="job-card">
-                  <h4>{profile.name}</h4>
-                  <p>Email: {profile.email}</p>
-                  <p>Role: {profile.role}</p>
 
-                  <h5>Skills:</h5>
+                  <h3>{profile.name}</h3>
+                  <p><strong>Email:</strong> {profile.email}</p>
+                  <p><strong>Role:</strong> {profile.role}</p>
+                  <p><strong>Location:</strong> {profile.location}</p>
+                  <p><strong>Phone:</strong> {profile.phone}</p>
+
+                  <hr />
+
+                  <h4>Summary</h4>
+                  <p>{profile.summary}</p>
+
+                  <h4>Skills</h4>
                   <p>{profile.skills?.join(", ")}</p>
+
+                  <h4>Education</h4>
+                  {profile.education?.map((edu, i) => (
+                    <div key={i}>
+                      <strong>{edu.level}</strong> - {edu.university}
+                    </div>
+                  ))}
+
+                  <h4>Experience</h4>
+                  {profile.experience?.map((exp, i) => (
+                    <div key={i}>
+                      {exp.title} at {exp.company}
+                    </div>
+                  ))}
+
+                  <h4>Certifications</h4>
+                  {profile.certifications?.map((cert, i) => (
+                    <div key={i}>
+                      {cert.name} - {cert.organization}
+                    </div>
+                  ))}
+
+                  <h4>Personal</h4>
+                  <p>DOB: {profile.personal?.dob}</p>
+                  <p>Gender: {profile.personal?.gender}</p>
+                  <p>Languages: {profile.personal?.languages}</p>
 
                   {profile.resume && (
                     <a
@@ -232,6 +228,7 @@ export default function Admin() {
                       📄 View Resume
                     </a>
                   )}
+
                 </div>
               ))
             )}
@@ -239,29 +236,6 @@ export default function Admin() {
         )}
 
       </div>
-
-      {/* RIGHT PROFILE CARD */}
-      <div className="profile-card">
-        <div className="profile-avatar">A</div>
-        <h3>Admin User</h3>
-        <p>System Administrator</p>
-
-        <div className="profile-stats">
-          <div>
-            <strong>{jobs.length}</strong>
-            <span>Jobs</span>
-          </div>
-          <div>
-            <strong>{applications.length}</strong>
-            <span>Applications</span>
-          </div>
-          <div>
-            <strong>{profiles.length}</strong>
-            <span>Candidates</span>
-          </div>
-        </div>
-      </div>
-
     </div>
   );
 }
