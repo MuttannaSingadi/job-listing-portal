@@ -25,13 +25,6 @@ app.use(
   })
 );
 
-/* ================= STATIC UPLOADS ================= */
-app.use(
-  "/uploads",
-  express.static(path.join(__dirname, "uploads"))
-);
-
-/* ================= TEST ================= */
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
