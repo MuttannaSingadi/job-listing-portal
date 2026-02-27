@@ -5,7 +5,7 @@ const Profile = require("../models/Profile");
 const { protect } = require("../middleware/authMiddleware");
 const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
-const cloudinary = require("../config/cloudnary");
+const cloudinary = require("../config/cloudinary");
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
