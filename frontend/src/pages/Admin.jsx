@@ -13,6 +13,7 @@ export default function Admin() {
   const [active, setActive] = useState("dashboard");
   const [jobs, setJobs] = useState([]);
   const [applications, setApplications] = useState([]);
+  const [profiles, setProfiles] = useState([]);
 
   const [job, setJob] = useState({
     title: "",
@@ -24,13 +25,14 @@ export default function Admin() {
     skills: "",
   });
 
-  // 🔐 Protect Admin
+  /* ================= AUTH PROTECT ================= */
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) navigate("/auth");
   }, [navigate]);
 
-  // 📦 Fetch Jobs
+  /* ================= FETCH DATA ================= */
+
   const fetchJobs = async () => {
     try {
       const res = await axios.get(`${API}/api/jobs`);
@@ -40,7 +42,6 @@ export default function Admin() {
     }
   };
 
-  // 📦 Fetch Applications
   const fetchApplications = async () => {
     try {
       const res = await axios.get(`${API}/api/applications`);
@@ -50,17 +51,32 @@ export default function Admin() {
     }
   };
 
+  const fetchProfiles = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await axios.get(`${API}/api/admin/profiles`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setProfiles(res.data);
+    } catch (err) {
+      console.log("Profiles fetch error:", err.message);
+    }
+  };
+
   useEffect(() => {
     fetchJobs();
     fetchApplications();
+    fetchProfiles();
   }, []);
 
-  // 📝 Handle form input
+  /* ================= HANDLE FORM ================= */
+
   const handleChange = (e) => {
     setJob({ ...job, [e.target.name]: e.target.value });
   };
 
-  // ➕ Post Job
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
@@ -89,6 +105,8 @@ export default function Admin() {
     }
   };
 
+  /* ================= UI ================= */
+
   return (
     <div className="admin-wrapper">
 
@@ -101,6 +119,7 @@ export default function Admin() {
           <li onClick={() => setActive("post")}>Post Job</li>
           <li onClick={() => setActive("manage")}>Manage Jobs</li>
           <li onClick={() => setActive("applications")}>Applications</li>
+          <li onClick={() => setActive("profiles")}>Candidates</li>
 
           <li
             onClick={() => {
@@ -113,17 +132,13 @@ export default function Admin() {
         </ul>
       </div>
 
-      {/* MAIN AREA */}
+      {/* MAIN */}
       <div className="main">
 
         {/* TOPBAR */}
         <div className="topbar">
-          <input type="text" placeholder="Search something here..." />
-          <div className="top-icons">
-            <span>🔔</span>
-            <span>💬</span>
-            <div className="profile-mini">A</div>
-          </div>
+          <input type="text" placeholder="Search..." />
+          <div className="profile-mini">A</div>
         </div>
 
         {/* DASHBOARD */}
@@ -138,8 +153,8 @@ export default function Admin() {
               <p>{applications.length}</p>
             </div>
             <div className="card">
-              <h3>System Status</h3>
-              <p>Active</p>
+              <h3>Total Candidates</h3>
+              <p>{profiles.length}</p>
             </div>
           </div>
         )}
@@ -154,8 +169,8 @@ export default function Admin() {
               <input name="company" placeholder="Company Name" value={job.company} onChange={handleChange} required />
               <input name="salary" placeholder="Salary" value={job.salary} onChange={handleChange} required />
               <input name="location" placeholder="Location" value={job.location} onChange={handleChange} required />
-              <input name="experience" placeholder="Experience (0 = Fresher)" value={job.experience} onChange={handleChange} required />
-              <input name="skills" placeholder="Skills (React, Node, MongoDB)" value={job.skills} onChange={handleChange} required />
+              <input name="experience" placeholder="Experience" value={job.experience} onChange={handleChange} required />
+              <input name="skills" placeholder="Skills (React, Node)" value={job.skills} onChange={handleChange} required />
               <textarea name="description" placeholder="Job Description" value={job.description} onChange={handleChange} required />
               <button type="submit">Post Job</button>
             </form>
@@ -193,9 +208,39 @@ export default function Admin() {
           </div>
         )}
 
+        {/* CANDIDATES / PROFILES */}
+        {active === "profiles" && (
+          <div className="jobs-grid">
+            {profiles.length === 0 ? (
+              <p>No candidates yet</p>
+            ) : (
+              profiles.map((profile) => (
+                <div key={profile._id} className="job-card">
+                  <h4>{profile.name}</h4>
+                  <p>Email: {profile.email}</p>
+                  <p>Role: {profile.role}</p>
+
+                  <h5>Skills:</h5>
+                  <p>{profile.skills?.join(", ")}</p>
+
+                  {profile.resume && (
+                    <a
+                      href={`${API}${profile.resume}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      📄 View Resume
+                    </a>
+                  )}
+                </div>
+              ))
+            )}
+          </div>
+        )}
+
       </div>
 
-      {/* PROFILE CARD */}
+      {/* RIGHT PROFILE CARD */}
       <div className="profile-card">
         <div className="profile-avatar">A</div>
         <h3>Admin User</h3>
@@ -209,6 +254,10 @@ export default function Admin() {
           <div>
             <strong>{applications.length}</strong>
             <span>Applications</span>
+          </div>
+          <div>
+            <strong>{profiles.length}</strong>
+            <span>Candidates</span>
           </div>
         </div>
       </div>

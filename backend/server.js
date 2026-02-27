@@ -43,7 +43,7 @@ app.use("/api/auth", require("./routes/auth"));
 app.use("/api/jobs", require("./routes/jobRoutes"));
 app.use("/api/applications", require("./routes/applicationRoutes"));
 app.use("/api/profile", require("./routes/profile"));
-
+app.use("/api/admin", require("./routes/admin"));
 /* ================= 404 ================= */
 app.use((req, res) => {
   res.status(404).json({ message: "Route Not Found" });
@@ -55,3 +55,4 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
+
