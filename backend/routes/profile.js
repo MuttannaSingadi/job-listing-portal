@@ -25,13 +25,13 @@ const storage = new CloudinaryStorage({
 
     return {
       folder: "resumes",
-      resource_type: "raw",
+      resource_type: "auto", // ✅ IMPORTANT FIX
       allowed_formats: ["pdf", "doc", "docx"],
 
-      // ✅ Keep original filename
+      // Keep original filename
       public_id: nameWithoutExt,
 
-      // ✅ Keep original extension
+      // Keep original extension
       format: extension,
     };
   },
@@ -85,7 +85,7 @@ router.put("/", protect, upload.single("resume"), async (req, res) => {
 
     // If resume uploaded
     if (req.file) {
-      updateData.resume = req.file.path; // Cloudinary secure URL
+      updateData.resume = req.file.path; // Cloudinary URL
     }
 
     const updatedProfile = await Profile.findOneAndUpdate(
