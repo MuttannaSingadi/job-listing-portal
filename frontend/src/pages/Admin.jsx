@@ -232,11 +232,8 @@ export default function Admin() {
 
                   {profile.resume && (
                     <a
-                      href={
-                        profile.resume.includes("fl_attachment")
-                          ? profile.resume
-                          : profile.resume.replace("/upload/", "/upload/fl_attachment/")
-                      }
+                      href={profile.resume}
+                      download={`${profile.name || "resume"}.pdf`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
