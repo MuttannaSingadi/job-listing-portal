@@ -15,24 +15,21 @@ const storage = new CloudinaryStorage({
   params: async (req, file) => {
     const originalName = file.originalname;
 
-    // Get file name without extension
+    // Remove extension from filename
     const nameWithoutExt =
       originalName.substring(0, originalName.lastIndexOf(".")) ||
       originalName;
 
-    // Get file extension
-    const extension = originalName.split(".").pop();
-
     return {
       folder: "resumes",
-      resource_type: "auto", // ✅ IMPORTANT FIX
-      allowed_formats: ["pdf", "doc", "docx"],
 
-      // Keep original filename
+      // 🔥 FORCE IMAGE TYPE (fixes PDF loading issue)
+      resource_type: "image",
+
+      // Allow only PDF uploads
+      allowed_formats: ["pdf"],
+
       public_id: nameWithoutExt,
-
-      // Keep original extension
-      format: extension,
     };
   },
 });
@@ -72,7 +69,7 @@ router.put("/", protect, upload.single("resume"), async (req, res) => {
       "personal",
     ];
 
-    // Parse JSON fields safely
+    // Safely parse JSON fields
     fieldsToParse.forEach((field) => {
       if (updateData[field]) {
         try {
