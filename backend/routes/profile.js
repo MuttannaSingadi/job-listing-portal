@@ -14,20 +14,17 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
     const originalName = file.originalname;
-
-    // Remove extension from filename
     const nameWithoutExt =
       originalName.substring(0, originalName.lastIndexOf(".")) ||
       originalName;
 
     return {
       folder: "resumes",
-
-      // 🔥 FORCE IMAGE TYPE (fixes PDF loading issue)
-      resource_type: "image",
-
-      // Allow only PDF uploads
+      resource_type: "image",  // treat PDF properly
       allowed_formats: ["pdf"],
+
+      type: "upload",          // ✅ make it public
+      access_mode: "public",   // ✅ prevent 401 error
 
       public_id: nameWithoutExt,
     };
