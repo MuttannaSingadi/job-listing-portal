@@ -231,12 +231,8 @@ export default function Admin() {
                   <p>{profile.skills?.join(", ")}</p>
 
                   {profile.resume && (
-                    <a
-                      href={`${API}${profile.resume}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      📄 View Resume
+                    <a href={profile.resume} target="_blank">
+                      View Resume
                     </a>
                   )}
                 </div>

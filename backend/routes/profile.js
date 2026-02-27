@@ -4,25 +4,15 @@ const router = express.Router();
 const Profile = require("../models/Profile");
 const { protect } = require("../middleware/authMiddleware");
 const multer = require("multer");
-const fs = require("fs");
-const path = require("path");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("../config/cloudnary");
 
-/* ================= CREATE UPLOADS FOLDER ================= */
-
-const uploadDir = path.join(__dirname, "../uploads");
-
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-/* ================= MULTER CONFIG ================= */
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadDir);   // ✅ use absolute path
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "resumes",
+    resource_type: "raw", // important for pdf
+    allowed_formats: ["pdf", "doc", "docx"],
   },
 });
 
@@ -72,7 +62,7 @@ router.put("/", protect, upload.single("resume"), async (req, res) => {
     });
 
     if (req.file) {
-      updateData.resume = `/uploads/${req.file.filename}`;
+     updateData.resume = req.file.path;
     }
 
     const updatedProfile = await Profile.findOneAndUpdate(
