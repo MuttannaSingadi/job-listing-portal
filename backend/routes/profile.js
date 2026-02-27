@@ -18,15 +18,14 @@ const storage = new CloudinaryStorage({
       originalName.substring(0, originalName.lastIndexOf(".")) ||
       originalName;
 
+    const extension = originalName.split(".").pop();
+
     return {
       folder: "resumes",
-      resource_type: "image",  // treat PDF properly
+      resource_type: "raw",  // ✅ IMPORTANT
       allowed_formats: ["pdf"],
-
-      type: "upload",          // ✅ make it public
-      access_mode: "public",   // ✅ prevent 401 error
-
       public_id: nameWithoutExt,
+      format: extension,
     };
   },
 });

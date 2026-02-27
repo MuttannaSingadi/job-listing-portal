@@ -232,8 +232,10 @@ export default function Admin() {
 
                   {profile.resume && (
                     <a
-                      href={profile.resume}
-                      download={`${profile.name || "resume"}.pdf`}
+                      href={profile.resume.replace(
+                        "/upload/",
+                        "/upload/fl_attachment/"
+                      )}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
