@@ -31,35 +31,54 @@ export default function Admin() {
     if (!token) navigate("/auth");
   }, [navigate]);
 
-  /* ================= FETCH DATA ================= */
-
+  /* ================= FETCH JOBS ================= */
   const fetchJobs = async () => {
     try {
-      const res = await axios.get(`${API}/api/jobs`);
+      const token = localStorage.getItem("token");
+
+      const res = await axios.get(`${API}/api/jobs`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
       setJobs(res.data);
     } catch (err) {
-      console.log(err.message);
+      console.log("Jobs fetch error:", err.response?.data || err.message);
     }
   };
 
+  /* ================= FETCH APPLICATIONS ================= */
   const fetchApplications = async () => {
     try {
-      const res = await axios.get(`${API}/api/applications`);
+      const token = localStorage.getItem("token");
+
+      const res = await axios.get(`${API}/api/applications`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
       setApplications(res.data);
     } catch (err) {
-      console.log(err.message);
+      console.log(
+        "Applications fetch error:",
+        err.response?.data || err.message
+      );
     }
   };
 
+  /* ================= FETCH PROFILES ================= */
   const fetchProfiles = async () => {
     try {
       const token = localStorage.getItem("token");
+
       const res = await axios.get(`${API}/api/admin/profiles`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
       setProfiles(res.data);
     } catch (err) {
-      console.log("Profile fetch error:", err.message);
+      console.log(
+        "Profiles fetch error:",
+        err.response?.data || err.message
+      );
     }
   };
 
@@ -70,17 +89,17 @@ export default function Admin() {
   }, []);
 
   /* ================= POST JOB ================= */
-
   const handleChange = (e) => {
     setJob({ ...job, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
 
     try {
-      await axios.post(`${API}/api/jobs/create`, job, {
+      const token = localStorage.getItem("token");
+
+      await axios.post(`${API}/api/jobs`, job, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -99,7 +118,7 @@ export default function Admin() {
       fetchJobs();
       setActive("manage");
     } catch (err) {
-      alert("Unauthorized ❌");
+      alert(err.response?.data?.message || "Unauthorized ❌");
     }
   };
 
@@ -126,14 +145,8 @@ export default function Admin() {
         </ul>
       </div>
 
-      {/* MAIN SECTION */}
+      {/* MAIN */}
       <div className="main">
-
-        {/* TOPBAR */}
-        <div className="topbar">
-          <input type="text" placeholder="Search..." />
-          <div className="profile-mini">A</div>
-        </div>
 
         {/* DASHBOARD */}
         {active === "dashboard" && (
@@ -157,16 +170,47 @@ export default function Admin() {
         {active === "post" && (
           <div className="post-section">
             <h2>Post New Job</h2>
-            <form className="admin-form" onSubmit={handleSubmit}>
-              <input name="title" placeholder="Job Title" value={job.title} onChange={handleChange} required />
-              <input name="company" placeholder="Company Name" value={job.company} onChange={handleChange} required />
+            <form onSubmit={handleSubmit}>
+              <input name="title" placeholder="Title" value={job.title} onChange={handleChange} required />
+              <input name="company" placeholder="Company" value={job.company} onChange={handleChange} required />
               <input name="salary" placeholder="Salary" value={job.salary} onChange={handleChange} required />
               <input name="location" placeholder="Location" value={job.location} onChange={handleChange} required />
               <input name="experience" placeholder="Experience" value={job.experience} onChange={handleChange} required />
               <input name="skills" placeholder="Skills" value={job.skills} onChange={handleChange} required />
-              <textarea name="description" placeholder="Job Description" value={job.description} onChange={handleChange} required />
+              <textarea name="description" placeholder="Description" value={job.description} onChange={handleChange} required />
               <button type="submit">Post Job</button>
             </form>
+          </div>
+        )}
+
+        {/* MANAGE JOBS */}
+        {active === "manage" && (
+          <div className="jobs-grid">
+            {jobs.map((j) => (
+              <div key={j._id} className="job-card">
+                <h4>{j.title}</h4>
+                <p>{j.company}</p>
+                <p>₹ {j.salary}</p>
+                <p>{j.location}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* APPLICATIONS */}
+        {active === "applications" && (
+          <div className="jobs-grid">
+            {applications.length === 0 ? (
+              <p>No applications yet</p>
+            ) : (
+              applications.map((app) => (
+                <div key={app._id} className="job-card">
+                  <h4>{app.jobId?.title}</h4>
+                  <p>Applicant: {app.applicantEmail}</p>
+                  <p>Company: {app.jobId?.company}</p>
+                </div>
+              ))
+            )}
           </div>
         )}
 
@@ -178,46 +222,13 @@ export default function Admin() {
             ) : (
               profiles.map((profile) => (
                 <div key={profile._id} className="job-card">
-
                   <h3>{profile.name}</h3>
-                  <p><strong>Email:</strong> {profile.email}</p>
-                  <p><strong>Role:</strong> {profile.role}</p>
-                  <p><strong>Location:</strong> {profile.location}</p>
-                  <p><strong>Phone:</strong> {profile.phone}</p>
-
-                  <hr />
-
-                  <h4>Summary</h4>
-                  <p>{profile.summary}</p>
+                  <p>Email: {profile.email}</p>
+                  <p>Role: {profile.role}</p>
+                  <p>Location: {profile.location}</p>
 
                   <h4>Skills</h4>
                   <p>{profile.skills?.join(", ")}</p>
-
-                  <h4>Education</h4>
-                  {profile.education?.map((edu, i) => (
-                    <div key={i}>
-                      <strong>{edu.level}</strong> - {edu.university}
-                    </div>
-                  ))}
-
-                  <h4>Experience</h4>
-                  {profile.experience?.map((exp, i) => (
-                    <div key={i}>
-                      {exp.title} at {exp.company}
-                    </div>
-                  ))}
-
-                  <h4>Certifications</h4>
-                  {profile.certifications?.map((cert, i) => (
-                    <div key={i}>
-                      {cert.name} - {cert.organization}
-                    </div>
-                  ))}
-
-                  <h4>Personal</h4>
-                  <p>DOB: {profile.personal?.dob}</p>
-                  <p>Gender: {profile.personal?.gender}</p>
-                  <p>Languages: {profile.personal?.languages}</p>
 
                   {profile.resume && (
                     <a
@@ -228,7 +239,6 @@ export default function Admin() {
                       📄 View Resume
                     </a>
                   )}
-
                 </div>
               ))
             )}
