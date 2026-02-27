@@ -231,7 +231,11 @@ export default function Admin() {
                   <p>{profile.skills?.join(", ")}</p>
 
                   {profile.resume && (
-                    <a href={profile.resume} target="_blank">
+                    <a
+                      href={profile.resume}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       View Resume
                     </a>
                   )}
