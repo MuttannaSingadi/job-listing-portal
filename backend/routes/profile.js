@@ -3,15 +3,18 @@ const router = express.Router();
 
 const Profile = require("../models/Profile");
 const { protect } = require("../middleware/authMiddleware");
+
 const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("../config/cloudinary");
+
+/* ================= CLOUDINARY STORAGE SETUP ================= */
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: "resumes",
-    resource_type: "raw", // important for pdf
+    resource_type: "raw", // IMPORTANT for PDF/DOC
     allowed_formats: ["pdf", "doc", "docx"],
   },
 });
@@ -51,18 +54,20 @@ router.put("/", protect, upload.single("resume"), async (req, res) => {
       "personal",
     ];
 
+    // Parse JSON fields safely
     fieldsToParse.forEach((field) => {
       if (updateData[field]) {
         try {
           updateData[field] = JSON.parse(updateData[field]);
         } catch (err) {
-          // ignore
+          console.log(`Skipping parse for ${field}`);
         }
       }
     });
 
+    // If resume uploaded
     if (req.file) {
-     updateData.resume = req.file.path;
+      updateData.resume = req.file.path; // Cloudinary secure URL
     }
 
     const updatedProfile = await Profile.findOneAndUpdate(
@@ -72,7 +77,6 @@ router.put("/", protect, upload.single("resume"), async (req, res) => {
     );
 
     res.json(updatedProfile);
-
   } catch (error) {
     console.error("UPDATE PROFILE ERROR:", error);
     res.status(500).json({ message: error.message });
