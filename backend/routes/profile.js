@@ -22,7 +22,7 @@ const storage = new CloudinaryStorage({
 
     return {
       folder: "resumes",
-      resource_type: "raw",  // ✅ IMPORTANT
+      resource_type: "raw",
       allowed_formats: ["pdf"],
       public_id: nameWithoutExt,
       format: extension,
@@ -44,7 +44,9 @@ router.get("/", protect, async (req, res) => {
 
     res.json(profile);
   } catch (error) {
-    console.error("GET PROFILE ERROR:", error);
+    console.error("GET PROFILE ERROR:");
+    console.error(error.message);
+    console.error(error.stack);
     res.status(500).json({ message: error.message });
   }
 });
@@ -53,32 +55,52 @@ router.get("/", protect, async (req, res) => {
 
 router.put("/", protect, upload.single("resume"), async (req, res) => {
   try {
-    const updateData = { ...req.body };
+    const updateData = {};
 
-    const fieldsToParse = [
-      "skills",
-      "education",
-      "experience",
-      "projects",
-      "certifications",
-      "links",
-      "personal",
-    ];
+    // Normal text fields
+    updateData.name = req.body.name || "";
+    updateData.role = req.body.role || "";
+    updateData.location = req.body.location || "";
+    updateData.email = req.body.email || "";
+    updateData.phone = req.body.phone || "";
+    updateData.summary = req.body.summary || "";
 
     // Safely parse JSON fields
-    fieldsToParse.forEach((field) => {
-      if (updateData[field]) {
-        try {
-          updateData[field] = JSON.parse(updateData[field]);
-        } catch (err) {
-          console.log(`Skipping parse for ${field}`);
-        }
+    const parseField = (field) => {
+      if (!req.body[field]) return [];
+      try {
+        return JSON.parse(req.body[field]);
+      } catch {
+        return [];
       }
-    });
+    };
+
+    updateData.skills = parseField("skills");
+    updateData.education = parseField("education");
+    updateData.experience = parseField("experience");
+    updateData.projects = parseField("projects");
+    updateData.certifications = parseField("certifications");
+
+    // Objects
+    try {
+      updateData.links = req.body.links
+        ? JSON.parse(req.body.links)
+        : {};
+    } catch {
+      updateData.links = {};
+    }
+
+    try {
+      updateData.personal = req.body.personal
+        ? JSON.parse(req.body.personal)
+        : {};
+    } catch {
+      updateData.personal = {};
+    }
 
     // If resume uploaded
     if (req.file) {
-      updateData.resume = req.file.path; // Cloudinary URL
+      updateData.resume = req.file.path;
     }
 
     const updatedProfile = await Profile.findOneAndUpdate(
@@ -89,7 +111,9 @@ router.put("/", protect, upload.single("resume"), async (req, res) => {
 
     res.json(updatedProfile);
   } catch (error) {
-    console.error("UPDATE PROFILE ERROR:", error);
+    console.error("UPDATE PROFILE ERROR:");
+    console.error(error.message);
+    console.error(error.stack);
     res.status(500).json({ message: error.message });
   }
 });
