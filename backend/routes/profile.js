@@ -13,19 +13,12 @@ const cloudinary = require("../config/cloudinary");
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
-    const originalName = file.originalname;
-    const nameWithoutExt =
-      originalName.substring(0, originalName.lastIndexOf(".")) ||
-      originalName;
-
-    const extension = originalName.split(".").pop();
-
     return {
       folder: "resumes",
       resource_type: "raw",
       allowed_formats: ["pdf"],
-      public_id: nameWithoutExt,
-      format: extension,
+      public_id: Date.now() + "-" + file.originalname.split(".")[0],
+      format: file.originalname.split(".").pop(),
     };
   },
 });
@@ -44,8 +37,7 @@ router.get("/", protect, async (req, res) => {
 
     res.json(profile);
   } catch (error) {
-    console.error("GET PROFILE ERROR:");
-    console.error(error.message);
+    console.error("GET PROFILE ERROR:", error.message);
     console.error(error.stack);
     res.status(500).json({ message: error.message });
   }
@@ -53,69 +45,69 @@ router.get("/", protect, async (req, res) => {
 
 /* ================= UPDATE PROFILE ================= */
 
-router.put("/", protect, upload.single("resume"), async (req, res) => {
-  try {
-    const updateData = {};
-
-    // Normal text fields
-    updateData.name = req.body.name || "";
-    updateData.role = req.body.role || "";
-    updateData.location = req.body.location || "";
-    updateData.email = req.body.email || "";
-    updateData.phone = req.body.phone || "";
-    updateData.summary = req.body.summary || "";
-
-    // Safely parse JSON fields
-    const parseField = (field) => {
-      if (!req.body[field]) return [];
-      try {
-        return JSON.parse(req.body[field]);
-      } catch {
-        return [];
+router.put(
+  "/",
+  protect,
+  (req, res, next) => {
+    upload.single("resume")(req, res, function (err) {
+      if (err) {
+        console.error("MULTER ERROR:", err);
+        return res.status(500).json({ message: "File upload failed" });
       }
-    };
-
-    updateData.skills = parseField("skills");
-    updateData.education = parseField("education");
-    updateData.experience = parseField("experience");
-    updateData.projects = parseField("projects");
-    updateData.certifications = parseField("certifications");
-
-    // Objects
+      next();
+    });
+  },
+  async (req, res) => {
     try {
-      updateData.links = req.body.links
-        ? JSON.parse(req.body.links)
-        : {};
-    } catch {
-      updateData.links = {};
+      console.log("BODY RECEIVED:", req.body);
+      console.log("FILE RECEIVED:", req.file);
+
+      const updateData = {};
+
+      // Normal fields
+      updateData.name = req.body.name || "";
+      updateData.role = req.body.role || "";
+      updateData.location = req.body.location || "";
+      updateData.email = req.body.email || "";
+      updateData.phone = req.body.phone || "";
+      updateData.summary = req.body.summary || "";
+
+      // Safe JSON parser
+      const safeParse = (value, defaultValue) => {
+        try {
+          return value ? JSON.parse(value) : defaultValue;
+        } catch {
+          return defaultValue;
+        }
+      };
+
+      updateData.skills = safeParse(req.body.skills, []);
+      updateData.education = safeParse(req.body.education, []);
+      updateData.experience = safeParse(req.body.experience, []);
+      updateData.projects = safeParse(req.body.projects, []);
+      updateData.certifications = safeParse(req.body.certifications, []);
+      updateData.links = safeParse(req.body.links, {});
+      updateData.personal = safeParse(req.body.personal, {});
+
+      // Resume upload
+      if (req.file) {
+        updateData.resume = req.file.path;
+      }
+
+      const updatedProfile = await Profile.findOneAndUpdate(
+        { userId: req.user.id },
+        updateData,
+        { new: true, upsert: true }
+      );
+
+      res.json(updatedProfile);
+
+    } catch (error) {
+      console.error("UPDATE PROFILE ERROR:", error.message);
+      console.error(error.stack);
+      res.status(500).json({ message: error.message });
     }
-
-    try {
-      updateData.personal = req.body.personal
-        ? JSON.parse(req.body.personal)
-        : {};
-    } catch {
-      updateData.personal = {};
-    }
-
-    // If resume uploaded
-    if (req.file) {
-      updateData.resume = req.file.path;
-    }
-
-    const updatedProfile = await Profile.findOneAndUpdate(
-      { userId: req.user.id },
-      updateData,
-      { new: true, upsert: true }
-    );
-
-    res.json(updatedProfile);
-  } catch (error) {
-    console.error("UPDATE PROFILE ERROR:");
-    console.error(error.message);
-    console.error(error.stack);
-    res.status(500).json({ message: error.message });
   }
-});
+);
 
 module.exports = router;
