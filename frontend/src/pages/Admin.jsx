@@ -232,7 +232,10 @@ export default function Admin() {
 
                   {profile.resume && (
                     <a
-                      href={`${profile.resume}?fl_attachment=true`}
+                      href={profile.resume.replace(
+                        "/upload/",
+                        "/upload/fl_attachment/"
+                      )}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
