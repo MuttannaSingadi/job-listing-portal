@@ -214,16 +214,36 @@ export default function Admin() {
           </div>
         )}
 
-        {profile.resume && (
-          <a
-            href={`${profile.resume}?fl_attachment=true`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            View Resume
-          </a>
-        )}
+        {/* CANDIDATES */}
+        {active === "profiles" && (
+          <div className="jobs-grid">
+            {profiles.length === 0 ? (
+              <p>No candidates yet</p>
+            ) : (
+              profiles.map((profile) => (
+                <div key={profile._id} className="job-card">
+                  <h3>{profile.name}</h3>
+                  <p>Email: {profile.email}</p>
+                  <p>Role: {profile.role}</p>
+                  <p>Location: {profile.location}</p>
 
+                  <h4>Skills</h4>
+                  <p>{profile.skills?.join(", ")}</p>
+
+                  {profile.resume && (
+                    <a
+                      href={`${profile.resume}?fl_attachment=true`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View Resume
+                    </a>
+                  )}
+                </div>
+              ))
+            )}
+          </div>
+        )}
 
       </div>
     </div>
