@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./admin.css";
+import profile from "../assets/image.png";
 
 const API =
   import.meta.env.VITE_API_URL ||
@@ -123,29 +124,36 @@ export default function Admin() {
   };
 
   return (
-    <div className="admin-wrapper">
+   <div className="admin-wrapper">
 
-      {/* SIDEBAR */}
-      <div className="sidebar">
-        <h2 className="brand">DevHire</h2>
-        <ul>
-          <li onClick={() => setActive("dashboard")}>Dashboard</li>
-          <li onClick={() => setActive("post")}>Post Job</li>
-          <li onClick={() => setActive("manage")}>Manage Jobs</li>
-          <li onClick={() => setActive("applications")}>Applications</li>
-          <li onClick={() => setActive("profiles")}>Candidates</li>
-          <li
-            onClick={() => {
-              localStorage.removeItem("token");
-              navigate("/");
-            }}
-          >
-            Logout
-          </li>
-        </ul>
+      {/* ===== TOP NAVBAR ===== */}
+      <div className="top-navbar">
+
+        <div className="nav-left">
+          <h2 className="brand">DevHire</h2>
+        </div>
+
+        <div className="nav-center">
+          <ul>
+            <li onClick={() => setActive("dashboard")}>Dashboard</li>
+            <li onClick={() => setActive("post")}>Post Job</li>
+            <li onClick={() => setActive("manage")}>Manage Jobs</li>
+            <li onClick={() => setActive("applications")}>Applications</li>
+            <li onClick={() => setActive("profiles")}>Candidates</li>
+          </ul>
+        </div>
+
+        <div className="nav-right">
+          <div className="profile-img">
+            <img src={profile} alt="Profile" />
+          </div>
+          <button className="logout-btn">Logout</button>
+        </div>
+
       </div>
 
-      {/* MAIN */}
+      
+        {/* MAIN */}
       <div className="main">
 
         {/* DASHBOARD */}
