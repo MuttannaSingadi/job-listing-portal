@@ -157,6 +157,7 @@ body {
   width: 100%;
   justify-content: space-between;
   align-items: stretch;
+  margin-top: 30px;
 }
 
 /* Card Base */
@@ -446,6 +447,7 @@ body {
   gap: 30px;
   padding: 20px 0;
   animation: fadeIn 0.5s ease-in-out;
+  margin-top: 160px;
 }
 
 /* ================= JOB CARD ================= */

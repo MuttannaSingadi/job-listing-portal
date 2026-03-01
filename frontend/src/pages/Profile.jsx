@@ -75,49 +75,31 @@ export default function Profile() {
   }, []);
 
   /* ================= SAVE PROFILE ================= */
-  /* ================= SAVE PROFILE ================= */
   const saveProfile = async () => {
     try {
       const token = localStorage.getItem("token");
       const formData = new FormData();
 
-      // Append simple fields
-      formData.append("name", profile.name || "");
-      formData.append("role", profile.role || "");
-      formData.append("location", profile.location || "");
-      formData.append("email", profile.email || "");
-      formData.append("phone", profile.phone || "");
-      formData.append("summary", profile.summary || "");
+      Object.keys(profile).forEach((key) => {
+        if (typeof profile[key] === "object") {
+          formData.append(key, JSON.stringify(profile[key]));
+        } else {
+          formData.append(key, profile[key]);
+        }
+      });
 
-      // Append arrays as JSON
-      formData.append("skills", JSON.stringify(profile.skills || []));
-      formData.append("education", JSON.stringify(profile.education || []));
-      formData.append("experience", JSON.stringify(profile.experience || []));
-      formData.append("projects", JSON.stringify(profile.projects || []));
-      formData.append("certifications", JSON.stringify(profile.certifications || []));
-
-      // Append nested objects safely
-      formData.append("links", JSON.stringify(profile.links || {}));
-      formData.append("personal", JSON.stringify(profile.personal || {}));
-
-      // Only append resume if new file selected
       if (resumeFile) {
         formData.append("resume", resumeFile);
       }
 
       await axios.put(BACKEND_URL, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       alert("Profile Saved Successfully ✅");
       setEditMode(false);
-
     } catch (error) {
-      console.log("SAVE ERROR FULL:", error.response?.data || error.message);
-      alert("Profile Save Failed ❌");
+      console.log("SAVE ERROR:", error.response?.data || error);
     }
   };
 
