@@ -105,6 +105,7 @@ export default function Home() {
         )}
 
         {/* Hamburger */}
+        {/* Hamburger */}
         <div
           className="hamburger"
           onClick={() => setMenuOpen(!menuOpen)}
@@ -113,14 +114,33 @@ export default function Home() {
         </div>
 
         <div className={`nav-right ${menuOpen ? "open" : ""}`}>
-          <Link to="/jobs">Jobs</Link>
-          <Link to="/companies">Companies</Link>
-          <Link to="/admin">Admin</Link>
 
-          {!isLoggedIn && <Link to="/auth">Login</Link>}
+          <Link to="/jobs" onClick={() => setMenuOpen(false)}>
+            Jobs
+          </Link>
+
+          <Link to="/companies" onClick={() => setMenuOpen(false)}>
+            Companies
+          </Link>
+
+          <Link to="/admin" onClick={() => setMenuOpen(false)}>
+            Admin
+          </Link>
+
+          {!isLoggedIn && (
+            <Link to="/auth" onClick={() => setMenuOpen(false)}>
+              Login
+            </Link>
+          )}
 
           {isLoggedIn && (
-            <button className="mobile-logout" onClick={handleLogout}>
+            <button
+              className="mobile-logout"
+              onClick={() => {
+                setMenuOpen(false);
+                handleLogout();
+              }}
+            >
               Logout
             </button>
           )}
@@ -130,12 +150,23 @@ export default function Home() {
               <img
                 src={profile}
                 alt="Profile"
-                onClick={handleProfileClick}
+                onClick={() => {
+                  setMenuOpen(false);
+                  handleProfileClick();
+                }}
                 style={{ cursor: "pointer" }}
               />
-              <button onClick={handleLogout}>Logout</button>
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  handleLogout();
+                }}
+              >
+                Logout
+              </button>
             </div>
           )}
+
         </div>
       </div>
 
@@ -203,103 +234,103 @@ export default function Home() {
         </div>
 
       </section>
-     {/* ================= FEATURES SECTION ================= */}
-<section className="features-section">
+      {/* ================= FEATURES SECTION ================= */}
+      <section className="features-section">
 
-  {/* 🔥 SECTION HEADER */}
-  <div className="features-header">
-    <h2>Why Choose <span>DevHire</span>?</h2>
-    <p>
-      Powerful tools designed to connect job seekers with top employers 
-      and make hiring faster, smarter, and more efficient.
-    </p>
-  </div>
-
-  <div className="features-container">
-
-    {/* ===== LEFT SIDE ===== */}
-    <div className="features-column seekers">
-      <h3 className="features-title blue">
-        For Job Seekers
-      </h3>
-
-      <div className="feature-card">
-        <div className="icon blue-bg">🔍</div>
-        <div>
-          <h4>Smart Job Matching</h4>
-          <p>Sophisticated algorithms match you with jobs that fit your skills and preferences.</p>
+        {/* 🔥 SECTION HEADER */}
+        <div className="features-header">
+          <h2>Why Choose <span>DevHire</span>?</h2>
+          <p>
+            Powerful tools designed to connect job seekers with top employers
+            and make hiring faster, smarter, and more efficient.
+          </p>
         </div>
-      </div>
 
-      <div className="feature-card">
-        <div className="icon blue-bg">📄</div>
-        <div>
-          <h4>Resume Uploader</h4>
-          <p>Easily upload your resume and let employers find you.</p>
+        <div className="features-container">
+
+          {/* ===== LEFT SIDE ===== */}
+          <div className="features-column seekers">
+            <h3 className="features-title blue">
+              For Job Seekers
+            </h3>
+
+            <div className="feature-card">
+              <div className="icon blue-bg">🔍</div>
+              <div>
+                <h4>Smart Job Matching</h4>
+                <p>Sophisticated algorithms match you with jobs that fit your skills and preferences.</p>
+              </div>
+            </div>
+
+            <div className="feature-card">
+              <div className="icon blue-bg">📄</div>
+              <div>
+                <h4>Resume Uploader</h4>
+                <p>Easily upload your resume and let employers find you.</p>
+              </div>
+            </div>
+
+            <div className="feature-card">
+              <div className="icon blue-bg">💬</div>
+              <div>
+                <h4>Direct Communication</h4>
+                <p>Communicate directly with employers.</p>
+              </div>
+            </div>
+
+            <div className="feature-card">
+              <div className="icon blue-bg">🏅</div>
+              <div>
+                <h4>Skill Assessments</h4>
+                <p>Showcase your skills with verified assessments.</p>
+              </div>
+            </div>
+          </div>
+
+
+          {/* ===== RIGHT SIDE ===== */}
+          <div className="features-column employers">
+            <h3 className="features-title purple">
+              For Employers
+            </h3>
+
+            <div className="feature-card">
+              <div className="icon purple-bg">👥</div>
+              <div>
+                <h4>Access to Talent Pool</h4>
+                <p>Find and connect with top talent in your industry.</p>
+              </div>
+            </div>
+
+            <div className="feature-card">
+              <div className="icon purple-bg">📊</div>
+              <div>
+                <h4>Advanced Analytics</h4>
+                <p>Get insights on job postings and candidate engagement.</p>
+              </div>
+            </div>
+
+            <div className="feature-card">
+              <div className="icon purple-bg">🛡</div>
+              <div>
+                <h4>Verified Candidates</h4>
+                <p>All candidates undergo background verification to ensure quality hires.</p>
+              </div>
+            </div>
+
+            <div className="feature-card">
+              <div className="icon purple-bg">⏱</div>
+              <div>
+                <h4>Quick Hiring Process</h4>
+                <p>Streamline your hiring process with efficient tools.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
-      </div>
+      </section>
 
-      <div className="feature-card">
-        <div className="icon blue-bg">💬</div>
-        <div>
-          <h4>Direct Communication</h4>
-          <p>Communicate directly with employers.</p>
-        </div>
-      </div>
-
-      <div className="feature-card">
-        <div className="icon blue-bg">🏅</div>
-        <div>
-          <h4>Skill Assessments</h4>
-          <p>Showcase your skills with verified assessments.</p>
-        </div>
-      </div>
-    </div>
-
-
-    {/* ===== RIGHT SIDE ===== */}
-    <div className="features-column employers">
-      <h3 className="features-title purple">
-        For Employers
-      </h3>
-
-      <div className="feature-card">
-        <div className="icon purple-bg">👥</div>
-        <div>
-          <h4>Access to Talent Pool</h4>
-          <p>Find and connect with top talent in your industry.</p>
-        </div>
-      </div>
-
-      <div className="feature-card">
-        <div className="icon purple-bg">📊</div>
-        <div>
-          <h4>Advanced Analytics</h4>
-          <p>Get insights on job postings and candidate engagement.</p>
-        </div>
-      </div>
-
-      <div className="feature-card">
-        <div className="icon purple-bg">🛡</div>
-        <div>
-          <h4>Verified Candidates</h4>
-          <p>All candidates undergo background verification to ensure quality hires.</p>
-        </div>
-      </div>
-
-      <div className="feature-card">
-        <div className="icon purple-bg">⏱</div>
-        <div>
-          <h4>Quick Hiring Process</h4>
-          <p>Streamline your hiring process with efficient tools.</p>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-          {/* ================= COMPANY SECTION ================= */}
+      {/* ================= COMPANY SECTION ================= */}
       <section className="company-section">
         <h2 className="section-title">Top Hiring Companies</h2>
 
