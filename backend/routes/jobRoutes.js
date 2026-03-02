@@ -1,12 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-// ✅ IMPORT FIRST
 const { createJob, getJobs, searchJobs } = require("../controllers/jobController");
 const { protect } = require("../middleware/authMiddleware");
 
-// ✅ ROUTES
-router.post("/create", protect, createJob);   // protected create
+// ✅ FIXED ROUTES
+router.post("/", protect, createJob);   // now matches frontend
 router.get("/", getJobs);
 router.get("/search", searchJobs);
 
