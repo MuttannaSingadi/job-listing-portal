@@ -140,78 +140,231 @@ export default function Home() {
       </div>
 
       {/* ================= HERO ================= */}
-      <section className="hero">
-        <div className="search-wrapper">
-          <h1>Find Your Dream Job</h1>
-          <p>Search thousands of jobs from top companies</p>
+      {/* ================= MODERN HERO SECTION ================= */}
+      <section className="hero-modern">
 
-          <div className="search-box">
-            <input
-              name="title"
-              placeholder="Job title"
-              onChange={handleChange}
-            />
-            <input
-              name="location"
-              placeholder="Location"
-              onChange={handleChange}
-            />
-            <select name="experience" onChange={handleChange}>
-              <option value="">Experience</option>
-              <option value="0">Fresher</option>
-              <option value="1">1 Year</option>
-              <option value="2">2 Years</option>
-            </select>
-            <input
-              name="skills"
-              placeholder="Skills"
-              onChange={handleChange}
-            />
-            <button onClick={handleSearch}>Search</button>
-          </div>
-        </div>
-      </section>
+        <div className="hero-content">
 
-      {/* ================= JOBS ================= */}
-      <section className="jobs-section">
-        <h2 className="section-title">Recommended Jobs</h2>
+          <div className="hero-left">
+            <h1>
+              Unlock Your <span>Career Potential</span>
+            </h1>
 
-        <div className="jobs-grid">
-          {jobs.map((job) => (
-            <div key={job._id} className="job-card">
-              <h3>{job.title}</h3>
-              <p className="company">{job.company}</p>
+            <p>
+              Discover top opportunities from leading companies and take
+              the next step in your professional journey.
+            </p>
 
-              <div className="details">
-                <span>₹ {job.salary}</span>
-                <span>{job.location}</span>
-                <span>
-                  {job.experience === 0
-                    ? "Fresher"
-                    : `${job.experience} Years`}
-                </span>
+            <div className="hero-buttons">
+              <button className="primary-cta" onClick={() => navigate("/jobs")}>
+                Explore Jobs
+              </button>
+
+              <button className="secondary-cta" onClick={() => navigate("/profile")}>
+                Build Your Profile
+              </button>
+            </div>
+
+            <div className="hero-stats">
+              <div>
+                <h3>10K+</h3>
+                <p>Active Jobs</p>
               </div>
-
-              <p className="desc">{job.description}</p>
-
-              <div className="card-actions">
-                <button onClick={handleApply}>Apply</button>
-
-                <button
-                  className={
-                    followedCompanies.includes(job.company)
-                      ? "follow active"
-                      : "follow"
-                  }
-                  onClick={() => handleFollow(job.company)}
-                >
-                  {followedCompanies.includes(job.company)
-                    ? "Following"
-                    : "Follow"}
-                </button>
+              <div>
+                <h3>5K+</h3>
+                <p>Companies</p>
+              </div>
+              <div>
+                <h3>25K+</h3>
+                <p>Job Seekers</p>
               </div>
             </div>
-          ))}
+          </div>
+
+          <div className="hero-right">
+            <div className="hero-card">
+              <h3>🔥 Trending Skills</h3>
+              <ul>
+                <li>React Developer</li>
+                <li>Node.js Engineer</li>
+                <li>Data Analyst</li>
+                <li>AI / ML Engineer</li>
+              </ul>
+            </div>
+
+            <div className="hero-card small">
+              <h4>✨ Get Hired Faster</h4>
+              <p>
+                Complete your profile and let recruiters discover you.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+     {/* ================= FEATURES SECTION ================= */}
+<section className="features-section">
+
+  {/* 🔥 SECTION HEADER */}
+  <div className="features-header">
+    <h2>Why Choose <span>DevHire</span>?</h2>
+    <p>
+      Powerful tools designed to connect job seekers with top employers 
+      and make hiring faster, smarter, and more efficient.
+    </p>
+  </div>
+
+  <div className="features-container">
+
+    {/* ===== LEFT SIDE ===== */}
+    <div className="features-column seekers">
+      <h3 className="features-title blue">
+        For Job Seekers
+      </h3>
+
+      <div className="feature-card">
+        <div className="icon blue-bg">🔍</div>
+        <div>
+          <h4>Smart Job Matching</h4>
+          <p>Sophisticated algorithms match you with jobs that fit your skills and preferences.</p>
+        </div>
+      </div>
+
+      <div className="feature-card">
+        <div className="icon blue-bg">📄</div>
+        <div>
+          <h4>Resume Uploader</h4>
+          <p>Easily upload your resume and let employers find you.</p>
+        </div>
+      </div>
+
+      <div className="feature-card">
+        <div className="icon blue-bg">💬</div>
+        <div>
+          <h4>Direct Communication</h4>
+          <p>Communicate directly with employers.</p>
+        </div>
+      </div>
+
+      <div className="feature-card">
+        <div className="icon blue-bg">🏅</div>
+        <div>
+          <h4>Skill Assessments</h4>
+          <p>Showcase your skills with verified assessments.</p>
+        </div>
+      </div>
+    </div>
+
+
+    {/* ===== RIGHT SIDE ===== */}
+    <div className="features-column employers">
+      <h3 className="features-title purple">
+        For Employers
+      </h3>
+
+      <div className="feature-card">
+        <div className="icon purple-bg">👥</div>
+        <div>
+          <h4>Access to Talent Pool</h4>
+          <p>Find and connect with top talent in your industry.</p>
+        </div>
+      </div>
+
+      <div className="feature-card">
+        <div className="icon purple-bg">📊</div>
+        <div>
+          <h4>Advanced Analytics</h4>
+          <p>Get insights on job postings and candidate engagement.</p>
+        </div>
+      </div>
+
+      <div className="feature-card">
+        <div className="icon purple-bg">🛡</div>
+        <div>
+          <h4>Verified Candidates</h4>
+          <p>All candidates undergo background verification to ensure quality hires.</p>
+        </div>
+      </div>
+
+      <div className="feature-card">
+        <div className="icon purple-bg">⏱</div>
+        <div>
+          <h4>Quick Hiring Process</h4>
+          <p>Streamline your hiring process with efficient tools.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+          {/* ================= COMPANY SECTION ================= */}
+      <section className="company-section">
+        <h2 className="section-title">Top Hiring Companies</h2>
+
+        <div className="company-grid">
+
+          <div className="company-card">
+            <img
+              src="https://cdn.brandfetch.io/google.com/w/400/h/400"
+              alt="Google"
+            />
+            <h3>Google</h3>
+            <p>Bangalore, India</p>
+            <button className="view-btn">View Open Roles</button>
+          </div>
+
+          <div className="company-card">
+            <img
+              src="https://cdn.brandfetch.io/microsoft.com/w/400/h/400"
+              alt="Microsoft"
+            />
+            <h3>Microsoft</h3>
+            <p>Hyderabad, India</p>
+            <button className="view-btn">View Open Roles</button>
+          </div>
+
+          <div className="company-card">
+            <img
+              src="https://cdn.brandfetch.io/amazon.com/w/400/h/400"
+              alt="Amazon"
+            />
+            <h3>Amazon</h3>
+            <p>Chennai, India</p>
+            <button className="view-btn">View Open Roles</button>
+          </div>
+
+          <div className="company-card">
+            <img
+              src="https://cdn.brandfetch.io/infosys.com/w/400/h/400"
+              alt="Infosys"
+            />
+            <h3>Infosys</h3>
+            <p>Pune, India</p>
+            <button className="view-btn">View Open Roles</button>
+          </div>
+
+          <div className="company-card">
+            <img
+              src="https://cdn.brandfetch.io/tcs.com/w/400/h/400"
+              alt="TCS"
+            />
+            <h3>TCS</h3>
+            <p>Mumbai, India</p>
+            <button className="view-btn">View Open Roles</button>
+          </div>
+
+          <div className="company-card">
+            <img
+              src="https://cdn.brandfetch.io/wipro.com/w/400/h/400"
+              alt="Wipro"
+            />
+            <h3>Wipro</h3>
+            <p>Bangalore, India</p>
+            <button className="view-btn">View Open Roles</button>
+          </div>
+
         </div>
       </section>
 
