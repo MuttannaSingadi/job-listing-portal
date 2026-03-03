@@ -1,5 +1,4 @@
 /* ================= GLOBAL ================= */
-/* ================= GLOBAL ================= */
 * {
   margin: 0;
   padding: 0;
@@ -30,8 +29,9 @@ body {
 
 /* Logo */
 .brand img {
-  height: 55px;
-  cursor: pointer;
+  height: 45px;
+  width: auto;
+  object-fit: contain;
 }
 
 /* ================= DESKTOP NAV ================= */
@@ -61,7 +61,7 @@ body {
   cursor: pointer;
 }
 
-/* Profile Section */
+/* Profile */
 .profile-section {
   display: flex;
   align-items: center;
@@ -73,6 +73,7 @@ body {
   height: 38px;
   border-radius: 50%;
   border: 2px solid white;
+  object-fit: cover;
 }
 
 .profile-section button {
@@ -85,8 +86,8 @@ body {
   font-weight: 600;
 }
 
-/* ================= MOBILE ================= */
 
+/* ================= MOBILE NAV ================= */
 @media (max-width: 768px) {
 
   .top-header {
@@ -99,38 +100,69 @@ body {
     z-index: 2001;
   }
 
-  /* Hide desktop nav layout */
+  /* Drawer */
   .nav-right {
     position: fixed;
     top: 0;
     right: -100%;
-    width: 80%;
-    height: 100vh;
-    background: #244a66;
+    width: 40%;
+    height: 60vh;
+    background: #8a8e90;
+
+    display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 35px;
+
+    padding: 100px 30px 30px 30px;  /* better spacing */
+
+    gap: 25px;
+
     transition: right 0.4s ease;
     z-index: 2000;
+
+    overflow-y: auto;
+
+    align-items: flex-start;   /* 🔥 FIX alignment */
   }
 
-  /* When open */
   .nav-right.open {
     right: 0;
   }
 
   .nav-right a {
-    font-size: 22px;
+    font-size: 20px;
+    color: white;
   }
 
+  /* Profile block inside drawer */
   .profile-section {
-    flex-direction: column;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .profile-section img {
+    width: 42px;
+    height: 42px;
+  }
+
+  /* Hide desktop profile in header */
+  .desktop-profile {
+    display: none;
+  }
+
+  /* Hide header profile when menu open */
+  .mobile-profile.hide {
+    display: none;
   }
 }
 
-/* ================= OVERLAY ================= */
+/* Hide mobile profile on desktop */
+.mobile-profile {
+  display: none;
+}
 
+/* Overlay */
 .menu-overlay {
   position: fixed;
   top: 0;
@@ -140,7 +172,6 @@ body {
   background: rgba(0,0,0,0.4);
   z-index: 1500;
 }
-
 /* ================= MODERN HERO ================= */
 
 .hero-modern {
@@ -157,8 +188,6 @@ body {
   margin: auto;
   flex-wrap: wrap;
 }
-
-/* LEFT SIDE */
 
 .hero-left {
   flex: 1;
@@ -182,8 +211,6 @@ body {
   margin-bottom: 30px;
   max-width: 500px;
 }
-
-/* BUTTONS */
 
 .hero-buttons {
   display: flex;
@@ -223,8 +250,6 @@ body {
   color: white;
 }
 
-/* STATS */
-
 .hero-stats {
   display: flex;
   gap: 40px;
@@ -239,8 +264,6 @@ body {
   font-size: 13px;
   color: #6b7280;
 }
-
-/* RIGHT SIDE */
 
 .hero-right {
   flex: 1;
@@ -262,203 +285,14 @@ body {
   box-shadow: 0 25px 50px rgba(0,0,0,0.12);
 }
 
-.hero-card ul {
-  margin-top: 10px;
-  padding-left: 18px;
-}
-
 .hero-card.small {
   background: linear-gradient(135deg, #4f46e5, #6366f1);
   color: white;
 }
 
-/* RESPONSIVE */
-
-@media (max-width: 768px) {
-  .hero-modern {
-    padding: 60px 20px;
-  }
-
-  .hero-left h1 {
-    font-size: 32px;
-  }
-
-  .hero-stats {
-    gap: 20px;
-  }
-}
-
-/* ================= RESPONSIVE ================= */
-@media (max-width: 768px) {
-
-  body {
-    padding-top: 80px;
-  }
-
-  .hamburger {
-    display: block;
-  }
-
-  /* Hide menu by default */
-  .nav-right {
-    position: absolute;
-    top: 75px;
-    right: 0;
-    background: #244a66;
-    width: 220px;
-    flex-direction: column;
-    padding: 20px;
-    display: none;
-    border-radius: 0 0 0 12px;
-    z-index: 1000;
-  }
-
-  /* Show only when open */
-  .nav-right.open {
-    display: flex;
-  }
-
-  .nav-right a {
-    padding: 8px 0;
-  }
-
-  /* FIX: Profile stays inside menu */
-  .profile-section {
-    flex-direction: column;
-    align-items: center;
-    margin-top: 15px;
-  }
-
-  .profile-section img {
-    width: 60px;
-    height: 60px;
-  }
-
-  .profile-section button {
-    width: 100%;
-  }
-
-  .search-box {
-    flex-direction: column;
-  }
-
-  .search-box input,
-  .search-box select,
-  .search-box button {
-    width: 100%;
-  }
-
-  .jobs-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .card-actions {
-    flex-direction: column;
-  }
-
-  .card-actions button {
-    width: 100%;
-  }
-}
-/* Hide mobile profile in desktop */
-.mobile-profile {
-  display: none;
-}
-
-/* Hide desktop profile in mobile */
-.desktop-profile {
-  display: flex;
-}
-
-/* Hide mobile profile in desktop */
-.mobile-profile {
-  display: none;
-}
-
-/* Hide hamburger in desktop */
-.hamburger {
-  display: none;
-}
-
-/* Desktop profile visible */
-.desktop-profile {
-  display: flex;
-}
-
-/* ================= MOBILE ================= */
-@media (max-width: 768px) {
-
-  .hamburger {
-    display: block;
-    font-size: 24px;
-    color: white;
-    cursor: pointer;
-  }
-
-  /* Show mobile profile */
-  .mobile-profile {
-    display: flex;
-    align-items: center;
-    margin-left: auto;
-    margin-right: 10px;
-  }
-
-  .mobile-profile img {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    border: 2px solid white;
-  }
-
-  /* Hide desktop profile */
-  .desktop-profile {
-    display: none;
-  }
-
-  /* Mobile menu */
-  .nav-right {
-    position: absolute;
-    top: 75px;
-    right: 0;
-    background: #244a66;
-    width: 220px;
-    flex-direction: column;
-    padding: 20px;
-    display: none;
-  }
-
-  .nav-right.open {
-    display: flex;
-  }
-
-  .nav-right a {
-    padding: 10px 0;
-    color: white;
-  }
-}
-.mobile-logout {
-  display: none;
-}
-
-/* Mobile */
-@media (max-width: 768px) {
-  .mobile-logout {
-    display: block;
-    background: white;
-    color: #244a66;
-    padding: 8px 12px;
-    border-radius: 20px;
-    border: none;
-    font-weight: 600;
-    margin-top: 10px;
-    cursor: pointer;
-  }
-}
-
 /* ================= FEATURES SECTION ================= */
 
 .features-section {
-  
   margin-top: -15px;
   padding: 100px 20px;
   background: linear-gradient(135deg, #f8fafc, #eef2ff);
@@ -582,6 +416,7 @@ body {
   color: #6b7280;
   line-height: 1.6;
 }
+
 /* ================= RESPONSIVE ================= */
 
 @media (max-width: 900px) {
@@ -668,6 +503,56 @@ body {
   transform: scale(1.08);
 }
 
+/* ===== MARQUEE CONTAINER ===== */
+
+.company-marquee {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+
+.company-track {
+  display: flex;
+  gap: 25px;
+  animation: scroll 35s linear infinite;
+}
+
+/* Duplicate trick for seamless loop */
+.company-track:hover {
+  animation-play-state: paused;
+}
+
+/* Cards */
+.company-card {
+  min-width: 220px;
+  flex-shrink: 0;
+}
+
+/* Animation */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* ===== MOBILE IMPROVEMENT ===== */
+
+@media (max-width: 768px) {
+
+  .company-card {
+    min-width: 180px;
+  }
+
+  .company-track {
+    gap: 15px;
+    animation: scroll 25s linear infinite;
+  }
+
+}
+
 /* ================= RESPONSIVE ================= */
 
 @media (max-width: 768px) {
@@ -683,11 +568,68 @@ body {
     padding: 25px 15px;
   }
 }
+
 /* ================= FOOTER ================= */
-footer {
+
+/* ================= FOOTER ================= */
+
+.footer {
   background: #244a66;
   color: white;
-  padding: 20px;
+  padding: 60px 20px 20px 20px;
+  margin-top: 80px;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+}
+
+.footer-column h3,
+.footer-column h4 {
+  margin-bottom: 15px;
+}
+
+.footer-column p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #e2e8f0;
+}
+
+.footer-column ul {
+  list-style: none;
+}
+
+.footer-column ul li {
+  margin-bottom: 10px;
+}
+
+.footer-column ul li a {
+  text-decoration: none;
+  color: #e2e8f0;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.footer-column ul li a:hover {
+  color: white;
+}
+
+.footer-bottom {
   text-align: center;
-  margin-top: 60px;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+  font-size: 13px;
+  color: #cbd5e1;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .footer {
+    padding: 40px 15px;
+  }
 }

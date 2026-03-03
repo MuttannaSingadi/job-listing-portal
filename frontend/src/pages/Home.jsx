@@ -94,6 +94,18 @@ export default function Home() {
           </Link>
         </div>
 
+        {/* Mobile Profile Icon (Header Only) */}
+        {isLoggedIn && (
+          <div className={`mobile-profile ${menuOpen ? "hide" : ""}`}>
+            <img
+              src={profile}
+              alt="Profile"
+              onClick={() => setMenuOpen(true)}
+              style={{ cursor: "pointer" }}
+            />
+          </div>
+        )}
+
         {/* Hamburger */}
         <div
           className="hamburger"
@@ -102,7 +114,7 @@ export default function Home() {
           {menuOpen ? "✕" : "☰"}
         </div>
 
-        {/* Navigation */}
+        {/* Drawer Navigation */}
         <div className={`nav-right ${menuOpen ? "open" : ""}`}>
 
           <Link to="/jobs" onClick={() => setMenuOpen(false)}>
@@ -125,32 +137,32 @@ export default function Home() {
             </Link>
           )}
 
+          {/* Profile + Logout INSIDE drawer */}
           {isLoggedIn && (
-            <>
-              <div className="profile-section">
-                <img
-                  src={profile}
-                  alt="Profile"
-                  onClick={() => {
-                    setMenuOpen(false);
-                    handleProfileClick();
-                  }}
-                  style={{ cursor: "pointer" }}
-                />
-                <button
-                  onClick={() => {
-                    setMenuOpen(false);
-                    handleLogout();
-                  }}
-                >
-                  Logout
-                </button>
-              </div>
-            </>
+            <div className="profile-section">
+              <img
+                src={profile}
+                alt="Profile"
+                onClick={() => {
+                  setMenuOpen(false);
+                  handleProfileClick();
+                }}
+                style={{ cursor: "pointer" }}
+              />
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  handleLogout();
+                }}
+              >
+                Logout
+              </button>
+            </div>
           )}
 
         </div>
 
+        {/* Overlay */}
         {menuOpen && (
           <div
             className="menu-overlay"
@@ -322,72 +334,108 @@ export default function Home() {
       <section className="company-section">
         <h2 className="section-title">Top Hiring Companies</h2>
 
-        <div className="company-grid">
+        <div className="company-marquee">
+          <div className="company-track">
 
-          <div className="company-card">
-            <img
-              src="https://cdn.brandfetch.io/google.com/w/400/h/400"
-              alt="Google"
-            />
-            <h3>Google</h3>
+            {/* Row 1 */}
+            <div className="company-card">
+              <img src="https://cdn.brandfetch.io/google.com/w/400/h/400" alt="Google" />
+              <h3>Google</h3>
+              <button className="view-btn">View Open Roles</button>
+            </div>
+
+            <div className="company-card">
+              <img src="https://cdn.brandfetch.io/microsoft.com/w/400/h/400" alt="Microsoft" />
+              <h3>Microsoft</h3>
+              <button className="view-btn">View Open Roles</button>
+            </div>
+
+            <div className="company-card">
+              <img src="https://cdn.brandfetch.io/amazon.com/w/400/h/400" alt="Amazon" />
+              <h3>Amazon</h3>
+              <button className="view-btn">View Open Roles</button>
+            </div>
+
+            <div className="company-card">
+              <img src="https://cdn.brandfetch.io/meta.com/w/400/h/400" alt="Meta" />
+              <h3>Meta</h3>
+              <button className="view-btn">View Open Roles</button>
+            </div>
+
+            <div className="company-card">
+              <img src="https://cdn.brandfetch.io/netflix.com/w/400/h/400" alt="Netflix" />
+              <h3>Netflix</h3>
+              <button className="view-btn">View Open Roles</button>
+            </div>
+
+            <div className="company-card">
+              <img src="https://cdn.brandfetch.io/infosys.com/w/400/h/400" alt="Infosys" />
+              <h3>Infosys</h3>
+              <button className="view-btn">View Open Roles</button>
+            </div>
+
+            <div className="company-card">
+              <img src="https://cdn.brandfetch.io/tcs.com/w/400/h/400" alt="TCS" />
+              <h3>TCS</h3>
+              <button className="view-btn">View Open Roles</button>
+            </div>
+
+            <div className="company-card">
+              <img src="https://cdn.brandfetch.io/wipro.com/w/400/h/400" alt="Wipro" />
+              <h3>Wipro</h3>
+              <button className="view-btn">View Open Roles</button>
+            </div>
+
+            <div className="company-card">
+              <img src="https://cdn.brandfetch.io/accenture.com/w/400/h/400" alt="Accenture" />
+              <h3>Accenture</h3>
+              <button className="view-btn">View Open Roles</button>
+            </div>
+
+            <div className="company-card">
+              <img src="https://cdn.brandfetch.io/oracle.com/w/400/h/400" alt="Oracle" />
+              <h3>Oracle</h3>
+              <button className="view-btn">View Open Roles</button>
+            </div>
+
+          </div>
+        </div>
+      </section>
+      {/* ================= FOOTER ================= */}
+      <footer className="footer">
+        <div className="footer-container">
+
+          <div className="footer-column">
+            <h3>DevHire</h3>
+            <p>
+              DevHire is a modern job portal connecting talented
+              developers with top companies across India.
+            </p>
+          </div>
+
+          <div className="footer-column">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><a href="/jobs">Jobs</a></li>
+              <li><a href="/companies">Companies</a></li>
+              <li><a href="/auth">Login</a></li>
+              <li><a href="/admin">Admin</a></li>
+            </ul>
+          </div>
+
+          <div className="footer-column">
+            <h4>Contact</h4>
+            <p>Email: support@devhire.com</p>
+            <p>Phone: +91 9876543210</p>
             <p>Bangalore, India</p>
-            <button className="view-btn">View Open Roles</button>
-          </div>
-
-          <div className="company-card">
-            <img
-              src="https://cdn.brandfetch.io/microsoft.com/w/400/h/400"
-              alt="Microsoft"
-            />
-            <h3>Microsoft</h3>
-            <p>Hyderabad, India</p>
-            <button className="view-btn">View Open Roles</button>
-          </div>
-
-          <div className="company-card">
-            <img
-              src="https://cdn.brandfetch.io/amazon.com/w/400/h/400"
-              alt="Amazon"
-            />
-            <h3>Amazon</h3>
-            <p>Chennai, India</p>
-            <button className="view-btn">View Open Roles</button>
-          </div>
-
-          <div className="company-card">
-            <img
-              src="https://cdn.brandfetch.io/infosys.com/w/400/h/400"
-              alt="Infosys"
-            />
-            <h3>Infosys</h3>
-            <p>Pune, India</p>
-            <button className="view-btn">View Open Roles</button>
-          </div>
-
-          <div className="company-card">
-            <img
-              src="https://cdn.brandfetch.io/tcs.com/w/400/h/400"
-              alt="TCS"
-            />
-            <h3>TCS</h3>
-            <p>Mumbai, India</p>
-            <button className="view-btn">View Open Roles</button>
-          </div>
-
-          <div className="company-card">
-            <img
-              src="https://cdn.brandfetch.io/wipro.com/w/400/h/400"
-              alt="Wipro"
-            />
-            <h3>Wipro</h3>
-            <p>Bangalore, India</p>
-            <button className="view-btn">View Open Roles</button>
           </div>
 
         </div>
-      </section>
 
-      {/* ================= FOOTER ================= */}
+        <div className="footer-bottom">
+          © {new Date().getFullYear()} DevHire. All Rights Reserved.
+        </div>
+      </footer>
       <footer>© 2026 DevHire. All rights reserved.</footer>
     </>
   );
