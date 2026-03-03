@@ -86,33 +86,23 @@ export default function Home() {
     <>
       {/* ================= NAVBAR ================= */}
       <div className="top-header">
+
+        {/* Logo */}
         <div className="brand">
           <Link to="/">
             <img src={logo} alt="DevHire Logo" />
           </Link>
         </div>
 
-        {/* Mobile Profile */}
-        {isLoggedIn && (
-          <div className="mobile-profile">
-            <img
-              src={profile}
-              alt="Profile"
-              onClick={handleProfileClick}
-              style={{ cursor: "pointer" }}
-            />
-          </div>
-        )}
-
-        {/* Hamburger */}
         {/* Hamburger */}
         <div
           className="hamburger"
           onClick={() => setMenuOpen(!menuOpen)}
         >
-          ☰
+          {menuOpen ? "✕" : "☰"}
         </div>
 
+        {/* Navigation */}
         <div className={`nav-right ${menuOpen ? "open" : ""}`}>
 
           <Link to="/jobs" onClick={() => setMenuOpen(false)}>
@@ -123,9 +113,11 @@ export default function Home() {
             Companies
           </Link>
 
-          <Link to="/admin" onClick={() => setMenuOpen(false)}>
-            Admin
-          </Link>
+          {isLoggedIn && (
+            <Link to="/admin" onClick={() => setMenuOpen(false)}>
+              Admin
+            </Link>
+          )}
 
           {!isLoggedIn && (
             <Link to="/auth" onClick={() => setMenuOpen(false)}>
@@ -134,43 +126,39 @@ export default function Home() {
           )}
 
           {isLoggedIn && (
-            <button
-              className="mobile-logout"
-              onClick={() => {
-                setMenuOpen(false);
-                handleLogout();
-              }}
-            >
-              Logout
-            </button>
-          )}
-
-          {isLoggedIn && (
-            <div className="profile-section desktop-profile">
-              <img
-                src={profile}
-                alt="Profile"
-                onClick={() => {
-                  setMenuOpen(false);
-                  handleProfileClick();
-                }}
-                style={{ cursor: "pointer" }}
-              />
-              <button
-                onClick={() => {
-                  setMenuOpen(false);
-                  handleLogout();
-                }}
-              >
-                Logout
-              </button>
-            </div>
+            <>
+              <div className="profile-section">
+                <img
+                  src={profile}
+                  alt="Profile"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    handleProfileClick();
+                  }}
+                  style={{ cursor: "pointer" }}
+                />
+                <button
+                  onClick={() => {
+                    setMenuOpen(false);
+                    handleLogout();
+                  }}
+                >
+                  Logout
+                </button>
+              </div>
+            </>
           )}
 
         </div>
-      </div>
 
-      {/* ================= HERO ================= */}
+        {menuOpen && (
+          <div
+            className="menu-overlay"
+            onClick={() => setMenuOpen(false)}
+          ></div>
+        )}
+
+      </div>
       {/* ================= MODERN HERO SECTION ================= */}
       <section className="hero-modern">
 
