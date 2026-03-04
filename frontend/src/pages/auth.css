@@ -75,6 +75,7 @@ body {
 /* ================= FORM ================= */
 .form-container {
   padding: 30px 25px;
+  
 }
 
 .form-container h2 {
@@ -184,7 +185,7 @@ body {
   }
 
   .container {
-    margin-top: 40px;
+    margin-top: 80px;
     max-width: 900px;
     display: flex;
   }
@@ -216,8 +217,8 @@ body {
 
   .container {
     display: block;
-    max-width: 100%;
-    margin: 20px 15px;
+    max-width: 90%;
+    margin: 90px 25px;
     border-radius: 15px;
   }
 
@@ -235,9 +236,15 @@ body {
   }
 
   .role-select {
-    flex-direction: column;
+    flex-direction: row;
     gap: 8px;
+    margin-right:100px;
   }
+
+  label{
+    margin-left: 140px;
+  }
+
 
   .overlay-container {
     padding: 25px 20px;

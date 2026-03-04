@@ -11,166 +11,214 @@ body {
   padding-top: 75px;
 }
 
-/* ================= NAVBAR ================= */
+/* ===== NAVBAR ===== */
 
-.top-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 75px;
-  padding: 0 40px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #244a66;
-  z-index: 1000;
+.top-header{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:70px;
+
+display:flex;
+align-items:center;
+justify-content:space-between;
+
+padding:0 40px;
+
+background:#244a66;
+
+z-index:7000;
 }
 
-/* Logo */
-.brand img {
-  height: 45px;
-  width: auto;
-  object-fit: contain;
+/* LEFT */
+
+.nav-left{
+display:flex;
+align-items:center;
+gap:15px;
 }
 
-/* ================= DESKTOP NAV ================= */
+/* LOGO */
 
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: 25px;
+.brand img{
+height:40px;
 }
 
-.nav-right a {
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-  transition: 0.3s;
+/* DESKTOP MENU */
+
+.desktop-menu{
+display:flex;
+align-items:center;
+gap:25px;
 }
 
-.nav-right a:hover {
-  color: #cbd5e1;
+.desktop-menu a{
+color:white;
+text-decoration:none;
+font-weight:500;
 }
 
-/* Hamburger hidden on desktop */
-.hamburger {
-  display: none;
-  font-size: 28px;
-  color: white;
-  cursor: pointer;
+/* PROFILE */
+
+.desktop-profile img{
+width:36px;
+height:36px;
+border-radius:50%;
+border:2px solid white;
+cursor:pointer;
 }
 
-/* Profile */
-.profile-section {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+/* LOGOUT */
+
+.logout-btn{
+background:white;
+color:#244a66;
+
+border:none;
+
+padding:6px 14px;
+
+border-radius:20px;
+
+cursor:pointer;
 }
 
-.profile-section img {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 2px solid white;
-  object-fit: cover;
+/* HAMBURGER */
+
+.hamburger{
+display:none;
+
+font-size:28px;
+
+color:white;
+
+cursor:pointer;
 }
 
-.profile-section button {
-  padding: 6px 14px;
-  border-radius: 20px;
-  border: none;
-  background: white;
-  color: #244a66;
-  cursor: pointer;
-  font-weight: 600;
+/* MOBILE PROFILE */
+
+.mobile-profile{
+display:none;
+}
+
+.mobile-profile img{
+width:34px;
+height:34px;
+margin-left: 340px;
+margin-top: 10px;
+
+border-radius:50%;
+
+border:2px solid white;
+}
+
+/* ===== MOBILE ===== */
+
+@media(max-width:768px){
+
+.desktop-menu{
+display:none;
+}
+
+.hamburger{
+display:block;
+}
+
+.mobile-profile{
+display:block;
+}
+
+/* MOBILE DRAWER */
+
+/* ===== MOBILE MENU ===== */
+
+.mobile-menu{
+
+position: fixed;
+
+top:70px;
+
+/* hide outside right */
+right:-100%;
+
+width:60%;
+max-width:140px;
+
+height:50vh;
+
+background:white;
+
+display:flex;
+flex-direction:column;
+
+gap:20px;
+
+padding:25px;
+
+transition:right 0.3s ease;
+
+z-index:10001;
+
+box-shadow:-5px 0 25px rgba(0,0,0,0.2);
+
+}
+
+/* when menu opens */
+
+.mobile-menu.open{
+right:0;
+}
+
+.close-menu{
+
+position:absolute;
+
+top:15px;
+right:15px;
+
+font-size:24px;
+
+background:none;
+border:none;
+
+cursor:pointer;
+
+}
+
+/* menu items */
+
+.mobile-menu a,
+.mobile-menu button{
+
+font-size:18px;
+color:rgba(0, 0, 0, 0.61);
+
+text-decoration:none;
+
+border:none;
+background:none;
+
+padding:12px 0;
+
+border-bottom:1px solid #e5e7eb;
+
+cursor:pointer;
+
 }
 
 
-/* ================= MOBILE NAV ================= */
-@media (max-width: 768px) {
-
-  .top-header {
-    padding: 0 20px;
-  }
-
-  /* Show hamburger */
-  .hamburger {
-    display: block;
-    z-index: 2001;
-  }
-
-  /* Drawer */
-  .nav-right {
-    position: fixed;
-    top: 0;
-    right: -100%;
-    width: 40%;
-    height: 60vh;
-    background: #8a8e90;
-
-    display: flex;
-    flex-direction: column;
-
-    padding: 100px 30px 30px 30px;  /* better spacing */
-
-    gap: 25px;
-
-    transition: right 0.4s ease;
-    z-index: 2000;
-
-    overflow-y: auto;
-
-    align-items: flex-start;   /* 🔥 FIX alignment */
-  }
-
-  .nav-right.open {
-    right: 0;
-  }
-
-  .nav-right a {
-    font-size: 20px;
-    color: white;
-  }
-
-  /* Profile block inside drawer */
-  .profile-section {
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .profile-section img {
-    width: 42px;
-    height: 42px;
-  }
-
-  /* Hide desktop profile in header */
-  .desktop-profile {
-    display: none;
-  }
-
-  /* Hide header profile when menu open */
-  .mobile-profile.hide {
-    display: none;
-  }
 }
 
-/* Hide mobile profile on desktop */
-.mobile-profile {
-  display: none;
-}
+.menu-overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.45);
 
-/* Overlay */
-.menu-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background: rgba(0,0,0,0.4);
-  z-index: 1500;
+z-index:10000;
 }
 /* ================= MODERN HERO ================= */
 
@@ -199,11 +247,13 @@ body {
   margin-bottom: 20px;
 }
 
-.hero-left h1 span {
-  background: linear-gradient(90deg, #4f46e5, #6366f1);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.gradient-text{
+background: linear-gradient(90deg, #4f46e5, #6366f1);
+background-clip: text;
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
 }
+
 
 .hero-left p {
   font-size: 16px;
@@ -407,6 +457,7 @@ body {
 
 .features-header h2 span {
   background: linear-gradient(90deg, #4f46e5, #7c3aed);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }

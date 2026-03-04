@@ -85,28 +85,70 @@ export default function Home() {
   return (
     <>
       {/* ================= NAVBAR ================= */}
+
       <div className="top-header">
 
-        {/* Logo */}
-        <div className="brand">
-          <Link to="/">
-            <img src={logo} alt="DevHire Logo" />
+        {/* LEFT */}
+        <div className="nav-left">
+
+          {/* Logo */}
+          <Link to="/" className="brand">
+            <img src={logo} alt="DevHire" />
           </Link>
+
         </div>
 
-        {/* Mobile Profile Icon (Header Only) */}
+
+        {/* DESKTOP MENU */}
+        <div className="nav-right desktop-menu">
+
+          <Link to="/jobs">Jobs</Link>
+
+          <a href="#companies">Companies</a>
+
+          {isLoggedIn && (
+            <Link to="/admin">Admin</Link>
+          )}
+
+          {!isLoggedIn && (
+            <Link to="/auth">Login</Link>
+          )}
+
+          {isLoggedIn && (
+            <>
+              <div className="desktop-profile">
+                <img
+                  src={profile}
+                  alt="profile"
+                  onClick={handleProfileClick}
+                />
+              </div>
+
+              <button
+                className="logout-btn"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </>
+          )}
+
+        </div>
+
+
+        {/* MOBILE PROFILE */}
         {isLoggedIn && (
-          <div className={`mobile-profile ${menuOpen ? "hide" : ""}`}>
+          <div className="mobile-profile">
             <img
               src={profile}
-              alt="Profile"
-              onClick={() => setMenuOpen(true)}
-              style={{ cursor: "pointer" }}
+              alt="profile"
+              onClick={handleProfileClick}
             />
           </div>
         )}
 
-        {/* Hamburger */}
+
+        {/* HAMBURGER */}
         <div
           className="hamburger"
           onClick={() => setMenuOpen(!menuOpen)}
@@ -114,63 +156,58 @@ export default function Home() {
           {menuOpen ? "✕" : "☰"}
         </div>
 
-        {/* Drawer Navigation */}
-        <div className={`nav-right ${menuOpen ? "open" : ""}`}>
-
-          <Link to="/jobs" onClick={() => setMenuOpen(false)}>
-            Jobs
-          </Link>
-
-          <Link to="/companies" onClick={() => setMenuOpen(false)}>
-            Companies
-          </Link>
-
-          {isLoggedIn && (
-            <Link to="/admin" onClick={() => setMenuOpen(false)}>
-              Admin
-            </Link>
-          )}
-
-          {!isLoggedIn && (
-            <Link to="/auth" onClick={() => setMenuOpen(false)}>
-              Login
-            </Link>
-          )}
-
-          {/* Profile + Logout INSIDE drawer */}
-          {isLoggedIn && (
-            <div className="profile-section">
-              <img
-                src={profile}
-                alt="Profile"
-                onClick={() => {
-                  setMenuOpen(false);
-                  handleProfileClick();
-                }}
-                style={{ cursor: "pointer" }}
-              />
-              <button
-                onClick={() => {
-                  setMenuOpen(false);
-                  handleLogout();
-                }}
-              >
-                Logout
-              </button>
-            </div>
-          )}
-
-        </div>
-
-        {/* Overlay */}
-        {menuOpen && (
-          <div
-            className="menu-overlay"
-            onClick={() => setMenuOpen(false)}
-          ></div>
-        )}
-
       </div>
+     
+      {/* ================= MOBILE MENU ================= */}
+
+<div
+  className={`mobile-menu ${menuOpen ? "open" : ""}`}
+  onClick={(e) => e.stopPropagation()}
+>
+
+  <Link to="/jobs" onClick={() => setMenuOpen(false)}>
+    Jobs
+  </Link>
+
+  <a href="#companies" onClick={() => setMenuOpen(false)}>
+    Companies
+  </a>
+
+  {isLoggedIn && (
+    <Link to="/admin" onClick={() => setMenuOpen(false)}>
+      Admin
+    </Link>
+  )}
+
+  {!isLoggedIn && (
+    <Link to="/auth" onClick={() => setMenuOpen(false)}>
+      Login
+    </Link>
+  )}
+
+  {isLoggedIn && (
+    <button
+      className="logout-btn"
+      onClick={() => {
+        handleLogout();
+        setMenuOpen(false);
+      }}
+    >
+      Logout
+    </button>
+  )}
+
+</div>
+
+
+      {/* ================= OVERLAY ================= */}
+
+      {menuOpen && (
+        <div
+          className="menu-overlay"
+          onClick={() => setMenuOpen(false)}
+        />
+      )}
       {/* ================= MODERN HERO SECTION ================= */}
       <section className="hero-modern">
 
@@ -178,7 +215,7 @@ export default function Home() {
 
           <div className="hero-left">
             <h1>
-              Unlock Your <span>Career Potential</span>
+              Unlock Your <span className="gradient-text">Career</span>
             </h1>
 
             <p>
@@ -331,7 +368,7 @@ export default function Home() {
       </section>
 
       {/* ================= COMPANY SECTION ================= */}
-      <section className="company-section">
+      <section id="companies" className="company-section">
         <h2 className="section-title">Top Hiring Companies</h2>
 
         <div className="company-marquee">

@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./admin.css";
 import profile from "../assets/image.png";
+import { FaArrowLeft } from "react-icons/fa";
+import logo from "../assets/image.png";
 
 const API =
   import.meta.env.VITE_API_URL ||
@@ -15,6 +17,7 @@ export default function Admin() {
   const [jobs, setJobs] = useState([]);
   const [applications, setApplications] = useState([]);
   const [profiles, setProfiles] = useState([]);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const [job, setJob] = useState({
     title: "",
@@ -123,23 +126,42 @@ export default function Admin() {
     }
   };
 
-  return (
-   <div className="admin-wrapper">
 
+  return (
+    <div className="admin-wrapper">
+        
       {/* ===== TOP NAVBAR ===== */}
       <div className="top-navbar">
 
         <div className="nav-left">
-          <h2 className="brand">DevHire</h2>
+          <button className="back-btn" onClick={() => navigate(-1)}>
+            <FaArrowLeft />
+          </button>
+
+         
+        {/* Logo */}
+        <div className="brand">
+          <Link to="/">
+            <img src={logo} alt="DevHire Logo" />
+          </Link>
+        </div>
         </div>
 
-        <div className="nav-center">
+        {/* Mobile Menu Button */}
+        <div
+          className="menu-btn"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          {menuOpen ? "✕" : "☰"}
+        </div>
+
+        <div className={`nav-center ${menuOpen ? "open" : ""}`}>
           <ul>
-            <li onClick={() => setActive("dashboard")}>Dashboard</li>
-            <li onClick={() => setActive("post")}>Post Job</li>
-            <li onClick={() => setActive("manage")}>Manage Jobs</li>
-            <li onClick={() => setActive("applications")}>Applications</li>
-            <li onClick={() => setActive("profiles")}>Candidates</li>
+            <li onClick={() => { setActive("dashboard"); setMenuOpen(false); }}>Dashboard</li>
+            <li onClick={() => { setActive("post"); setMenuOpen(false); }}>Post Job</li>
+            <li onClick={() => { setActive("manage"); setMenuOpen(false); }}>Manage Jobs</li>
+            <li onClick={() => { setActive("applications"); setMenuOpen(false); }}>Applications</li>
+            <li onClick={() => { setActive("profiles"); setMenuOpen(false); }}>Candidates</li>
           </ul>
         </div>
 
@@ -152,8 +174,15 @@ export default function Admin() {
 
       </div>
 
-      
-        {/* MAIN */}
+      {menuOpen && (
+        <div
+          className="menu-overlay"
+          onClick={() => setMenuOpen(false)}
+        ></div>
+      )}
+
+
+      {/* MAIN */}
       <div className="main">
 
         {/* DASHBOARD */}

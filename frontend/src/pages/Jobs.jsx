@@ -9,6 +9,10 @@ export default function Jobs() {
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+
+  /* ===== SAVE JOB STATE ===== */
+  const [savedJobs, setSavedJobs] = useState([]);
+
   const navigate = useNavigate();
 
   /* ================= FETCH JOBS ================= */
@@ -64,6 +68,15 @@ export default function Jobs() {
     }
   };
 
+  /* ================= SAVE JOB ================= */
+  const handleSave = (jobId) => {
+    if (savedJobs.includes(jobId)) {
+      setSavedJobs(savedJobs.filter((id) => id !== jobId));
+    } else {
+      setSavedJobs([...savedJobs, jobId]);
+    }
+  };
+
   return (
     <div className="jobs-page">
 
@@ -73,6 +86,7 @@ export default function Jobs() {
           <FaArrowLeft />
           Back
         </button>
+
         <div>
           <h1 className="jobs-title">Find Your Dream Job</h1>
           <p className="jobs-subtitle">
@@ -98,7 +112,8 @@ export default function Jobs() {
       ) : (
         <div className="jobs-grid">
           {filteredJobs.map((job) => (
-            <div key={job._id} className="job-card">
+            <div key={job._id} className="job-card fade-in">
+
               <h3>{job.title}</h3>
               <p className="company">{job.company}</p>
 
@@ -118,12 +133,27 @@ export default function Jobs() {
                 <span>{job.skills || "Skills not specified"}</span>
               </div>
 
-              <button
-                className="apply-btn"
-                onClick={() => handleApply(job._id)}
-              >
-                Apply Now
-              </button>
+              {/* BUTTONS */}
+              <div className="job-actions">
+
+                <button
+                  className="apply-btn"
+                  onClick={() => handleApply(job._id)}
+                >
+                  Apply Now
+                </button>
+
+                <button
+                  className={`save-job-btn ${
+                    savedJobs.includes(job._id) ? "saved" : ""
+                  }`}
+                  onClick={() => handleSave(job._id)}
+                >
+                  {savedJobs.includes(job._id) ? "Saved" : "Save"}
+                </button>
+
+              </div>
+
             </div>
           ))}
         </div>

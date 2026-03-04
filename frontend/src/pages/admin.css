@@ -15,6 +15,7 @@ body {
   color: #1f2937;
 }
 
+
 /* ================= WRAPPER ================= */
 .admin-wrapper {
   display: flex;
@@ -22,131 +23,267 @@ body {
   min-height: 100vh;
 }
 
-/* ================= NAVBAR ================= */
-.top-navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 70px;
+/* ================= ADMIN NAVBAR ================= */
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.admin-wrapper .top-navbar{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:70px;
 
-  padding: 0 50px;
+display:flex;
+align-items:center;
+justify-content:space-between;
 
-  background: linear-gradient(135deg, #4c1d95, #7c3aed);
-  color: white;
+padding:0 40px;
 
-  z-index: 9999;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+background:#244a66;
+color:white;
+
+z-index:10002; /* higher than overlay */
+
+box-shadow:0 4px 20px rgba(0,0,0,0.08);
+}
+
+/* ================= NAV LEFT ================= */
+
+.admin-wrapper .nav-left{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+/* Back Button */
+
+.admin-wrapper .back-btn{
+background:none;
+border:none;
+color:white;
+font-size:20px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.admin-wrapper .back-btn:hover{
+transform:scale(1.1);
+color:#c7d2fe;
 }
 
 /* Brand */
-.brand {
-  font-size: 20px;
-  font-weight: 600;
-  transition: 0.3s;
-}
 
-.brand:hover {
-  transform: scale(1.05);
+.admin-wrapper .brand{
+font-size:20px;
+font-weight:600;
+letter-spacing:0.5px;
 }
 
 /* ================= NAV CENTER ================= */
-.nav-center {
-  flex: 1;
-  display: flex;
-  justify-content: center;
+
+.admin-wrapper .nav-center{
+flex:1;
+display:flex;
+justify-content:center;
 }
 
-.nav-center ul {
-  display: flex;
-  gap: 35px;
-  list-style: none;
+.admin-wrapper .nav-center ul{
+display:flex;
+gap:35px;
+list-style:none;
 }
 
-.nav-center li {
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  position: relative;
-  transition: 0.3s ease;
+.admin-wrapper .nav-center li{
+cursor:pointer;
+font-size:14px;
+font-weight:500;
+position:relative;
+transition:0.3s ease;
 }
 
-.nav-center li:hover {
-  transform: translateY(-2px);
-  opacity: 0.85;
+/* Hover animation */
+
+.admin-wrapper .nav-center li:hover{
+transform:translateY(-2px);
+opacity:0.9;
 }
 
-/* Underline animation */
-.nav-center li::after {
-  content: "";
-  position: absolute;
-  bottom: -6px;
-  left: 0;
-  width: 0%;
-  height: 2px;
-  background: white;
-  transition: width 0.3s ease;
+/* underline animation */
+
+.admin-wrapper .nav-center li::after{
+content:"";
+position:absolute;
+bottom:-6px;
+left:0;
+width:0%;
+height:2px;
+background:white;
+transition:width 0.3s ease;
 }
 
-.nav-center li:hover::after {
-  width: 100%;
+.admin-wrapper .nav-center li:hover::after{
+width:100%;
 }
 
 /* ================= NAV RIGHT ================= */
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: 15px;
+
+.admin-wrapper .nav-right{
+display:flex;
+align-items:center;
+gap:15px;
 }
 
 /* Profile Image */
-.profile-img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 2px solid white;
-  transition: 0.3s ease;
+
+.admin-wrapper .profile-img{
+width:40px;
+height:40px;
+border-radius:50%;
+overflow:hidden;
+border:2px solid white;
 }
 
-.profile-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.profile-img:hover {
-  transform: scale(1.08);
-  box-shadow: 0 0 15px rgba(255,255,255,0.4);
+.admin-wrapper .profile-img img{
+width:100%;
+height:100%;
+object-fit:cover;
 }
 
 /* Logout Button */
-.logout-btn {
-  background: white;
-  color: #6d28d9;
-  border: none;
-  padding: 6px 14px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: 0.3s ease;
+
+.admin-wrapper .logout-btn{
+background:white;
+color:#6d28d9;
+border:none;
+padding:6px 14px;
+border-radius:20px;
+cursor:pointer;
+font-weight:500;
+transition:0.3s;
 }
 
-.logout-btn:hover {
-  transform: scale(1.08);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+.admin-wrapper .logout-btn:hover{
+transform:scale(1.05);
+box-shadow:0 6px 15px rgba(0,0,0,0.2);
 }
+
+/* ================= MENU BUTTON ================= */
+
+.admin-wrapper .menu-btn{
+display:none;
+font-size:26px;
+cursor:pointer;
+color:white;
+}
+
+
+
+/* ================= MOBILE DRAWER MENU ================= */
+
+@media(max-width:768px){
+
+.admin-wrapper .menu-btn{
+display:block;
+z-index:10001;
+}
+
+.admin-wrapper .nav-center{
+position:fixed;
+top:0;
+right:-260px;
+width:200px;
+height:60vh;
+
+background:#87898a;
+
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+
+transition:0.3s ease;
+
+z-index:10001;
+}
+
+.admin-wrapper .nav-center.open{
+right:0;
+}
+
+/* Drawer Menu */
+
+.admin-wrapper .nav-center{
+position: fixed;
+color:rgba(0, 0, 0, 0.61);
+top:70px;
+
+/* hide outside right */
+right:-100%;
+
+width:60%;
+max-width:140px;
+
+height:50vh;
+
+background:white;
+
+display:flex;
+flex-direction:column;
+
+gap:20px;
+
+padding:25px;
+
+transition:right 0.3s ease;
+
+z-index:10001;
+
+box-shadow:-5px 0 25px rgba(0,0,0,0.2);
+
+
+}
+
+/* When menu opens */
+
+.admin-wrapper .nav-center.open{
+right:0;
+}
+
+/* Menu list */
+
+.admin-wrapper .nav-center ul{
+flex-direction:column;
+gap:30px;
+}
+
+/* Hide profile */
+
+.admin-wrapper .nav-right{
+display:none;
+}
+
+}
+
+.menu-overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.45);
+
+z-index:10000;
+}
+
 
 /* ================= MAIN CONTENT ================= */
-.main {
-  margin-top: 70px;  /* VERY IMPORTANT */
-  padding: 50px;
-  flex: 1;
+
+.admin-wrapper .main{
+margin-top:70px;
+padding:40px;
+flex:1;
 }
+
+
 
 /* ================= PREMIUM DASHBOARD UI ================= */
 
@@ -269,32 +406,6 @@ body {
     gap: 20px;
   }
 }
-
-@media (max-width: 768px) {
-
-  .top-navbar {
-    flex-direction: column;
-    height: auto;
-    padding: 15px;
-    gap: 10px;
-  }
-
-  .nav-center {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .nav-center ul {
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: center;
-  }
-
-  .main {
-    padding: 25px;
-  }
-}
-
 /* ================= POST JOB SECTION ================= */
 
 .post-section {

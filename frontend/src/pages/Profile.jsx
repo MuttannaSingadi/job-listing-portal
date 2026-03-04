@@ -28,6 +28,7 @@ export default function Profile() {
   const [editMode, setEditMode] = useState(false);
   const [active, setActive] = useState("resume");
   const [resumeFile, setResumeFile] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const [newSkill, setNewSkill] = useState("");
   const [newEducation, setNewEducation] = useState({
@@ -170,6 +171,15 @@ export default function Profile() {
     <div className="dashboard">
 
       <header className="topbar">
+
+        {/* Mobile Menu Button */}
+        <button
+          className="menu-btn"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          ☰
+        </button>
+
         <h2>My Profile</h2>
 
         <div className="top-actions">
@@ -188,13 +198,16 @@ export default function Profile() {
       <div className="dashboard-body">
 
         {/* SIDEBAR */}
-        <aside className="sidebar">
+        <aside className={`sidebar ${menuOpen ? "open" : ""}`}>
           <ul>
             {sections.map((item) => (
               <li
                 key={item.id}
                 className={active === item.id ? "active" : ""}
-                onClick={() => handleScroll(item.id)}
+                onClick={() => {
+                  handleScroll(item.id);
+                  setMenuOpen(false); // close menu after click
+                }}
               >
                 {item.name}
               </li>
@@ -202,8 +215,15 @@ export default function Profile() {
           </ul>
         </aside>
 
+        {menuOpen && (
+          <div
+            className="overlay"
+            onClick={() => setMenuOpen(false)}
+          ></div>
+        )}
+
         {/* MAIN */}
-        <main className="main">
+        <main className="main2">
 
           {/* RESUME */}
           <section id="resume" className="card">
