@@ -154,14 +154,14 @@ textarea:focus {
   }
 
   .top-actions button{
-    padding: 8px 14px;
+    padding: 8px 8px;
     font-size: 14px;
     gap: 10px;
-    margin-left: 40px;
+    margin-left: 5px;
   }
   .sidebar ul {
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 5px;
   }
 
   .main2 {
