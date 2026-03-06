@@ -104,7 +104,7 @@ export default function Profile() {
 
       Object.keys(profile).forEach((key) => {
 
-        // ❗ Skip file fields
+        // Skip file fields
         if (key === "resume" || key === "profileImage") return;
 
         if (
@@ -138,6 +138,7 @@ export default function Profile() {
       });
       alert("Profile Saved Successfully ✅");
       setEditMode(false);
+      window.location.reload();
 
     } catch (error) {
       console.log("SAVE ERROR:", error.response?.data || error);

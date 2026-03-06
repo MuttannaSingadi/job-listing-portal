@@ -87,11 +87,11 @@ h1, h2, h3 {
   width: 100%;
 }
 
-.profile-image{
-display:flex;
-flex-direction:column;
-align-items:center;
-margin-bottom:20px;
+.profile-img{
+  width:140px;
+  height:140px;
+  border-radius:50%;
+  object-fit:cover;
 }
 
 .profile-image img{
