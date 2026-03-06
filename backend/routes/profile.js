@@ -32,6 +32,11 @@ if (file.fieldname === "profileImage") {
     public_id: Date.now() + "-profile"
   };
 }
+
+/* IMPORTANT DEFAULT RETURN */
+return {
+  folder: "others"
+};
 ```
 
 }
@@ -42,6 +47,7 @@ const upload = multer({ storage });
 /* ================= GET PROFILE ================= */
 
 router.get("/", protect, async (req, res) => {
+
 try {
 
 ```
@@ -62,6 +68,7 @@ res.status(500).json({ message: "Server error" });
 ```
 
 }
+
 });
 
 /* ================= UPDATE PROFILE ================= */
@@ -85,7 +92,7 @@ try {
 
   const updateData = {};
 
-  /* TEXT FIELDS */
+  /* NORMAL FIELDS */
 
   updateData.name = req.body.name || "";
   updateData.role = req.body.role || "";
@@ -112,7 +119,7 @@ try {
   updateData.links = safeParse(req.body.links, {});
   updateData.personal = safeParse(req.body.personal, {});
 
-  /* KEEP OLD RESUME IF NOT UPLOADED */
+  /* RESUME UPLOAD */
 
   if (req.files && req.files.resume) {
     updateData.resume = req.files.resume[0].path;
@@ -120,7 +127,7 @@ try {
     updateData.resume = existingProfile.resume;
   }
 
-  /* KEEP OLD IMAGE IF NOT UPLOADED */
+  /* PROFILE IMAGE UPLOAD */
 
   if (req.files && req.files.profileImage) {
     updateData.profileImage = req.files.profileImage[0].path;
