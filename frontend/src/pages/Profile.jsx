@@ -104,6 +104,9 @@ export default function Profile() {
 
       Object.keys(profile).forEach((key) => {
 
+        // ❗ Skip files (they will be added separately)
+        if (key === "resume" || key === "profileImage") return;
+
         if (
           key === "skills" ||
           key === "education" ||
@@ -115,15 +118,17 @@ export default function Profile() {
         ) {
           formData.append(key, JSON.stringify(profile[key]));
         } else {
-          formData.append(key, profile[key]);
+          formData.append(key, profile[key] || "");
         }
 
       });
 
+      // Resume upload
       if (resumeFile) {
         formData.append("resume", resumeFile);
       }
 
+      // Profile image upload
       if (profileImageFile) {
         formData.append("profileImage", profileImageFile);
       }
@@ -131,385 +136,411 @@ export default function Profile() {
       await axios.put(BACKEND_URL, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
         },
       });
 
       alert("Profile Saved Successfully ✅");
+
       setEditMode(false);
 
     } catch (error) {
+
       console.log("SAVE ERROR:", error.response?.data || error);
-    }
-  };
-
-  /* ================= ADD FUNCTIONS ================= */
-
-  const addSkill = () => {
-
-    if (newSkill.trim()) {
-
-      setProfile({
-        ...profile,
-        skills: [...profile.skills, newSkill],
-      });
-
-      setNewSkill("");
 
     }
-  };
-
-  const addEducation = () => {
-
-    if (newEducation.level && newEducation.university) {
-
-      setProfile({
-        ...profile,
-        education: [...profile.education, newEducation],
-      });
-
-      setNewEducation({
-        level: "",
-        university: "",
-        course: "",
-        specialization: "",
-        courseType: "",
-        startDate: "",
-        endDate: "",
-        completed: false,
-      });
-    }
-  };
-
-  const addExperience = () => {
-
-    if (newExperience.title) {
-
-      setProfile({
-        ...profile,
-        experience: [...profile.experience, newExperience],
-      });
-
-      setNewExperience({
-        title: "",
-        company: "",
-        year: "",
-      });
-
-    }
-  };
-
-  const addCertification = () => {
-
-    if (newCertification.name) {
-
-      setProfile({
-        ...profile,
-        certifications: [...profile.certifications, newCertification],
-      });
-
-      setNewCertification({
-        name: "",
-        organization: "",
-      });
-
-    }
-  };
-
-  /* ================= SCROLL ================= */
-
-  const handleScroll = (id) => {
-
-    setActive(id);
-
-    document
-      .getElementById(id)
-      ?.scrollIntoView({ behavior: "smooth" });
 
   };
 
-  const sections = [
-    { name: "Resume", id: "resume" },
-    { name: "Summary", id: "summary" },
-    { name: "Skills", id: "skills" },
-    { name: "Education", id: "education" },
-    { name: "Experience", id: "experience" },
-    { name: "Certifications", id: "certifications" },
-  ];
+  if (resumeFile) {
+    formData.append("resume", resumeFile);
+  }
 
-  return (
-    <div className="dashboard">
+  if (profileImageFile) {
+    formData.append("profileImage", profileImageFile);
+  }
 
-      <header className="topbar">
+  await axios.put(BACKEND_URL, formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
+    },
+  });
 
-        {/* Mobile Menu Button */}
-        <button
-          className="menu-btn"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          ☰
+  alert("Profile Saved Successfully ✅");
+  setEditMode(false);
+
+} catch (error) {
+  console.log("SAVE ERROR:", error.response?.data || error);
+}
+  };
+
+/* ================= ADD FUNCTIONS ================= */
+
+const addSkill = () => {
+
+  if (newSkill.trim()) {
+
+    setProfile({
+      ...profile,
+      skills: [...profile.skills, newSkill],
+    });
+
+    setNewSkill("");
+
+  }
+};
+
+const addEducation = () => {
+
+  if (newEducation.level && newEducation.university) {
+
+    setProfile({
+      ...profile,
+      education: [...profile.education, newEducation],
+    });
+
+    setNewEducation({
+      level: "",
+      university: "",
+      course: "",
+      specialization: "",
+      courseType: "",
+      startDate: "",
+      endDate: "",
+      completed: false,
+    });
+  }
+};
+
+const addExperience = () => {
+
+  if (newExperience.title) {
+
+    setProfile({
+      ...profile,
+      experience: [...profile.experience, newExperience],
+    });
+
+    setNewExperience({
+      title: "",
+      company: "",
+      year: "",
+    });
+
+  }
+};
+
+const addCertification = () => {
+
+  if (newCertification.name) {
+
+    setProfile({
+      ...profile,
+      certifications: [...profile.certifications, newCertification],
+    });
+
+    setNewCertification({
+      name: "",
+      organization: "",
+    });
+
+  }
+};
+
+/* ================= SCROLL ================= */
+
+const handleScroll = (id) => {
+
+  setActive(id);
+
+  document
+    .getElementById(id)
+    ?.scrollIntoView({ behavior: "smooth" });
+
+};
+
+const sections = [
+  { name: "Resume", id: "resume" },
+  { name: "Summary", id: "summary" },
+  { name: "Skills", id: "skills" },
+  { name: "Education", id: "education" },
+  { name: "Experience", id: "experience" },
+  { name: "Certifications", id: "certifications" },
+];
+
+return (
+  <div className="dashboard">
+
+    <header className="topbar">
+
+      {/* Mobile Menu Button */}
+      <button
+        className="menu-btn"
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+        ☰
+      </button>
+
+      <h2>My Profile</h2>
+
+      <div className="top-actions">
+        <button onClick={() => setEditMode(!editMode)}>
+          {editMode ? "View Mode" : "Edit Mode"}
         </button>
 
-        <h2>My Profile</h2>
-
-        <div className="top-actions">
-          <button onClick={() => setEditMode(!editMode)}>
-            {editMode ? "View Mode" : "Edit Mode"}
+        {editMode && (
+          <button onClick={saveProfile}>
+            Save Profile
           </button>
-
-          {editMode && (
-            <button onClick={saveProfile}>
-              Save Profile
-            </button>
-          )}
-        </div>
-      </header>
-
-      <div className="dashboard-body">
-
-        {/* SIDEBAR */}
-        <aside className={`sidebar ${menuOpen ? "open" : ""}`}>
-          <ul>
-            {sections.map((item) => (
-              <li
-                key={item.id}
-                className={active === item.id ? "active" : ""}
-                onClick={() => {
-                  handleScroll(item.id);
-                  setMenuOpen(false); // close menu after click
-                }}
-              >
-                {item.name}
-              </li>
-            ))}
-          </ul>
-        </aside>
-
-        {menuOpen && (
-          <div
-            className="overlay"
-            onClick={() => setMenuOpen(false)}
-          ></div>
         )}
+      </div>
+    </header>
 
-        {/* MAIN */}
-        <main className="main2">
+    <div className="dashboard-body">
 
-          {/* RESUME */}
-          <section id="resume" className="card">
+      {/* SIDEBAR */}
+      <aside className={`sidebar ${menuOpen ? "open" : ""}`}>
+        <ul>
+          {sections.map((item) => (
+            <li
+              key={item.id}
+              className={active === item.id ? "active" : ""}
+              onClick={() => {
+                handleScroll(item.id);
+                setMenuOpen(false); // close menu after click
+              }}
+            >
+              {item.name}
+            </li>
+          ))}
+        </ul>
+      </aside>
 
-            {/* PROFILE IMAGE */}
-            <div className="profile-image">
+      {menuOpen && (
+        <div
+          className="overlay"
+          onClick={() => setMenuOpen(false)}
+        ></div>
+      )}
 
-              {profile.profileImage ? (
-                <img
-                  src={profile.profileImage}
-                  alt="profile"
-                />
-              ) : (
-                <div className="avatar">No Image</div>
-              )}
+      {/* MAIN */}
+      <main className="main2">
 
-              {editMode && (
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setProfileImageFile(e.target.files[0])}
-                />
-              )}
+        {/* RESUME */}
+        <section id="resume" className="card">
 
-            </div>
+          {/* PROFILE IMAGE */}
+          <div className="profile-image">
 
-            {editMode ? (
-              <>
-                <input
-                  value={profile.name}
-                  onChange={(e) =>
-                    setProfile({ ...profile, name: e.target.value })
-                  }
-                  placeholder="Name"
-                />
-
-                <input
-                  value={profile.role}
-                  onChange={(e) =>
-                    setProfile({ ...profile, role: e.target.value })
-                  }
-                  placeholder="Role"
-                />
-
-                <input
-                  value={profile.location}
-                  onChange={(e) =>
-                    setProfile({ ...profile, location: e.target.value })
-                  }
-                  placeholder="Location"
-                />
-
-                <input
-                  value={profile.email}
-                  onChange={(e) =>
-                    setProfile({ ...profile, email: e.target.value })
-                  }
-                  placeholder="Email"
-                />
-
-                <input
-                  value={profile.phone}
-                  onChange={(e) =>
-                    setProfile({ ...profile, phone: e.target.value })
-                  }
-                  placeholder="Phone"
-                />
-
-                <input
-                  type="file"
-                  onChange={(e) => setResumeFile(e.target.files[0])}
-                />
-              </>
-            ) : (
-              <>
-                <h3>{profile.name}</h3>
-                <p>{profile.role}</p>
-                <p>{profile.email}</p>
-                <p>{profile.phone}</p>
-              </>
-            )}
-          </section>
-
-          {/* SUMMARY */}
-          <section id="summary" className="card">
-            <h3>Summary</h3>
-            {editMode ? (
-              <textarea
-                value={profile.summary}
-                onChange={(e) => setProfile({ ...profile, summary: e.target.value })}
+            {profile.profileImage ? (
+              <img
+                src={profile.profileImage}
+                alt="profile"
               />
             ) : (
-              <p>{profile.summary}</p>
+              <div className="avatar">No Image</div>
             )}
-          </section>
-
-          {/* SKILLS */}
-          <section id="skills" className="card">
-            <h3>Skills</h3>
-            {editMode && (
-              <>
-                <input
-                  value={newSkill}
-                  onChange={(e) => setNewSkill(e.target.value)}
-                  placeholder="Add skill"
-                />
-                <button onClick={addSkill}>Add</button>
-              </>
-            )}
-            {profile.skills.map((skill, i) => (
-              <div key={i}>{skill}</div>
-            ))}
-          </section>
-
-          {/* EDUCATION */}
-          <section id="education" className="card">
-            <h3>Education</h3>
 
             {editMode && (
-              <>
-                <input placeholder="Level"
-                  value={newEducation.level}
-                  onChange={(e) => setNewEducation({ ...newEducation, level: e.target.value })} />
-
-                <input placeholder="University"
-                  value={newEducation.university}
-                  onChange={(e) => setNewEducation({ ...newEducation, university: e.target.value })} />
-
-                <input placeholder="Course"
-                  value={newEducation.course}
-                  onChange={(e) => setNewEducation({ ...newEducation, course: e.target.value })} />
-
-                <input placeholder="Specialization"
-                  value={newEducation.specialization}
-                  onChange={(e) => setNewEducation({ ...newEducation, specialization: e.target.value })} />
-
-                <input placeholder="Course Type"
-                  value={newEducation.courseType}
-                  onChange={(e) => setNewEducation({ ...newEducation, courseType: e.target.value })} />
-
-                <input type="date"
-                  value={newEducation.startDate}
-                  onChange={(e) => setNewEducation({ ...newEducation, startDate: e.target.value })} />
-
-                <input type="date"
-                  value={newEducation.endDate}
-                  onChange={(e) => setNewEducation({ ...newEducation, endDate: e.target.value })} />
-
-                <label>
-                  Completed
-                  <input type="checkbox"
-                    checked={newEducation.completed}
-                    onChange={(e) => setNewEducation({ ...newEducation, completed: e.target.checked })} />
-                </label>
-
-                <button onClick={addEducation}>Add</button>
-              </>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setProfileImageFile(e.target.files[0])}
+              />
             )}
 
-            {profile.education.map((edu, i) => (
-              <div key={i}>
-                <strong>{edu.level}</strong> - {edu.university}<br />
-                {edu.course} ({edu.specialization})<br />
-                {edu.startDate} - {edu.endDate}
-              </div>
-            ))}
-          </section>
+          </div>
 
-          {/* EXPERIENCE */}
-          <section id="experience" className="card">
-            <h3>Experience</h3>
+          {editMode ? (
+            <>
+              <input
+                value={profile.name}
+                onChange={(e) =>
+                  setProfile({ ...profile, name: e.target.value })
+                }
+                placeholder="Name"
+              />
 
-            {editMode && (
-              <>
-                <input placeholder="Title"
-                  value={newExperience.title}
-                  onChange={(e) => setNewExperience({ ...newExperience, title: e.target.value })} />
-                <input placeholder="Company"
-                  value={newExperience.company}
-                  onChange={(e) => setNewExperience({ ...newExperience, company: e.target.value })} />
-                <button onClick={addExperience}>Add</button>
-              </>
-            )}
+              <input
+                value={profile.role}
+                onChange={(e) =>
+                  setProfile({ ...profile, role: e.target.value })
+                }
+                placeholder="Role"
+              />
 
-            {profile.experience.map((exp, i) => (
-              <div key={i}>
-                {exp.title} at {exp.company}
-              </div>
-            ))}
-          </section>
+              <input
+                value={profile.location}
+                onChange={(e) =>
+                  setProfile({ ...profile, location: e.target.value })
+                }
+                placeholder="Location"
+              />
 
-          {/* CERTIFICATIONS */}
-          <section id="certifications" className="card">
-            <h3>Certifications</h3>
+              <input
+                value={profile.email}
+                onChange={(e) =>
+                  setProfile({ ...profile, email: e.target.value })
+                }
+                placeholder="Email"
+              />
 
-            {editMode && (
-              <>
-                <input placeholder="Name"
-                  value={newCertification.name}
-                  onChange={(e) => setNewCertification({ ...newCertification, name: e.target.value })} />
-                <input placeholder="Organization"
-                  value={newCertification.organization}
-                  onChange={(e) => setNewCertification({ ...newCertification, organization: e.target.value })} />
-                <button onClick={addCertification}>Add</button>
-              </>
-            )}
+              <input
+                value={profile.phone}
+                onChange={(e) =>
+                  setProfile({ ...profile, phone: e.target.value })
+                }
+                placeholder="Phone"
+              />
 
-            {profile.certifications.map((cert, i) => (
-              <div key={i}>
-                {cert.name} - {cert.organization}
-              </div>
-            ))}
-          </section>
+              <input
+                type="file"
+                onChange={(e) => setResumeFile(e.target.files[0])}
+              />
+            </>
+          ) : (
+            <>
+              <h3>{profile.name}</h3>
+              <p>{profile.role}</p>
+              <p>{profile.email}</p>
+              <p>{profile.phone}</p>
+            </>
+          )}
+        </section>
 
-        </main>
-      </div>
+        {/* SUMMARY */}
+        <section id="summary" className="card">
+          <h3>Summary</h3>
+          {editMode ? (
+            <textarea
+              value={profile.summary}
+              onChange={(e) => setProfile({ ...profile, summary: e.target.value })}
+            />
+          ) : (
+            <p>{profile.summary}</p>
+          )}
+        </section>
+
+        {/* SKILLS */}
+        <section id="skills" className="card">
+          <h3>Skills</h3>
+          {editMode && (
+            <>
+              <input
+                value={newSkill}
+                onChange={(e) => setNewSkill(e.target.value)}
+                placeholder="Add skill"
+              />
+              <button onClick={addSkill}>Add</button>
+            </>
+          )}
+          {profile.skills.map((skill, i) => (
+            <div key={i}>{skill}</div>
+          ))}
+        </section>
+
+        {/* EDUCATION */}
+        <section id="education" className="card">
+          <h3>Education</h3>
+
+          {editMode && (
+            <>
+              <input placeholder="Level"
+                value={newEducation.level}
+                onChange={(e) => setNewEducation({ ...newEducation, level: e.target.value })} />
+
+              <input placeholder="University"
+                value={newEducation.university}
+                onChange={(e) => setNewEducation({ ...newEducation, university: e.target.value })} />
+
+              <input placeholder="Course"
+                value={newEducation.course}
+                onChange={(e) => setNewEducation({ ...newEducation, course: e.target.value })} />
+
+              <input placeholder="Specialization"
+                value={newEducation.specialization}
+                onChange={(e) => setNewEducation({ ...newEducation, specialization: e.target.value })} />
+
+              <input placeholder="Course Type"
+                value={newEducation.courseType}
+                onChange={(e) => setNewEducation({ ...newEducation, courseType: e.target.value })} />
+
+              <input type="date"
+                value={newEducation.startDate}
+                onChange={(e) => setNewEducation({ ...newEducation, startDate: e.target.value })} />
+
+              <input type="date"
+                value={newEducation.endDate}
+                onChange={(e) => setNewEducation({ ...newEducation, endDate: e.target.value })} />
+
+              <label>
+                Completed
+                <input type="checkbox"
+                  checked={newEducation.completed}
+                  onChange={(e) => setNewEducation({ ...newEducation, completed: e.target.checked })} />
+              </label>
+
+              <button onClick={addEducation}>Add</button>
+            </>
+          )}
+
+          {profile.education.map((edu, i) => (
+            <div key={i}>
+              <strong>{edu.level}</strong> - {edu.university}<br />
+              {edu.course} ({edu.specialization})<br />
+              {edu.startDate} - {edu.endDate}
+            </div>
+          ))}
+        </section>
+
+        {/* EXPERIENCE */}
+        <section id="experience" className="card">
+          <h3>Experience</h3>
+
+          {editMode && (
+            <>
+              <input placeholder="Title"
+                value={newExperience.title}
+                onChange={(e) => setNewExperience({ ...newExperience, title: e.target.value })} />
+              <input placeholder="Company"
+                value={newExperience.company}
+                onChange={(e) => setNewExperience({ ...newExperience, company: e.target.value })} />
+              <button onClick={addExperience}>Add</button>
+            </>
+          )}
+
+          {profile.experience.map((exp, i) => (
+            <div key={i}>
+              {exp.title} at {exp.company}
+            </div>
+          ))}
+        </section>
+
+        {/* CERTIFICATIONS */}
+        <section id="certifications" className="card">
+          <h3>Certifications</h3>
+
+          {editMode && (
+            <>
+              <input placeholder="Name"
+                value={newCertification.name}
+                onChange={(e) => setNewCertification({ ...newCertification, name: e.target.value })} />
+              <input placeholder="Organization"
+                value={newCertification.organization}
+                onChange={(e) => setNewCertification({ ...newCertification, organization: e.target.value })} />
+              <button onClick={addCertification}>Add</button>
+            </>
+          )}
+
+          {profile.certifications.map((cert, i) => (
+            <div key={i}>
+              {cert.name} - {cert.organization}
+            </div>
+          ))}
+        </section>
+
+      </main>
     </div>
-  );
+  </div>
+);
 }
