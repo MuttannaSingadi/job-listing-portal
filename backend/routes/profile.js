@@ -13,13 +13,25 @@ const cloudinary = require("../config/cloudinary");
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
-    return {
-      folder: "resumes",
-      resource_type: "raw",
-      allowed_formats: ["pdf"],
-      public_id: Date.now() + "-" + file.originalname.split(".")[0],
-      format: file.originalname.split(".").pop(),
-    };
+
+    if (file.fieldname === "resume") {
+      return {
+        folder: "resumes",
+        resource_type: "raw",
+        allowed_formats: ["pdf"],
+        public_id: Date.now() + "-resume",
+      };
+    }
+
+    if (file.fieldname === "profileImage") {
+      return {
+        folder: "profile_images",
+        resource_type: "image",
+        allowed_formats: ["jpg", "png", "jpeg", "webp"],
+        public_id: Date.now() + "-profile",
+      };
+    }
+
   },
 });
 
@@ -27,44 +39,37 @@ const upload = multer({ storage });
 
 /* ================= GET PROFILE ================= */
 
-router.get("/", protect, async (req, res) => {
-  try {
-    let profile = await Profile.findOne({ userId: req.user.id });
-
-    if (!profile) {
-      profile = await Profile.create({ userId: req.user.id });
-    }
-
-    res.json(profile);
-  } catch (error) {
-    console.error("GET PROFILE ERROR:", error.message);
-    console.error(error.stack);
-    res.status(500).json({ message: error.message });
-  }
-});
-
-/* ================= UPDATE PROFILE ================= */
-
 router.put(
   "/",
   protect,
   (req, res, next) => {
-    upload.single("resume")(req, res, function (err) {
+
+    const uploadFields = upload.fields([
+      { name: "resume", maxCount: 1 },
+      { name: "profileImage", maxCount: 1 }
+    ]);
+
+    uploadFields(req, res, function (err) {
       if (err) {
         console.error("MULTER ERROR:", err);
-        return res.status(500).json({ message: "File upload failed" });
+        return res.status(500).json({ message: err.message });
       }
       next();
     });
+
   },
+
   async (req, res) => {
+
     try {
+
       console.log("BODY RECEIVED:", req.body);
-      console.log("FILE RECEIVED:", req.file);
+      console.log("FILES RECEIVED:", req.files);
 
       const updateData = {};
 
-      // Normal fields
+      /* NORMAL FIELDS */
+
       updateData.name = req.body.name || "";
       updateData.role = req.body.role || "";
       updateData.location = req.body.location || "";
@@ -72,7 +77,8 @@ router.put(
       updateData.phone = req.body.phone || "";
       updateData.summary = req.body.summary || "";
 
-      // Safe JSON parser
+      /* SAFE JSON PARSER */
+
       const safeParse = (value, defaultValue) => {
         try {
           return value ? JSON.parse(value) : defaultValue;
@@ -89,10 +95,19 @@ router.put(
       updateData.links = safeParse(req.body.links, {});
       updateData.personal = safeParse(req.body.personal, {});
 
-      // Resume upload
-      if (req.file) {
-        updateData.resume = req.file.path;
+      /* RESUME FILE */
+
+      if (req.files?.resume) {
+        updateData.resume = req.files.resume[0].path;
       }
+
+      /* PROFILE IMAGE */
+
+      if (req.files?.profileImage) {
+        updateData.profileImage = req.files.profileImage[0].path;
+      }
+
+      /* UPDATE DATABASE */
 
       const updatedProfile = await Profile.findOneAndUpdate(
         { userId: req.user.id },
@@ -103,10 +118,14 @@ router.put(
       res.json(updatedProfile);
 
     } catch (error) {
+
       console.error("UPDATE PROFILE ERROR:", error.message);
       console.error(error.stack);
+
       res.status(500).json({ message: error.message });
+
     }
+
   }
 );
 

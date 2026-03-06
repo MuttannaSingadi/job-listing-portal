@@ -7,6 +7,8 @@ export default function Profile() {
   const BACKEND_URL =
     "https://job-listing-portal-iu9g.onrender.com/api/profile";
 
+  /* ================= DEFAULT PROFILE ================= */
+
   const defaultProfile = {
     name: "",
     role: "",
@@ -15,6 +17,7 @@ export default function Profile() {
     phone: "",
     summary: "",
     resume: "",
+    profileImage: "",
     skills: [],
     education: [],
     experience: [],
@@ -24,13 +27,19 @@ export default function Profile() {
     personal: { dob: "", gender: "", languages: "" },
   };
 
+  /* ================= STATES ================= */
+
   const [profile, setProfile] = useState(defaultProfile);
   const [editMode, setEditMode] = useState(false);
   const [active, setActive] = useState("resume");
+
   const [resumeFile, setResumeFile] = useState(null);
+  const [profileImageFile, setProfileImageFile] = useState(null);
+
   const [menuOpen, setMenuOpen] = useState(false);
 
   const [newSkill, setNewSkill] = useState("");
+
   const [newEducation, setNewEducation] = useState({
     level: "",
     university: "",
@@ -54,9 +63,12 @@ export default function Profile() {
   });
 
   /* ================= FETCH PROFILE ================= */
+
   useEffect(() => {
     const fetchProfile = async () => {
+
       try {
+
         const token = localStorage.getItem("token");
         if (!token) return;
 
@@ -65,40 +77,67 @@ export default function Profile() {
         });
 
         if (res.data) {
-          setProfile({ ...defaultProfile, ...res.data });
+          setProfile({
+            ...defaultProfile,
+            ...res.data,
+          });
         }
+
       } catch (error) {
         console.log("FETCH ERROR:", error.response?.data || error);
       }
     };
 
     fetchProfile();
+
   }, []);
 
   /* ================= SAVE PROFILE ================= */
+
   const saveProfile = async () => {
+
     try {
+
       const token = localStorage.getItem("token");
+
       const formData = new FormData();
 
       Object.keys(profile).forEach((key) => {
-        if (typeof profile[key] === "object") {
+
+        if (
+          key === "skills" ||
+          key === "education" ||
+          key === "experience" ||
+          key === "projects" ||
+          key === "certifications" ||
+          key === "links" ||
+          key === "personal"
+        ) {
           formData.append(key, JSON.stringify(profile[key]));
         } else {
           formData.append(key, profile[key]);
         }
+
       });
 
       if (resumeFile) {
         formData.append("resume", resumeFile);
       }
 
+      if (profileImageFile) {
+        formData.append("profileImage", profileImageFile);
+      }
+
       await axios.put(BACKEND_URL, formData, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
       });
 
       alert("Profile Saved Successfully ✅");
       setEditMode(false);
+
     } catch (error) {
       console.log("SAVE ERROR:", error.response?.data || error);
     }
@@ -107,18 +146,28 @@ export default function Profile() {
   /* ================= ADD FUNCTIONS ================= */
 
   const addSkill = () => {
+
     if (newSkill.trim()) {
-      setProfile({ ...profile, skills: [...profile.skills, newSkill] });
+
+      setProfile({
+        ...profile,
+        skills: [...profile.skills, newSkill],
+      });
+
       setNewSkill("");
+
     }
   };
 
   const addEducation = () => {
+
     if (newEducation.level && newEducation.university) {
+
       setProfile({
         ...profile,
         education: [...profile.education, newEducation],
       });
+
       setNewEducation({
         level: "",
         university: "",
@@ -133,28 +182,50 @@ export default function Profile() {
   };
 
   const addExperience = () => {
+
     if (newExperience.title) {
+
       setProfile({
         ...profile,
         experience: [...profile.experience, newExperience],
       });
-      setNewExperience({ title: "", company: "", year: "" });
+
+      setNewExperience({
+        title: "",
+        company: "",
+        year: "",
+      });
+
     }
   };
 
   const addCertification = () => {
+
     if (newCertification.name) {
+
       setProfile({
         ...profile,
         certifications: [...profile.certifications, newCertification],
       });
-      setNewCertification({ name: "", organization: "" });
+
+      setNewCertification({
+        name: "",
+        organization: "",
+      });
+
     }
   };
 
+  /* ================= SCROLL ================= */
+
   const handleScroll = (id) => {
+
     setActive(id);
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+
+    document
+      .getElementById(id)
+      ?.scrollIntoView({ behavior: "smooth" });
+
   };
 
   const sections = [
@@ -164,7 +235,6 @@ export default function Profile() {
     { name: "Education", id: "education" },
     { name: "Experience", id: "experience" },
     { name: "Certifications", id: "certifications" },
-    { name: "Personal", id: "personal" },
   ];
 
   return (
@@ -227,25 +297,75 @@ export default function Profile() {
 
           {/* RESUME */}
           <section id="resume" className="card">
+
+            {/* PROFILE IMAGE */}
+            <div className="profile-image">
+
+              {profile.profileImage ? (
+                <img
+                  src={profile.profileImage}
+                  alt="profile"
+                />
+              ) : (
+                <div className="avatar">No Image</div>
+              )}
+
+              {editMode && (
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setProfileImageFile(e.target.files[0])}
+                />
+              )}
+
+            </div>
+
             {editMode ? (
               <>
-                <input value={profile.name}
-                  onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-                  placeholder="Name" />
-                <input value={profile.role}
-                  onChange={(e) => setProfile({ ...profile, role: e.target.value })}
-                  placeholder="Role" />
-                <input value={profile.location}
-                  onChange={(e) => setProfile({ ...profile, location: e.target.value })}
-                  placeholder="Location" />
-                <input value={profile.email}
-                  onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-                  placeholder="Email" />
-                <input value={profile.phone}
-                  onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-                  placeholder="Phone" />
-                <input type="file"
-                  onChange={(e) => setResumeFile(e.target.files[0])} />
+                <input
+                  value={profile.name}
+                  onChange={(e) =>
+                    setProfile({ ...profile, name: e.target.value })
+                  }
+                  placeholder="Name"
+                />
+
+                <input
+                  value={profile.role}
+                  onChange={(e) =>
+                    setProfile({ ...profile, role: e.target.value })
+                  }
+                  placeholder="Role"
+                />
+
+                <input
+                  value={profile.location}
+                  onChange={(e) =>
+                    setProfile({ ...profile, location: e.target.value })
+                  }
+                  placeholder="Location"
+                />
+
+                <input
+                  value={profile.email}
+                  onChange={(e) =>
+                    setProfile({ ...profile, email: e.target.value })
+                  }
+                  placeholder="Email"
+                />
+
+                <input
+                  value={profile.phone}
+                  onChange={(e) =>
+                    setProfile({ ...profile, phone: e.target.value })
+                  }
+                  placeholder="Phone"
+                />
+
+                <input
+                  type="file"
+                  onChange={(e) => setResumeFile(e.target.files[0])}
+                />
               </>
             ) : (
               <>
