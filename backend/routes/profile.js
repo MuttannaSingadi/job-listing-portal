@@ -85,8 +85,6 @@ try {
 
   const existingProfile = await Profile.findOne({ userId: req.user.id });
 
-  /* DEFAULT UPDATE DATA */
-
   const updateData = {
     resume: existingProfile?.resume || "",
     profileImage: existingProfile?.profileImage || ""
@@ -131,9 +129,9 @@ try {
     updateData.profileImage = req.files.profileImage[0].path;
   }
 
-  console.log("IMAGE URL:", updateData.profileImage);
+  console.log("FINAL IMAGE URL:", updateData.profileImage);
 
-  /* UPDATE PROFILE */
+  /* UPDATE DATABASE */
 
   const updatedProfile = await Profile.findOneAndUpdate(
     { userId: req.user.id },
