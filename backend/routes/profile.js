@@ -39,6 +39,25 @@ const upload = multer({ storage });
 
 /* ================= GET PROFILE ================= */
 
+router.get("/", protect, async (req, res) => {
+  try {
+
+    const profile = await Profile.findOne({ userId: req.user.id });
+
+    if (!profile) {
+      return res.json({});
+    }
+
+    res.json(profile);
+
+  } catch (error) {
+    console.error("GET PROFILE ERROR:", error.message);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+/* ================= UPDATE PROFILE ================= */
+
 router.put(
   "/",
   protect,
@@ -120,8 +139,6 @@ router.put(
     } catch (error) {
 
       console.error("UPDATE PROFILE ERROR:", error.message);
-      console.error(error.stack);
-
       res.status(500).json({ message: error.message });
 
     }
