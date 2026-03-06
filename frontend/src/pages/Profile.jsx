@@ -308,38 +308,44 @@ export default function Profile() {
           <section id="resume" className="card">
 
             {/* PROFILE IMAGE */}
-            <div className="profile-image">
+          {/* PROFILE IMAGE SECTION */}
+<div className="profile-image">
+  {profile.profileImage ? (
+    <img
+      // Only append timestamp if it's a Cloudinary URL (starts with http)
+      src={profile.profileImage.startsWith('http') 
+        ? `${profile.profileImage}?t=${Date.now()}` 
+        : profile.profileImage
+      }
+      alt="profile"
+      className="profile-img"
+      onError={(e) => { e.target.src = "https://via.placeholder.com/150"; }}
+    />
+  ) : (
+    <div className="avatar">No Image</div>
+  )}
 
-              {profile.profileImage ? (
-                <img
-                  src={profile.profileImage + "?t=" + Date.now()}
-                  alt="profile"
-                  className="profile-img"
-                />
-              ) : (
-                <div className="avatar">No Image</div>
-              )}
-
-              {editMode && (
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files[0];
-                    setProfileImageFile(file);
-
-                    // Preview image immediately
-                    if (file) {
-                      setProfile({
-                        ...profile,
-                        profileImage: URL.createObjectURL(file)
-                      });
-                    }
-                  }}
-                />
-              )}
-
-            </div>
+  {editMode && (
+    <div className="upload-controls">
+      <input
+        type="file"
+        id="imageUpload"
+        accept="image/*"
+        onChange={(e) => {
+          const file = e.target.files[0];
+          if (file) {
+            setProfileImageFile(file);
+            // Instant Preview using local Blob URL
+            setProfile((prev) => ({
+              ...prev,
+              profileImage: URL.createObjectURL(file),
+            }));
+          }
+        }}
+      />
+    </div>
+  )}
+</div>
 
             {editMode ? (
               <>
