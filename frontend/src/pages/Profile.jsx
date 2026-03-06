@@ -96,25 +96,32 @@ export default function Profile() {
 
   const saveProfile = async () => {
     try {
+
+
       const token = localStorage.getItem("token");
 
       const formData = new FormData();
 
-      Object.keys(profile).forEach((key) => {
-        if (
-          key === "skills" ||
-          key === "education" ||
-          key === "experience" ||
-          key === "projects" ||
-          key === "certifications" ||
-          key === "links" ||
-          key === "personal"
-        ) {
-          formData.append(key, JSON.stringify(profile[key]));
-        } else {
-          formData.append(key, profile[key]);
-        }
-      });
+      /* TEXT FIELDS */
+
+      formData.append("name", profile.name);
+      formData.append("role", profile.role);
+      formData.append("location", profile.location);
+      formData.append("email", profile.email);
+      formData.append("phone", profile.phone);
+      formData.append("summary", profile.summary);
+
+      /* JSON FIELDS */
+
+      formData.append("skills", JSON.stringify(profile.skills));
+      formData.append("education", JSON.stringify(profile.education));
+      formData.append("experience", JSON.stringify(profile.experience));
+      formData.append("projects", JSON.stringify(profile.projects));
+      formData.append("certifications", JSON.stringify(profile.certifications));
+      formData.append("links", JSON.stringify(profile.links));
+      formData.append("personal", JSON.stringify(profile.personal));
+
+      /* FILE UPLOADS */
 
       if (resumeFile) {
         formData.append("resume", resumeFile);
@@ -125,7 +132,7 @@ export default function Profile() {
       }
 
       await axios.put(
-        "https://job-listing-portal-iu9g.onrender.com/api/profile",
+        BACKEND_URL,
         formData,
         {
           headers: {
@@ -142,6 +149,7 @@ export default function Profile() {
       alert("Save failed");
     }
   };
+
 
 
   /* ================= ADD FUNCTIONS ================= */
