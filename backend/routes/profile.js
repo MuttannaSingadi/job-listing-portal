@@ -42,7 +42,6 @@ const upload = multer({ storage });
 /* ================= GET PROFILE ================= */
 
 router.get("/", protect, async (req, res) => {
-
 try {
 
 ```
@@ -63,7 +62,6 @@ res.status(500).json({ message: "Server error" });
 ```
 
 }
-
 });
 
 /* ================= UPDATE PROFILE ================= */
@@ -85,12 +83,9 @@ try {
 
   const existingProfile = await Profile.findOne({ userId: req.user.id });
 
-  const updateData = {
-    resume: existingProfile?.resume || "",
-    profileImage: existingProfile?.profileImage || ""
-  };
+  const updateData = {};
 
-  /* NORMAL FIELDS */
+  /* TEXT FIELDS */
 
   updateData.name = req.body.name || "";
   updateData.role = req.body.role || "";
@@ -117,16 +112,20 @@ try {
   updateData.links = safeParse(req.body.links, {});
   updateData.personal = safeParse(req.body.personal, {});
 
-  /* RESUME UPLOAD */
+  /* KEEP OLD RESUME IF NOT UPLOADED */
 
   if (req.files && req.files.resume) {
     updateData.resume = req.files.resume[0].path;
+  } else if (existingProfile?.resume) {
+    updateData.resume = existingProfile.resume;
   }
 
-  /* PROFILE IMAGE UPLOAD */
+  /* KEEP OLD IMAGE IF NOT UPLOADED */
 
   if (req.files && req.files.profileImage) {
     updateData.profileImage = req.files.profileImage[0].path;
+  } else if (existingProfile?.profileImage) {
+    updateData.profileImage = existingProfile.profileImage;
   }
 
   console.log("FINAL IMAGE URL:", updateData.profileImage);
