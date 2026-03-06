@@ -104,6 +104,9 @@ export default function Profile() {
 
       Object.keys(profile).forEach((key) => {
 
+        // ❗ Skip file fields
+        if (key === "resume" || key === "profileImage") return;
+
         if (
           key === "skills" ||
           key === "education" ||
@@ -115,7 +118,7 @@ export default function Profile() {
         ) {
           formData.append(key, JSON.stringify(profile[key]));
         } else {
-          formData.append(key, profile[key]);
+          formData.append(key, profile[key] || "");
         }
 
       });
@@ -130,11 +133,9 @@ export default function Profile() {
 
       await axios.put(BACKEND_URL, formData, {
         headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
+          Authorization: `Bearer ${token}`
+        }
       });
-
       alert("Profile Saved Successfully ✅");
       setEditMode(false);
 
