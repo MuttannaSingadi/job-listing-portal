@@ -303,8 +303,9 @@ export default function Profile() {
 
               {profile.profileImage ? (
                 <img
-                  src={profile.profileImage}
+                  src={profile.profileImage + "?t=" + Date.now()}
                   alt="profile"
+                  className="profile-img"
                 />
               ) : (
                 <div className="avatar">No Image</div>
@@ -314,7 +315,18 @@ export default function Profile() {
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) => setProfileImageFile(e.target.files[0])}
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    setProfileImageFile(file);
+
+                    // Preview image immediately
+                    if (file) {
+                      setProfile({
+                        ...profile,
+                        profileImage: URL.createObjectURL(file)
+                      });
+                    }
+                  }}
                 />
               )}
 

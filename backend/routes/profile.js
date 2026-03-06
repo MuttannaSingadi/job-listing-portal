@@ -85,7 +85,14 @@ router.put(
       console.log("BODY RECEIVED:", req.body);
       console.log("FILES RECEIVED:", req.files);
 
-      const updateData = {};
+      /* GET EXISTING PROFILE */
+
+      const existingProfile = await Profile.findOne({ userId: req.user.id });
+
+      const updateData = {
+        resume: existingProfile?.resume || "",
+        profileImage: existingProfile?.profileImage || ""
+      };
 
       /* NORMAL FIELDS */
 
