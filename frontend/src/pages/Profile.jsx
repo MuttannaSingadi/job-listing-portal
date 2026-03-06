@@ -95,18 +95,12 @@ export default function Profile() {
   /* ================= SAVE PROFILE ================= */
 
   const saveProfile = async () => {
-
     try {
-
       const token = localStorage.getItem("token");
 
       const formData = new FormData();
 
       Object.keys(profile).forEach((key) => {
-
-        // Skip file fields
-        if (key === "resume" || key === "profileImage") return;
-
         if (
           key === "skills" ||
           key === "education" ||
@@ -118,9 +112,8 @@ export default function Profile() {
         ) {
           formData.append(key, JSON.stringify(profile[key]));
         } else {
-          formData.append(key, profile[key] || "");
+          formData.append(key, profile[key]);
         }
-
       });
 
       if (resumeFile) {
@@ -131,19 +124,25 @@ export default function Profile() {
         formData.append("profileImage", profileImageFile);
       }
 
-      await axios.put(BACKEND_URL, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      await axios.put(
+        "https://job-listing-portal-iu9g.onrender.com/api/profile",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-      });
+      );
+
       alert("Profile Saved Successfully ✅");
       setEditMode(false);
-      window.location.reload();
 
     } catch (error) {
-      console.log("SAVE ERROR:", error.response?.data || error);
+      console.log(error);
+      alert("Save failed");
     }
   };
+
 
   /* ================= ADD FUNCTIONS ================= */
 
