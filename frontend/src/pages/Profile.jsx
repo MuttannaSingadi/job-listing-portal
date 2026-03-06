@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import "./profile.css";
 
@@ -31,7 +31,7 @@ export default function Profile() {
 
   const [profile, setProfile] = useState(defaultProfile);
   const [editMode, setEditMode] = useState(false);
-  const [active, setActive] = useState("resume");
+    const [active, setActive] = useState("resume");
 
   const [resumeFile, setResumeFile] = useState(null);
   const [profileImageFile, setProfileImageFile] = useState(null);
@@ -64,93 +64,62 @@ export default function Profile() {
 
   /* ================= FETCH PROFILE ================= */
 
-  useEffect(() => {
-    const fetchProfile = async () => {
+  const fetchProfile = useCallback(async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
 
-      try {
+      const res = await axios.get(BACKEND_URL, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-        const token = localStorage.getItem("token");
-        if (!token) return;
-
-        const res = await axios.get(BACKEND_URL, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (res.data) {
-          setProfile({
-            ...defaultProfile,
-            ...res.data,
-          });
-        }
-
-      } catch (error) {
-        console.log("FETCH ERROR:", error.response?.data || error);
+      if (res.data) {
+        // Merge with defaultProfile so missing fields don't break the UI
+        setProfile({ ...defaultProfile, ...res.data });
       }
-    };
+    } catch (error) {
+      console.log("FETCH ERROR:", error.response?.data || error);
+    }
+  }, [BACKEND_URL]);
 
+  useEffect(() => {
     fetchProfile();
-
-  }, []);
+  }, [fetchProfile]);
 
   /* ================= SAVE PROFILE ================= */
-
   const saveProfile = async () => {
     try {
-
-
       const token = localStorage.getItem("token");
-
       const formData = new FormData();
 
-      /* TEXT FIELDS */
-
-      formData.append("name", profile.name);
-      formData.append("role", profile.role);
-      formData.append("location", profile.location);
-      formData.append("email", profile.email);
-      formData.append("phone", profile.phone);
-      formData.append("summary", profile.summary);
-
-      /* JSON FIELDS */
-
-      formData.append("skills", JSON.stringify(profile.skills));
-      formData.append("education", JSON.stringify(profile.education));
-      formData.append("experience", JSON.stringify(profile.experience));
-      formData.append("projects", JSON.stringify(profile.projects));
-      formData.append("certifications", JSON.stringify(profile.certifications));
-      formData.append("links", JSON.stringify(profile.links));
-      formData.append("personal", JSON.stringify(profile.personal));
-
-      /* FILE UPLOADS */
-
-      if (resumeFile) {
-        formData.append("resume", resumeFile);
-      }
-
-      if (profileImageFile) {
-        formData.append("profileImage", profileImageFile);
-      }
-
-      await axios.put(
-        BACKEND_URL,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+      // Automatically append all fields, stringifying objects/arrays
+      Object.keys(profile).forEach((key) => {
+        if (Array.isArray(profile[key]) || (typeof profile[key] === "object" && profile[key] !== null)) {
+          formData.append(key, JSON.stringify(profile[key]));
+        } else {
+          formData.append(key, profile[key]);
         }
-      );
+      });
 
-      alert("Profile Saved Successfully ✅");
-      setEditMode(false);
+      if (resumeFile) formData.append("resume", resumeFile);
+      if (profileImageFile) formData.append("profileImage", profileImageFile);
 
+      const res = await axios.put(BACKEND_URL, formData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (res.data) {
+        setProfile({ ...defaultProfile, ...res.data }); // Sync local state with DB
+        alert("Profile Saved Successfully ✅");
+        setEditMode(false);
+        setProfileImageFile(null);
+        setResumeFile(null);
+      }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       alert("Save failed");
     }
   };
-
-
 
   /* ================= ADD FUNCTIONS ================= */
 
@@ -307,43 +276,26 @@ export default function Profile() {
           {/* RESUME */}
           <section id="resume" className="card">
 
-            {/* PROFILE IMAGE */}
-            {/* PROFILE IMAGE SECTION */}
+           {/* PROFILE IMAGE SECTION */}
             <div className="profile-image">
-              {profile.profileImage ? (
-                <img
-                  // Only append timestamp if it's a Cloudinary URL (starts with http)
-                  src={profile.profileImage.startsWith('http')
-                    ? `${profile.profileImage}?t=${Date.now()}`
-                    : profile.profileImage
-                  }
-                  alt="profile"
-                  className="profile-img"
-                  onError={(e) => { e.target.src = "https://via.placeholder.com/150"; }}
-                />
-              ) : (
-                <div className="avatar">No Image</div>
-              )}
-
+              <img
+                src={profile.profileImage || "https://via.placeholder.com/150"}
+                alt="profile"
+                className="profile-img"
+                onError={(e) => { e.target.src = "https://via.placeholder.com/150"; }}
+              />
               {editMode && (
-                <div className="upload-controls">
-                  <input
-                    type="file"
-                    id="imageUpload"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files[0];
-                      if (file) {
-                        setProfileImageFile(file);
-                        // Instant Preview using local Blob URL
-                        setProfile((prev) => ({
-                          ...prev,
-                          profileImage: URL.createObjectURL(file),
-                        }));
-                      }
-                    }}
-                  />
-                </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      setProfileImageFile(file);
+                      setProfile(prev => ({ ...prev, profileImage: URL.createObjectURL(file) }));
+                    }
+                  }}
+                />
               )}
             </div>
 
