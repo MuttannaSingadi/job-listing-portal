@@ -495,7 +495,7 @@ export default function Profile() {
             ))}
 
             {profile.resume && (
-              <a href={profile.resume} download>
+              <a href={profile.resume} target="_blank" rel="noopener noreferrer">
                 Download Resume
               </a>
             )}
