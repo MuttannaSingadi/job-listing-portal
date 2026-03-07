@@ -13,7 +13,7 @@ const storage = new CloudinaryStorage({
   params: async (req, file) => ({
     folder: file.fieldname === "resume" ? "resumes" : "profile_images",
     resource_type: "auto",
-    public_id: Date.now() + "-" + file.originalname,
+    public_id: Date.now() + "-" + file.originalname.split(".")[0],
   }),
 });
 
