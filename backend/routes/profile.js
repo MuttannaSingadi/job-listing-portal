@@ -13,7 +13,7 @@ const storage = new CloudinaryStorage({
   params: async (req, file) => ({
     folder: file.fieldname === "resume" ? "resumes" : "profile_images",
     resource_type: file.fieldname === "resume" ? "raw" : "image",
-    public_id: Date.now() + "-" + file.fieldname,
+    public_id: Date.now() + "-" + file.originalname,
   }),
 });
 
@@ -61,24 +61,21 @@ router.put(
       };
 
       const updateData = {
-        name: req.body.name || "",
-        role: req.body.role || "",
-        location: req.body.location || "",
-        email: req.body.email || "",
-        phone: req.body.phone || "",
-        summary: req.body.summary || "",
+  name: req.body.name || "",
+  role: req.body.role || "",
+  location: req.body.location || "",
+  email: req.body.email || "",
+  phone: req.body.phone || "",
+  summary: req.body.summary || "",
 
-        skills: safeParse(req.body.skills, []),
-        education: safeParse(req.body.education, []),
-        experience: safeParse(req.body.experience, []),
-        certifications: safeParse(req.body.certifications, []),
+  skills: safeParse(req.body.skills, []),
+  education: safeParse(req.body.education, []),
+  experience: safeParse(req.body.experience, []),
+  certifications: safeParse(req.body.certifications, []),
 
-        links: safeParse(req.body.links, {}),
-        personal: safeParse(req.body.personal, {}),
-
-        resume: existingProfile?.resume || "",
-        profileImage: existingProfile?.profileImage || "",
-      };
+  links: safeParse(req.body.links, {}),
+  personal: safeParse(req.body.personal, {}),
+};
 
       /* FILE UPLOADS */
 
