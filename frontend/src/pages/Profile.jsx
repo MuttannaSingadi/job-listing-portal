@@ -228,12 +228,12 @@ export default function Profile() {
             }
             setEditMode(!editMode);
           }}>
-            {editMode ? "Discard Changes" : "Edit Profile"}
+            {editMode ? "veiw" : "Edit"}
           </button>
 
           {editMode && (
             <button className="save-btn" onClick={saveProfile}>
-              Save to Database
+              Save
             </button>
           )}
         </div>
