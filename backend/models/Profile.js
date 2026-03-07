@@ -39,7 +39,13 @@ const profileSchema = new mongoose.Schema(
       default: "",
     },
 
-    // ✅ ADDED RESUME FIELD (ONLY THIS IS NEW)
+    // ⭐ ADD THIS FIELD
+    profileImage: {
+      type: String,
+      default: "",
+    },
+
+    // resume
     resume: {
       type: String,
       default: "",
