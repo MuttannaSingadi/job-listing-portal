@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import "./profile.css";
 
@@ -6,8 +6,6 @@ export default function Profile() {
 
   const BACKEND_URL =
     "https://job-listing-portal-iu9g.onrender.com/api/profile";
-
-  /* ================= DEFAULT PROFILE ================= */
 
   const defaultProfile = {
     name: "",
@@ -17,7 +15,6 @@ export default function Profile() {
     phone: "",
     summary: "",
     resume: "",
-    profileImage: "",
     skills: [],
     education: [],
     experience: [],
@@ -27,20 +24,139 @@ export default function Profile() {
     personal: { dob: "", gender: "", languages: "" },
   };
 
-  /* ================= STATES ================= */
-
   const [profile, setProfile] = useState(defaultProfile);
   const [editMode, setEditMode] = useState(false);
-    const [active, setActive] = useState("resume");
-
   const [resumeFile, setResumeFile] = useState(null);
-  const [profileImageFile, setProfileImageFile] = useState(null);
-
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const [newSkill, setNewSkill] = useState("");
+  const [active, setActive] = useState("resume");
 
-  const [newEducation, setNewEducation] = useState({
+const [newSkill, setNewSkill] = useState("");
+
+const [newEducation, setNewEducation] = useState({
+  level: "",
+  university: "",
+  course: "",
+  specialization: "",
+  courseType: "",
+  startDate: "",
+  endDate: "",
+  completed: false,
+});
+
+const [newExperience, setNewExperience] = useState({
+  title: "",
+  company: "",
+});
+
+const [newCertification, setNewCertification] = useState({
+  name: "",
+  organization: "",
+});
+
+const [profileImageFile, setProfileImageFile] = useState(null);
+
+  /* ================= FETCH PROFILE ================= */
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const res = await axios.get(BACKEND_URL, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (res.data) {
+          setProfile({ ...defaultProfile, ...res.data });
+        }
+
+      } catch (error) {
+        console.log("FETCH ERROR:", error.response?.data || error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  /* ================= SAVE PROFILE ================= */
+
+  const saveProfile = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const formData = new FormData();
+
+      formData.append("name", profile.name);
+      formData.append("role", profile.role);
+      formData.append("location", profile.location);
+      formData.append("email", profile.email);
+      formData.append("phone", profile.phone);
+      formData.append("summary", profile.summary);
+
+      formData.append("skills", JSON.stringify(profile.skills));
+      formData.append("education", JSON.stringify(profile.education));
+      formData.append("experience", JSON.stringify(profile.experience));
+      formData.append("projects", JSON.stringify(profile.projects));
+      formData.append("certifications", JSON.stringify(profile.certifications));
+
+      formData.append("links", JSON.stringify(profile.links));
+      formData.append("personal", JSON.stringify(profile.personal));
+
+      if (resumeFile) {
+        formData.append("resume", resumeFile);
+      }
+
+      await axios.put(BACKEND_URL, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+
+      alert("Profile Saved Successfully ✅");
+      setEditMode(false);
+
+    } catch (error) {
+      console.log("SAVE ERROR:", error.response?.data || error.message);
+      alert("Profile Save Failed ❌");
+    }
+  };
+
+
+  const sections = [
+  { name: "Resume", id: "resume" },
+  { name: "Summary", id: "summary" },
+  { name: "Skills", id: "skills" },
+  { name: "Education", id: "education" },
+  { name: "Experience", id: "experience" },
+  { name: "Certifications", id: "certifications" }
+];
+
+const handleScroll = (id) => {
+  setActive(id);
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+};
+
+const addSkill = () => {
+  if (!newSkill.trim()) return;
+
+  setProfile({
+    ...profile,
+    skills: [...profile.skills, newSkill],
+  });
+
+  setNewSkill("");
+};
+
+const addEducation = () => {
+  setProfile({
+    ...profile,
+    education: [...profile.education, newEducation],
+  });
+
+  setNewEducation({
     level: "",
     university: "",
     course: "",
@@ -50,171 +166,31 @@ export default function Profile() {
     endDate: "",
     completed: false,
   });
+};
 
-  const [newExperience, setNewExperience] = useState({
-    title: "",
-    company: "",
-    year: "",
+const addExperience = () => {
+  setProfile({
+    ...profile,
+    experience: [...profile.experience, newExperience],
   });
 
-  const [newCertification, setNewCertification] = useState({
+  setNewExperience({
+    title: "",
+    company: "",
+  });
+};
+
+const addCertification = () => {
+  setProfile({
+    ...profile,
+    certifications: [...profile.certifications, newCertification],
+  });
+
+  setNewCertification({
     name: "",
     organization: "",
   });
-
-  /* ================= FETCH PROFILE ================= */
-
-  const fetchProfile = useCallback(async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) return;
-
-      const res = await axios.get(BACKEND_URL, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (res.data) {
-        // Merge with defaultProfile so missing fields don't break the UI
-        setProfile({ ...defaultProfile, ...res.data });
-      }
-    } catch (error) {
-      console.log("FETCH ERROR:", error.response?.data || error);
-    }
-  }, [BACKEND_URL]);
-
-  useEffect(() => {
-    fetchProfile();
-  }, [fetchProfile]);
-
-  /* ================= SAVE PROFILE ================= */
-  const saveProfile = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const formData = new FormData();
-
-      // Automatically append all fields, stringifying objects/arrays
-      Object.keys(profile).forEach((key) => {
-        if (Array.isArray(profile[key]) || (typeof profile[key] === "object" && profile[key] !== null)) {
-          formData.append(key, JSON.stringify(profile[key]));
-        } else {
-          formData.append(key, profile[key]);
-        }
-      });
-
-      if (resumeFile) formData.append("resume", resumeFile);
-      if (profileImageFile) formData.append("profileImage", profileImageFile);
-
-      const res = await axios.put(BACKEND_URL, formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (res.data) {
-        setProfile({ ...defaultProfile, ...res.data }); // Sync local state with DB
-        alert("Profile Saved Successfully ✅");
-        setEditMode(false);
-        setProfileImageFile(null);
-        setResumeFile(null);
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Save failed");
-    }
-  };
-
-  /* ================= ADD FUNCTIONS ================= */
-
-  const addSkill = () => {
-
-    if (newSkill.trim()) {
-
-      setProfile({
-        ...profile,
-        skills: [...profile.skills, newSkill],
-      });
-
-      setNewSkill("");
-
-    }
-  };
-
-  const addEducation = () => {
-
-    if (newEducation.level && newEducation.university) {
-
-      setProfile({
-        ...profile,
-        education: [...profile.education, newEducation],
-      });
-
-      setNewEducation({
-        level: "",
-        university: "",
-        course: "",
-        specialization: "",
-        courseType: "",
-        startDate: "",
-        endDate: "",
-        completed: false,
-      });
-    }
-  };
-
-  const addExperience = () => {
-
-    if (newExperience.title) {
-
-      setProfile({
-        ...profile,
-        experience: [...profile.experience, newExperience],
-      });
-
-      setNewExperience({
-        title: "",
-        company: "",
-        year: "",
-      });
-
-    }
-  };
-
-  const addCertification = () => {
-
-    if (newCertification.name) {
-
-      setProfile({
-        ...profile,
-        certifications: [...profile.certifications, newCertification],
-      });
-
-      setNewCertification({
-        name: "",
-        organization: "",
-      });
-
-    }
-  };
-
-  /* ================= SCROLL ================= */
-
-  const handleScroll = (id) => {
-
-    setActive(id);
-
-    document
-      .getElementById(id)
-      ?.scrollIntoView({ behavior: "smooth" });
-
-  };
-
-  const sections = [
-    { name: "Resume", id: "resume" },
-    { name: "Summary", id: "summary" },
-    { name: "Skills", id: "skills" },
-    { name: "Education", id: "education" },
-    { name: "Experience", id: "experience" },
-    { name: "Certifications", id: "certifications" },
-  ];
-
+};
   return (
     <div className="dashboard">
 
@@ -231,13 +207,19 @@ export default function Profile() {
         <h2>My Profile</h2>
 
         <div className="top-actions">
-          <button onClick={() => setEditMode(!editMode)}>
-            {editMode ? "View Mode" : "Edit Mode"}
+          <button onClick={() => {
+            if (editMode) {
+              // If cancelling, RE-FETCH original data from DB to undo typed changes
+              fetchProfileFromDB();
+            }
+            setEditMode(!editMode);
+          }}>
+            {editMode ? "Discard Changes" : "Edit Profile"}
           </button>
 
           {editMode && (
-            <button onClick={saveProfile}>
-              Save Profile
+            <button className="save-btn" onClick={saveProfile}>
+              Save to Database
             </button>
           )}
         </div>
@@ -276,27 +258,26 @@ export default function Profile() {
           {/* RESUME */}
           <section id="resume" className="card">
 
-           {/* PROFILE IMAGE SECTION */}
+            {/* PROFILE IMAGE */}
             <div className="profile-image">
-              <img
-                src={profile.profileImage || "https://via.placeholder.com/150"}
-                alt="profile"
-                className="profile-img"
-                onError={(e) => { e.target.src = "https://via.placeholder.com/150"; }}
-              />
+
+              {profile.profileImage ? (
+                <img
+                  src={profile.profileImage}
+                  alt="profile"
+                />
+              ) : (
+                <div className="avatar">No Image</div>
+              )}
+
               {editMode && (
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                      setProfileImageFile(file);
-                      setProfile(prev => ({ ...prev, profileImage: URL.createObjectURL(file) }));
-                    }
-                  }}
+                  onChange={(e) => setProfileImageFile(e.target.files[0])}
                 />
               )}
+
             </div>
 
             {editMode ? (
