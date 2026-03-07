@@ -44,6 +44,8 @@ export default function Profile() {
     completed: false,
   });
 
+
+
   const [newExperience, setNewExperience] = useState({
     title: "",
     company: "",
@@ -58,6 +60,8 @@ export default function Profile() {
 
   /* ================= FETCH PROFILE ================= */
 
+
+
   useEffect(() => {
     fetchProfileFromDB();
   }, []);
@@ -67,6 +71,11 @@ export default function Profile() {
   const fetchProfileFromDB = async () => {
     try {
       const token = localStorage.getItem("token");
+
+      if (!token) {
+        console.log("No token found");
+        return;
+      }
 
       const res = await axios.get(BACKEND_URL, {
         headers: { Authorization: `Bearer ${token}` },
@@ -468,11 +477,16 @@ export default function Profile() {
 
             <input
               type="file"
+              accept="application/pdf"
               onChange={(e) => setResumeFile(e.target.files[0])}
             />
 
             {profile.resume && (
-              <a href={profile.resume} target="_blank" rel="noreferrer">
+              <a
+                href={`${profile.resume}?fl_attachment=true`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Download Resume
               </a>
             )}
