@@ -482,11 +482,7 @@ export default function Profile() {
             />
 
             {profile.resume && (
-              <a
-                href={`${profile.resume}?fl_attachment=true`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href={profile.resume} download>
                 Download Resume
               </a>
             )}
