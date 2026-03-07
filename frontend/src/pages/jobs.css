@@ -139,11 +139,22 @@
 
 /* ================= DESCRIPTION ================= */
 
+/* ================= DESCRIPTION ================= */
+
 .description {
-  font-size: 14px;
-  color: rgb(71, 85, 105);
-  line-height: 1.5;
-  margin-bottom: 15px;
+  max-height: 65px;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.description.expanded {
+  max-height: 500px;
+}
+
+.read-more {
+  color: rgb(79,70,229);
+  cursor: pointer;
+  font-size: 13px;
 }
 
 /* ================= SKILLS ================= */

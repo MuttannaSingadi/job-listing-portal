@@ -9,6 +9,7 @@ export default function Jobs() {
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [expandedJob, setExpandedJob] = useState(null);
 
   /* ===== SAVE JOB STATE ===== */
   const [savedJobs, setSavedJobs] = useState([]);
@@ -28,6 +29,26 @@ export default function Jobs() {
         console.log("Error fetching jobs:", err);
         setLoading(false);
       });
+  }, []);
+
+  useEffect(() => {
+
+    const buttons = document.querySelectorAll(".read-more");
+
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+
+        const description = btn.previousElementSibling;
+
+        description.classList.toggle("expanded");
+
+        btn.textContent =
+          description.classList.contains("expanded")
+            ? "Show less"
+            : "Read more";
+      });
+    });
+
   }, []);
 
   /* ================= SEARCH FILTER ================= */
@@ -77,11 +98,16 @@ export default function Jobs() {
     }
   };
 
+   const toggleDescription = (id) => {
+    setExpandedJob(expandedJob === id ? null : id);
+  };
+
   return (
-    <div className="jobs-page">
+   <div className="jobs-page">
 
       {/* ===== HEADER SECTION ===== */}
       <div className="jobs-header">
+
         <button className="back-btn" onClick={() => navigate(-1)}>
           <FaArrowLeft />
           Back
@@ -102,16 +128,21 @@ export default function Jobs() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
+
       </div>
 
       {/* ===== JOB LIST ===== */}
+
       {loading ? (
         <p className="no-jobs">Loading jobs...</p>
       ) : filteredJobs.length === 0 ? (
         <p className="no-jobs">No matching jobs found 🚀</p>
       ) : (
+
         <div className="jobs-grid">
+
           {filteredJobs.map((job) => (
+
             <div key={job._id} className="job-card fade-in">
 
               <h3>{job.title}</h3>
@@ -127,13 +158,23 @@ export default function Jobs() {
                 <span>{job.location}</span>
               </div>
 
-              <p className="description">{job.description}</p>
+              <p className={`description ${expandedJob === job._id ? "expanded" : ""}`}>
+                {job.description}
+              </p>
+
+              <span
+                className="read-more"
+                onClick={() => toggleDescription(job._id)}
+              >
+                {expandedJob === job._id ? "Show less" : "Read more"}
+              </span>
 
               <div className="tags">
                 <span>{job.skills || "Skills not specified"}</span>
               </div>
 
               {/* BUTTONS */}
+
               <div className="job-actions">
 
                 <button
@@ -144,9 +185,7 @@ export default function Jobs() {
                 </button>
 
                 <button
-                  className={`save-job-btn ${
-                    savedJobs.includes(job._id) ? "saved" : ""
-                  }`}
+                  className={`save-job-btn ${savedJobs.includes(job._id) ? "saved" : ""}`}
                   onClick={() => handleSave(job._id)}
                 >
                   {savedJobs.includes(job._id) ? "Saved" : "Save"}
@@ -155,9 +194,13 @@ export default function Jobs() {
               </div>
 
             </div>
+
           ))}
+
         </div>
+
       )}
+
     </div>
   );
 }
