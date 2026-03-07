@@ -80,6 +80,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 24px;
+  align-items: stretch;
 }
 
 /* ================= JOB CARD ================= */
@@ -93,7 +94,9 @@
   animation: fadeUp 0.6s ease forwards;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 8px;
+  height: 100%;
 }
 
 .job-card:hover {
@@ -160,7 +163,7 @@
 .job-actions {
   display: flex;
   gap: 10px;
-  margin-top: 15px;
+  margin-top: auto;
 }
 
 /* ================= APPLY BUTTON ================= */
