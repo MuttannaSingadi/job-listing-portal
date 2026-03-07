@@ -3,7 +3,6 @@ import "./home.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import logo from "../assets/image.png";
-import profile from "../assets/image.png";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -11,6 +10,7 @@ export default function Home() {
   const [jobs, setJobs] = useState([]);
   const [menuOpen, setMenuOpen] = useState(false);
   const [followedCompanies, setFollowedCompanies] = useState([]);
+  const [profileImage, setProfileImage] = useState("");
 
   const [filters, setFilters] = useState({
     title: "",
@@ -20,9 +20,38 @@ export default function Home() {
   });
 
   // ✅ Check Login
+  // ✅ Check Login
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
+  }, []);
+
+
+  // ✅ Fetch profile image
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) return;
+
+    const fetchProfileImage = async () => {
+      try {
+        const res = await axios.get(
+          "https://job-listing-portal-iu9g.onrender.com/api/profile",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        if (res.data?.profileImage) {
+          setProfileImage(res.data.profileImage);
+        }
+
+      } catch (error) {
+        console.log("Profile image fetch error:", error);
+      }
+    };
+
+    fetchProfileImage();
   }, []);
 
   // ✅ Fetch Jobs
@@ -118,7 +147,7 @@ export default function Home() {
             <>
               <div className="desktop-profile">
                 <img
-                  src={profile}
+                  src={profileImage || logo}
                   alt="profile"
                   onClick={handleProfileClick}
                 />
@@ -140,7 +169,7 @@ export default function Home() {
         {isLoggedIn && (
           <div className="mobile-profile">
             <img
-              src={profile}
+              src={profileImage || logo}
               alt="profile"
               onClick={handleProfileClick}
             />
@@ -157,47 +186,47 @@ export default function Home() {
         </div>
 
       </div>
-     
+
       {/* ================= MOBILE MENU ================= */}
 
-<div
-  className={`mobile-menu ${menuOpen ? "open" : ""}`}
-  onClick={(e) => e.stopPropagation()}
->
+      <div
+        className={`mobile-menu ${menuOpen ? "open" : ""}`}
+        onClick={(e) => e.stopPropagation()}
+      >
 
-  <Link to="/jobs" onClick={() => setMenuOpen(false)}>
-    Jobs
-  </Link>
+        <Link to="/jobs" onClick={() => setMenuOpen(false)}>
+          Jobs
+        </Link>
 
-  <a href="#companies" onClick={() => setMenuOpen(false)}>
-    Companies
-  </a>
+        <a href="#companies" onClick={() => setMenuOpen(false)}>
+          Companies
+        </a>
 
-  {isLoggedIn && (
-    <Link to="/admin" onClick={() => setMenuOpen(false)}>
-      Admin
-    </Link>
-  )}
+        {isLoggedIn && (
+          <Link to="/admin" onClick={() => setMenuOpen(false)}>
+            Admin
+          </Link>
+        )}
 
-  {!isLoggedIn && (
-    <Link to="/auth" onClick={() => setMenuOpen(false)}>
-      Login
-    </Link>
-  )}
+        {!isLoggedIn && (
+          <Link to="/auth" onClick={() => setMenuOpen(false)}>
+            Login
+          </Link>
+        )}
 
-  {isLoggedIn && (
-    <button
-      className="logout-btn"
-      onClick={() => {
-        handleLogout();
-        setMenuOpen(false);
-      }}
-    >
-      Logout
-    </button>
-  )}
+        {isLoggedIn && (
+          <button
+            className="logout-btn"
+            onClick={() => {
+              handleLogout();
+              setMenuOpen(false);
+            }}
+          >
+            Logout
+          </button>
+        )}
 
-</div>
+      </div>
 
 
       {/* ================= OVERLAY ================= */}
