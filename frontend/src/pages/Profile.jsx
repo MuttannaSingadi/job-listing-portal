@@ -465,21 +465,34 @@ export default function Profile() {
 
             {editMode && (
               <>
-                <input placeholder="Name"
+                <input
+                  placeholder="Name"
                   value={newCertification.name}
-                  onChange={(e) => setNewCertification({ ...newCertification, name: e.target.value })} />
-                <input placeholder="Organization"
+                  onChange={(e) =>
+                    setNewCertification({ ...newCertification, name: e.target.value })
+                  }
+                />
+
+                <input
+                  placeholder="Organization"
                   value={newCertification.organization}
-                  onChange={(e) => setNewCertification({ ...newCertification, organization: e.target.value })} />
+                  onChange={(e) =>
+                    setNewCertification({
+                      ...newCertification,
+                      organization: e.target.value,
+                    })
+                  }
+                />
+
                 <button onClick={addCertification}>Add</button>
               </>
             )}
 
-            <input
-              type="file"
-              accept="application/pdf"
-              onChange={(e) => setResumeFile(e.target.files[0])}
-            />
+            {(profile.certifications || []).map((cert, i) => (
+              <div key={i}>
+                {cert.name} - {cert.organization}
+              </div>
+            ))}
 
             {profile.resume && (
               <a href={profile.resume} download>
