@@ -123,7 +123,7 @@ export default function Auth() {
     if (loginData.role === "employer") {
       navigate("/admin");
     } else {
-      navigate("/home");
+      navigate("/");
     }
 
   } catch (err) {
