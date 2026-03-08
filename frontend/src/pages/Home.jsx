@@ -135,7 +135,7 @@ export default function Home() {
 
           <a href="#companies">Companies</a>
 
-          <a href="#auth">Companies</a>
+          <a href="/auth">Employer/Job Seaker</a>
 
           {!isLoggedIn && (
             <Link to="/auth">Login</Link>
