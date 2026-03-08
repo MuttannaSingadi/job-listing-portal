@@ -121,9 +121,9 @@ export default function Auth() {
 
     // ROLE BASED NAVIGATION
     if (loginData.role === "employer") {
-      navigate("/employer-dashboard");
+      navigate("/admin");
     } else {
-      navigate("/jobseeker-dashboard");
+      navigate("/Home");
     }
 
   } catch (err) {
