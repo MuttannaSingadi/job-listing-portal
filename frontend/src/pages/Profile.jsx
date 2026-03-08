@@ -194,6 +194,30 @@ export default function Profile() {
     });
   };
 
+  // DELETE SKILL
+  const deleteSkill = (index) => {
+    const updatedSkills = profile.skills.filter((_, i) => i !== index);
+    setProfile({ ...profile, skills: updatedSkills });
+  };
+
+  // DELETE EDUCATION
+  const deleteEducation = (index) => {
+    const updatedEducation = profile.education.filter((_, i) => i !== index);
+    setProfile({ ...profile, education: updatedEducation });
+  };
+
+  // DELETE EXPERIENCE
+  const deleteExperience = (index) => {
+    const updatedExperience = profile.experience.filter((_, i) => i !== index);
+    setProfile({ ...profile, experience: updatedExperience });
+  };
+
+  // DELETE CERTIFICATION
+  const deleteCertification = (index) => {
+    const updatedCertifications = profile.certifications.filter((_, i) => i !== index);
+    setProfile({ ...profile, certifications: updatedCertifications });
+  };
+
   const addCertification = () => {
     setProfile({
       ...profile,
@@ -374,11 +398,18 @@ export default function Profile() {
                   onChange={(e) => setNewSkill(e.target.value)}
                   placeholder="Add skill"
                 />
-                <button onClick={addSkill}>Add</button>
+                <button className="add-btn" onClick={addSkill}>Add</button>
               </>
             )}
             {(profile.skills || []).map((skill, i) => (
-              <div key={i}>{skill}</div>
+              <div key={i}>
+                {skill}
+                {editMode && (
+                  <button className="delete-btn" onClick={() => deleteSkill(i)}>
+                    Delete
+                  </button>
+                )}
+              </div>
             ))}
           </section>
 
@@ -423,7 +454,7 @@ export default function Profile() {
                     onChange={(e) => setNewEducation({ ...newEducation, completed: e.target.checked })} />
                 </label>
 
-                <button onClick={addEducation}>Add</button>
+               <button className="add-btn" onClick={addSkill}>Add</button>
               </>
             )}
 
@@ -432,6 +463,12 @@ export default function Profile() {
                 <strong>{edu.level}</strong> - {edu.university}<br />
                 {edu.course} ({edu.specialization})<br />
                 {edu.startDate} - {edu.endDate}
+
+                {editMode && (
+                  <button className="delete-btn" onClick={() => deleteEducation(i)}>
+                    Delete
+                  </button>
+                )}
               </div>
             ))}
           </section>
@@ -448,13 +485,19 @@ export default function Profile() {
                 <input placeholder="Company"
                   value={newExperience.company}
                   onChange={(e) => setNewExperience({ ...newExperience, company: e.target.value })} />
-                <button onClick={addExperience}>Add</button>
+                <button className="add-btn" onClick={addExperience}>Add</button>
               </>
             )}
 
             {(profile.experience || []).map((exp, i) => (
               <div key={i}>
                 {exp.title} at {exp.company}
+
+                {editMode && (
+                  <button className="delete-btn" onClick={() => deleteExperience(i)}>
+                    Delete
+                  </button>
+                )}
               </div>
             ))}
           </section>
@@ -484,13 +527,19 @@ export default function Profile() {
                   }
                 />
 
-                <button onClick={addCertification}>Add</button>
+               <button className="add-btn" onClick={addCertification}>Add</button>
               </>
             )}
 
             {(profile.certifications || []).map((cert, i) => (
               <div key={i}>
                 {cert.name} - {cert.organization}
+
+                {editMode && (
+                  <button className="delete-btn" onClick={() => deleteCertification(i)}>
+                    Delete
+                  </button>
+                )}
               </div>
             ))}
 

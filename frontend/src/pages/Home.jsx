@@ -135,7 +135,7 @@ export default function Home() {
 
           <a href="#companies">Companies</a>
 
-          <Link to="/auth">Employer/Job Seaker</Link>
+          <Link to="/auth">Employer/Job Seekers</Link>
 
           {!isLoggedIn && (
             <Link to="/auth">Login</Link>
@@ -200,11 +200,7 @@ export default function Home() {
           Companies
         </a>
 
-        {isLoggedIn && (
-          <Link to="/admin" onClick={() => setMenuOpen(false)}>
-            Admin
-          </Link>
-        )}
+        <Link to="/auth">LogIn</Link>
 
         {!isLoggedIn && (
           <Link to="/auth" onClick={() => setMenuOpen(false)}>
@@ -483,7 +479,7 @@ export default function Home() {
               <li><a href="/jobs">Jobs</a></li>
               <li><a href="/companies">Companies</a></li>
               <li><a href="/auth">Login</a></li>
-              <li><a href="/admin">Admin</a></li>
+              <li><a href="/auth">Employer/Job Seekers</a></li>
             </ul>
           </div>
 
