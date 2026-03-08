@@ -135,9 +135,7 @@ export default function Home() {
 
           <a href="#companies">Companies</a>
 
-          {isLoggedIn && (
-            <Link to="/admin">Admin</Link>
-          )}
+          <a href="#auth">Companies</a>
 
           {!isLoggedIn && (
             <Link to="/auth">Login</Link>
