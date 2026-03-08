@@ -89,6 +89,7 @@ export default function Auth() {
 
   // ================= LOGIN =================
   const [loginData, setLoginData] = useState({
+    role: "jobseeker",
     email: "",
     password: "",
   });
@@ -98,34 +99,38 @@ export default function Auth() {
   };
 
   const handleLogin = async () => {
-    if (!loginData.email || !loginData.password) {
-      alert("Enter email & password");
+  if (!loginData.email || !loginData.password) {
+    alert("Enter email & password");
+    return;
+  }
+
+  try {
+    const res = await axios.post(`${API}/api/auth/login`, loginData);
+
+    console.log("LOGIN RESPONSE:", res.data);
+
+    if (res.data.token) {
+      localStorage.setItem("token", res.data.token);
+      console.log("TOKEN SAVED:", localStorage.getItem("token"));
+    } else {
+      alert("Token not received");
       return;
     }
 
-    try {
-      const res = await axios.post(`${API}/api/auth/login`, loginData);
+    alert(res.data.msg);
 
-      console.log("LOGIN RESPONSE:", res.data);
-
-      if (res.data.token) {
-        localStorage.setItem("token", res.data.token);
-        console.log("TOKEN SAVED:", localStorage.getItem("token"));
-      } else {
-        alert("Token not received");
-        return;
-      }
-
-      alert(res.data.msg);
-
-      navigate("/");
-      window.location.reload(); // Important Fix
-
-    } catch (err) {
-      console.log("LOGIN ERROR:", err);
-      alert(err.response?.data?.msg || "Error");
+    // ROLE BASED NAVIGATION
+    if (loginData.role === "employer") {
+      navigate("/employer-dashboard");
+    } else {
+      navigate("/jobseeker-dashboard");
     }
-  };
+
+  } catch (err) {
+    console.log("LOGIN ERROR:", err);
+    alert(err.response?.data?.msg || "Error");
+  }
+};
 
   // ================= RESET =================
   const handleForgotPassword = async () => {
@@ -174,6 +179,30 @@ export default function Auth() {
         {isLogin && (
           <div className="form-container">
             <h2>Login</h2>
+
+            <div className="role-select">
+              <label>
+                <input
+                  type="radio"
+                  name="role"
+                  value="jobseeker"
+                  checked={loginData.role === "jobseeker"}
+                  onChange={handleLoginChange}
+                />
+                Job Seeker
+              </label>
+
+              <label>
+                <input
+                  type="radio"
+                  name="role"
+                  value="employer"
+                  checked={loginData.role === "employer"}
+                  onChange={handleLoginChange}
+                />
+                Employer
+              </label>
+            </div>
 
             <div className="input-group">
               <input
