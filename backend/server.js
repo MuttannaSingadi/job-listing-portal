@@ -8,6 +8,7 @@ const path = require("path");
 
 const connectDB = require("./config/db");
 const employeeRoutes = require("./routes/employee");
+
 const profile = require("./routes/profile");
 
 const app = express();
@@ -43,6 +44,7 @@ app.use("/api/jobs", require("./routes/jobRoutes"));
 app.use("/api/applications", require("./routes/applicationRoutes"));
 app.use("/api/admin", require("./routes/admin"));
 app.use("/api/profile", require("./routes/profile"));
+app.use("/api/employee", employeeRoutes);
 
 /* ================= 404 ================= */
 
@@ -57,5 +59,3 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
-
-app.use("/api/employee", employeeRoutes);
