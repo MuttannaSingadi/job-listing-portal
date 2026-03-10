@@ -119,7 +119,7 @@ const handleLogin = async () => {
     alert(res.data.msg);
 
     if (res.data.role === "employer") {
-      navigate("/jobs");
+      navigate("/employeeDashboard");
     } else {
       navigate("/");
     }
