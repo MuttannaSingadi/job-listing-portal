@@ -109,27 +109,27 @@ export default function Admin() {
     };
 
     const saveProfile = async () => {
-  try {
+        try {
 
-    const token = localStorage.getItem("token");
+            const token = localStorage.getItem("token");
 
-    await axios.put(
-      `${API}/api/employee/profile`,
-      employee,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
+            await axios.put(
+                `${API}/api/employee/profile`,
+                employee,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            alert("Profile Updated ✅");
+            setEditMode(false);
+
+        } catch (err) {
+            console.log("Profile update error:", err.response?.data || err.message);
         }
-      }
-    );
-
-    alert("Profile Updated ✅");
-    setEditMode(false);
-
-  } catch (err) {
-    console.log("Profile update error:", err.response?.data || err.message);
-  }
-};
+    };
 
     /* ================= FETCH PROFILES ================= */
     const fetchProfiles = async () => {
@@ -154,6 +154,20 @@ export default function Admin() {
         fetchApplications();
         fetchProfiles();
     }, []);
+
+    router.get("/profile/:email", async (req, res) => {
+        try {
+
+            const employee = await Employee.findOne({
+                email: req.params.email
+            });
+
+            res.json(employee);
+
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    });
 
     /* ================= POST JOB ================= */
     const handleChange = (e) => {

@@ -1,24 +1,21 @@
-const router = require("express").Router()
-const Employee = require("../models/Employee")
+const express = require("express");
+const router = express.Router();
+const Employee = require("../models/Employee");
 
-router.put("/profile", async(req,res)=>{
+router.put("/profile", async (req, res) => {
+  try {
 
-try{
+    const updated = await Employee.findOneAndUpdate(
+      { email: req.body.email },
+      req.body,
+      { new: true }
+    );
 
-const updated = await Employee.findOneAndUpdate(
-{email:req.body.email},
-req.body,
-{new:true}
-)
+    res.json(updated);
 
-res.json(updated)
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
-}catch(err){
-
-res.status(500).json(err)
-
-}
-
-})
-
-module.exports = router
+module.exports = router;

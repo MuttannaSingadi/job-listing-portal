@@ -58,6 +58,6 @@ app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
 
-const employeeRoutes = require("./routes/employee")
+const employeeRoutes = require("./routes/employee");
 
-app.use("/api/employee",employeeRoutes)
+app.use("/api/employee", employeeRoutes);
