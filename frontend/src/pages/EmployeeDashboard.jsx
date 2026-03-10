@@ -155,21 +155,7 @@ export default function Admin() {
         fetchProfiles();
     }, []);
 
-    router.get("/profile/:email", async (req, res) => {
-        try {
-
-            const employee = await Employee.findOne({
-                email: req.params.email
-            });
-
-            res.json(employee);
-
-        } catch (err) {
-            res.status(500).json(err);
-        }
-    });
-
-    /* ================= POST JOB ================= */
+       /* ================= POST JOB ================= */
     const handleChange = (e) => {
         setJob({ ...job, [e.target.name]: e.target.value });
     };
