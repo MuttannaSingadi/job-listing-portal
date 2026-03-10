@@ -19,7 +19,7 @@ export default function Home() {
     skills: "",
   });
 
-  // ✅ Check Login
+  
   // ✅ Check Login
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -131,7 +131,7 @@ export default function Home() {
         {/* DESKTOP MENU */}
         <div className="nav-right desktop-menu">
 
-          <Link to="/EmployeeDashboard">Jobs</Link>
+          <Link to="/jobs">Jobs</Link>
 
           <a href="#companies">Companies</a>
 
