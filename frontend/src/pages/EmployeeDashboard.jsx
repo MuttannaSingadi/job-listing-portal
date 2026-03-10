@@ -109,16 +109,27 @@ export default function Admin() {
     };
 
     const saveProfile = async () => {
-        try {
-            await axios.put("http://localhost:5000/api/employee/profile", employee)
+  try {
 
-            alert("Profile Updated")
-            setEditMode(false)
+    const token = localStorage.getItem("token");
 
-        } catch (err) {
-            console.log(err)
+    await axios.put(
+      `${API}/api/employee/profile`,
+      employee,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
         }
-    }
+      }
+    );
+
+    alert("Profile Updated ✅");
+    setEditMode(false);
+
+  } catch (err) {
+    console.log("Profile update error:", err.response?.data || err.message);
+  }
+};
 
     /* ================= FETCH PROFILES ================= */
     const fetchProfiles = async () => {
