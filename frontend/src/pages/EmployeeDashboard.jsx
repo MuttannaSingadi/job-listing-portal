@@ -226,15 +226,19 @@ export default function Admin() {
                                     alt="Profile"
                                     className="profile-img-big"
                                 />
+
                                 {editMode && (
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={(e) => setProfileImage(e.target.files[0])}
-                                    />
+                                    <label className="edit-image-btn">
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={(e) => setProfileImage(e.target.files[0])}
+                                            style={{ display: "none" }}
+                                        />
+                                        <i className="fa fa-pencil"></i> {/* pencil icon */}
+                                    </label>
                                 )}
                             </div>
-
                             <div className="profile-details">
                                 {!editMode ? (
                                     <>
