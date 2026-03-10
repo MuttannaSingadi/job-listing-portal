@@ -87,18 +87,22 @@ export default function Auth() {
     }
   };
 
-  // ================= LOGIN =================
-  const [loginData, setLoginData] = useState({
-    role: "jobseeker",
-    email: "",
-    password: "",
+    // ================= LOGIN =================
+
+const [loginData, setLoginData] = useState({
+  role: "jobseeker",
+  email: "",
+  password: "",
+});
+
+const handleLoginChange = (e) => {
+  setLoginData({
+    ...loginData,
+    [e.target.name]: e.target.value,
   });
+};
 
-  const handleLoginChange = (e) => {
-    setLoginData({ ...loginData, [e.target.name]: e.target.value });
-  };
-
-  const handleLogin = async () => {
+const handleLogin = async () => {
   if (!loginData.email || !loginData.password) {
     alert("Enter email & password");
     return;
@@ -107,28 +111,21 @@ export default function Auth() {
   try {
     const res = await axios.post(`${API}/api/auth/login`, loginData);
 
-    console.log("LOGIN RESPONSE:", res.data);
-
     if (res.data.token) {
       localStorage.setItem("token", res.data.token);
-      console.log("TOKEN SAVED:", localStorage.getItem("token"));
-    } else {
-      alert("Token not received");
-      return;
+      localStorage.setItem("role", res.data.role);
     }
 
     alert(res.data.msg);
 
-    // ROLE BASED NAVIGATION
-    if (loginData.role === "employer") {
+    if (res.data.role === "employer") {
       navigate("/admin");
     } else {
       navigate("/");
     }
 
   } catch (err) {
-    console.log("LOGIN ERROR:", err);
-    alert(err.response?.data?.msg || "Error");
+    alert(err.response?.data?.msg || "Login failed");
   }
 };
 
@@ -231,7 +228,9 @@ export default function Auth() {
               Forgot Password?
             </button>
 
-            <button onClick={handleLogin}>Login</button>
+            <button type="button" onClick={handleLogin}>
+              Login
+            </button>
           </div>
         )}
 
@@ -372,7 +371,9 @@ export default function Auth() {
               </span>
             </div>
 
-            <button onClick={handleSignup}>Sign Up</button>
+            <button type="button" onClick={handleSignup}>
+              Sign Up
+            </button>
           </div>
         )}
 

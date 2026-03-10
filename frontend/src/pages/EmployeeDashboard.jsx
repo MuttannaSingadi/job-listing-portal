@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./admin.css";
+import "./EmployeeDashboard.css";
 import profile from "../assets/image.png";
 import { FaArrowLeft } from "react-icons/fa";
 import logo from "../assets/image.png";
+
 import {
   BarChart,
   Bar,

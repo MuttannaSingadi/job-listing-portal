@@ -131,7 +131,7 @@ export default function Home() {
         {/* DESKTOP MENU */}
         <div className="nav-right desktop-menu">
 
-          <Link to="/jobs">Jobs</Link>
+          <Link to="/EmployeeDashboard">Jobs</Link>
 
           <a href="#companies">Companies</a>
 
