@@ -1,40 +1,18 @@
+// backend/models/Employee.js
 const mongoose = require("mongoose");
 
 const EmployeeSchema = new mongoose.Schema(
-{
-  name: {
-    type: String,
-    required: true
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    phone: String,
+    role: String,
+    company: String,
+    location: String,
+    website: String,
+    profileImage: String, // <-- add this
   },
-
-  email: {
-    type: String,
-    required: true,
-    unique: true
-  },
-
-  phone: {
-    type: String
-  },
-
-  role: {
-    type: String
-  },
-
-  company: {
-    type: String
-  },
-
-  location: {
-    type: String
-  },
-
-  website: {
-    type: String
-  }
-
-},
-{ timestamps: true }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("Employee", EmployeeSchema);

@@ -45,7 +45,7 @@ app.use("/api/applications", require("./routes/applicationRoutes"));
 app.use("/api/admin", require("./routes/admin"));
 app.use("/api/profile", require("./routes/profile"));
 app.use("/api/employee", employeeRoutes);
-
+app.use("/uploads", express.static("uploads"));
 /* ================= 404 ================= */
 
 app.use((req, res) => {

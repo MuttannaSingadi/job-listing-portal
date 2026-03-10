@@ -6,19 +6,6 @@ import profile from "../assets/image.png";
 import { FaArrowLeft } from "react-icons/fa";
 import logo from "../assets/image.png";
 
-import {
-    BarChart,
-    Bar,
-    XAxis,
-    YAxis,
-    Tooltip,
-    ResponsiveContainer,
-    PieChart,
-    Pie,
-    Cell,
-    Legend
-} from "recharts";
-
 const API =
     import.meta.env.VITE_API_URL ||
     "https://job-listing-portal-iu9g.onrender.com";
@@ -31,7 +18,8 @@ export default function Admin() {
     const [applications, setApplications] = useState([]);
     const [profiles, setProfiles] = useState([]);
     const [menuOpen, setMenuOpen] = useState(false);
-
+    const [profileImage, setProfileImage] = useState(null);
+    
     const [job, setJob] = useState({
         title: "",
         company: "",
