@@ -2,17 +2,17 @@ const express = require("express");
 const router = express.Router();
 const Employee = require("../models/Employee");
 
-
-// CREATE or UPDATE PROFILE
 router.put("/profile", async (req, res) => {
   try {
 
-    let employee = await Employee.findOne({ email: req.body.email });
+    const { email } = req.body;
+
+    let employee = await Employee.findOne({ email });
 
     if (employee) {
 
       employee = await Employee.findOneAndUpdate(
-        { email: req.body.email },
+        { email },
         req.body,
         { new: true }
       );
@@ -26,8 +26,11 @@ router.put("/profile", async (req, res) => {
 
     res.json(employee);
 
-  } catch (err) {
-    res.status(500).json(err);
+  } catch (error) {
+
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+
   }
 });
 
