@@ -7,7 +7,7 @@ const cors = require("cors");
 const path = require("path");
 
 const connectDB = require("./config/db");
-
+const employeeRoutes = require("./routes/employee");
 const profile = require("./routes/profile");
 
 const app = express();
