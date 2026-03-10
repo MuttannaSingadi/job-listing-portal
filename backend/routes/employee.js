@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const Employee = require("../models/Employee");
-const authMiddleware = require("../middleware/auth"); // your JWT auth middleware
+const authMiddleware = require("../middleware/auth"); // JWT auth middleware
 
 // Use memory storage to avoid disk issues on Render
 const storage = multer.memoryStorage();
@@ -12,10 +12,9 @@ const upload = multer({ storage });
 /* ================= GET PROFILE ================= */
 router.get("/profile", authMiddleware, async (req, res) => {
   try {
-    // Assuming authMiddleware sets req.user.email
-    const email = req.user.email;
-
+    const email = req.user.email; // set by authMiddleware
     const employee = await Employee.findOne({ email });
+
     if (!employee) return res.status(404).json({ message: "Employee not found" });
 
     res.json(employee);
@@ -30,36 +29,30 @@ router.put("/profile", authMiddleware, upload.single("profileImage"), async (req
   try {
     const { name, email, phone, role, company, location, website } = req.body;
 
-    // Optional: store image as Base64 for Render
-    let profileImageData = req.file ? req.file.buffer.toString("base64") : undefined;
-
+    // Find existing employee or create new
     let employee = await Employee.findOne({ email });
 
+    // Convert uploaded image to Base64 if present
+    const profileImageData = req.file
+      ? req.file.buffer.toString("base64")
+      : employee?.profileImage; // keep old image if no new image uploaded
+
+    const employeeData = {
+      name,
+      phone,
+      role,
+      company,
+      location,
+      website,
+      profileImage: profileImageData,
+    };
+
     if (employee) {
-      employee = await Employee.findOneAndUpdate(
-        { email },
-        {
-          name,
-          phone,
-          role,
-          company,
-          location,
-          website,
-          ...(profileImageData && { profileImage: profileImageData }),
-        },
-        { new: true }
-      );
+      // Update existing employee
+      employee = await Employee.findOneAndUpdate({ email }, employeeData, { new: true });
     } else {
-      employee = new Employee({
-        name,
-        email,
-        phone,
-        role,
-        company,
-        location,
-        website,
-        profileImage: profileImageData,
-      });
+      // Create new employee
+      employee = new Employee({ email, ...employeeData });
       await employee.save();
     }
 
