@@ -4,94 +4,99 @@ import axios from "axios";
 
 export default function ApplyJob() {
 
-  const { id } = useParams();
+    const { id } = useParams();
 
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: ""
-  });
-
-  const [resume, setResume] = useState(null);
-
-  const handleChange = (e) => {
-
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value
+    const [form, setForm] = useState({
+        name: "",
+        email: "",
+        phone: ""
     });
 
-  };
+    const [resume, setResume] = useState(null);
 
-  const handleSubmit = async () => {
+    const handleChange = (e) => {
 
-    const data = new FormData();
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value
+        });
 
-    data.append("jobId", id);
-    data.append("jobTitle", "Job Application");
-    data.append("applicantName", form.name);
-    data.append("applicantEmail", form.email);
-    data.append("phone", form.phone);
-    data.append("resume", resume);
+    };
 
-    try {
+    const handleSubmit = async () => {
 
-      await axios.post(
-        "http://localhost:5000/api/applications/apply",
-        data
-      );
+        const data = new FormData();
 
-      alert("Application submitted successfully");
+        data.append("jobId", id);
+        data.append("jobTitle", "Job Application");
+        data.append("applicantName", form.name);
+        data.append("applicantEmail", form.email);
+        data.append("phone", form.phone);
+        data.append("resume", resume);
 
-    } catch (err) {
+        try {
 
-      alert("Application failed");
+            await axios.post(
+                "https://job-listing-portal-iu9g.onrender.com/api/applications/apply",
+                data,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                }
+            );
 
-    }
+            alert("Application submitted successfully");
 
-  };
+        } catch (err) {
 
-  return (
+            alert("Application failed");
 
-    <div style={{ padding: "40px" }}>
+        }
 
-      <h2>Apply for Job</h2>
+    };
 
-      <input
-        name="name"
-        placeholder="Full Name"
-        onChange={handleChange}
-      />
+    return (
 
-      <br/><br/>
+        <div style={{ padding: "40px" }}>
 
-      <input
-        name="email"
-        placeholder="Email"
-        onChange={handleChange}
-      />
+            <h2>Apply for Job</h2>
 
-      <br/><br/>
+            <input
+                name="name"
+                placeholder="Full Name"
+                onChange={handleChange}
+            />
 
-      <input
-        name="phone"
-        placeholder="Phone"
-        onChange={handleChange}
-      />
+            <br /><br />
 
-      <br/><br/>
+            <input
+                name="email"
+                placeholder="Email"
+                onChange={handleChange}
+            />
 
-      <input
-        type="file"
-        onChange={(e) => setResume(e.target.files[0])}
-      />
+            <br /><br />
 
-      <br/><br/>
+            <input
+                name="phone"
+                placeholder="Phone"
+                onChange={handleChange}
+            />
 
-      <button onClick={handleSubmit}>
-        Submit Application
-      </button>
+            <br /><br />
 
-    </div>
-  );
+            <input
+                type="file"
+                onChange={(e) => setResume(e.target.files[0])}
+            />
+
+            <br /><br />
+
+            <button onClick={handleSubmit}>
+                Submit Application
+            </button>
+
+        </div>
+    );
 }
