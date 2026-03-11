@@ -56,7 +56,7 @@ export default function Jobs() {
 
   }, []);
 
-  /* ================= SEARCH FILTER ================= */
+
   /* ================= FILTER + SEARCH ================= */
   useEffect(() => {
 
@@ -97,35 +97,43 @@ export default function Jobs() {
   }, [search, jobs, jobTypes, categories, minSalary, maxSalary]);
 
   /* ================= APPLY ================= */
-  const handleApply = async (jobId) => {
-    const token = localStorage.getItem("token");
+ const handleApply = async (job) => {
+  const token = localStorage.getItem("token");
 
-    if (!token) {
-      alert("Please login to apply");
-      navigate("/auth");
-      return;
-    }
+  if (!token) {
+    alert("Please login to apply");
+    navigate("/auth");
+    return;
+  }
 
-    try {
-      await axios.post(
-        "https://job-listing-portal-iu9g.onrender.com/api/applications/apply",
-        { jobId, applicantEmail: "user@example.com" }
-      );
+  const user = JSON.parse(localStorage.getItem("user")) || {};
 
-      alert("Application submitted successfully ✅");
-    } catch (err) {
-      alert("Application failed ❌");
-    }
-  };
+  try {
+    await axios.post(
+      "http://localhost:5000/api/applications/apply",
+      {
+        jobId: job._id,
+        jobTitle: job.title,
+        applicantName: user.name,
+        applicantEmail: user.email
+      }
+    );
 
-  /* ===== JOB TYPE FILTER ===== */
-  const handleJobTypeChange = (type) => {
-    if (jobTypes.includes(type)) {
-      setJobTypes(jobTypes.filter((t) => t !== type));
-    } else {
-      setJobTypes([...jobTypes, type]);
-    }
-  };
+    alert("Application submitted successfully ✅");
+
+  } catch (error) {
+    console.log(error.response?.data);
+    alert(error.response?.data?.msg || "Application failed ❌");
+  }
+};
+
+const handleJobTypeChange = (type) => {
+  if (jobTypes.includes(type)) {
+    setJobTypes(jobTypes.filter((t) => t !== type));
+  } else {
+    setJobTypes([...jobTypes, type]);
+  }
+};
 
   /* ===== CATEGORY FILTER ===== */
   const handleCategoryChange = (category) => {
@@ -367,7 +375,7 @@ export default function Jobs() {
 
                     <button
                       className="apply-btn"
-                      onClick={() => handleApply(job._id)}
+                      onClick={() => handleApply(job)}
                     >
                       Apply Now
                     </button>

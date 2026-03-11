@@ -4,9 +4,20 @@ const applicationSchema = new mongoose.Schema(
   {
     jobId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Job", // MUST match Job model name
+      ref: "Job",
       required: true,
     },
+
+    jobTitle: {
+      type: String,
+      required: true,
+    },
+
+    applicantName: {
+      type: String,
+      required: true,
+    },
+
     applicantEmail: {
       type: String,
       required: true,

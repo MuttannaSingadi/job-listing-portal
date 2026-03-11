@@ -10,6 +10,7 @@ const connectDB = require("./config/db");
 const employeeRoutes = require("./routes/employee");
 
 const profile = require("./routes/profile");
+const applicationRoutes = require("./routes/applicationRoutes");
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.use("/api/admin", require("./routes/admin"));
 app.use("/api/profile", require("./routes/profile"));
 app.use("/api/employee", employeeRoutes);
 app.use("/uploads", express.static("uploads"));
+app.use("/api/applications", applicationRoutes);
 /* ================= 404 ================= */
 
 app.use((req, res) => {
