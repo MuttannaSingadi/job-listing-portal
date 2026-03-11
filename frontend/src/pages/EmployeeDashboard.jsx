@@ -312,20 +312,57 @@ export default function Admin() {
 
                 {/* ===== APPLICATIONS ===== */}
                 {active === "applications" && (
-                    <div className="jobs-grid">
-                        {applications.length === 0 ? (
-                            <p>No applications yet</p>
-                        ) : (
-                            applications.map((app) => (
-                                <div key={app._id} className="job-card">
-                                    <h4>{app.jobId?.title}</h4>
-                                    <p>Applicant: {app.applicantEmail}</p>
-                                    <p>Company: {app.jobId?.company}</p>
-                                </div>
-                            ))
-                        )}
-                    </div>
-                )}
+  <div className="applications-section">
+
+    <h2>Job Applications</h2>
+
+    {applications.length === 0 ? (
+      <p>No applications yet</p>
+    ) : (
+      <div className="applications-grid">
+
+        {applications.map((app) => (
+
+          <div key={app._id} className="application-card">
+
+            <h3>{app.jobId?.title}</h3>
+
+            <p>
+              <strong>Company:</strong> {app.jobId?.company}
+            </p>
+
+            <p>
+              <strong>Name:</strong> {app.applicantName}
+            </p>
+
+            <p>
+              <strong>Email:</strong> {app.applicantEmail}
+            </p>
+
+            <p>
+              <strong>Phone:</strong> {app.phone}
+            </p>
+
+            {app.resumeUrl && (
+              <a
+                href={app.resumeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="resume-btn"
+              >
+                View Resume
+              </a>
+            )}
+
+          </div>
+
+        ))}
+
+      </div>
+    )}
+
+  </div>
+)}
 
                 {/* ===== CANDIDATES ===== */}
                 {active === "profiles" && (
