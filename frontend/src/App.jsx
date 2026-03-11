@@ -5,6 +5,7 @@ import Admin from "./pages/Admin";
 import Jobs from "./pages/Jobs";
 import Profile from "./pages/Profile";
 import EmployeeDashboard from "./pages/EmployeeDashboard";
+import ApplyJob from "./pages/ApplyJob";
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route path="/jobs" element={<Jobs />} />  
         <Route path="/profile" element={<Profile />} />    
         <Route path="/EmployeeDashboard" element={<EmployeeDashboard />} />
+        <Route path="/apply/:id" element={<ApplyJob />} />
       </Routes>
     </Router>
   );

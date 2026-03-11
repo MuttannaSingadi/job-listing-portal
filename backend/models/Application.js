@@ -22,6 +22,13 @@ const applicationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+
+    phone: String,
+
+    resumeUrl: {
+      type: String
+    }
+
   },
   { timestamps: true }
 );

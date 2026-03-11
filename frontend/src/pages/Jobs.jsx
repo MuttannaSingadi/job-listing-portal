@@ -95,46 +95,7 @@ export default function Jobs() {
     setFilteredJobs(filtered);
 
   }, [search, jobs, jobTypes, categories, minSalary, maxSalary]);
-
-  /* ================= APPLY ================= */
- const handleApply = async (job) => {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    alert("Please login to apply");
-    navigate("/auth");
-    return;
-  }
-
-  const user = JSON.parse(localStorage.getItem("user")) || {};
-
-  try {
-    await axios.post(
-      "http://localhost:5000/api/applications/apply",
-      {
-        jobId: job._id,
-        jobTitle: job.title,
-        applicantName: user.name,
-        applicantEmail: user.email
-      }
-    );
-
-    alert("Application submitted successfully ✅");
-
-  } catch (error) {
-    console.log(error.response?.data);
-    alert(error.response?.data?.msg || "Application failed ❌");
-  }
-};
-
-const handleJobTypeChange = (type) => {
-  if (jobTypes.includes(type)) {
-    setJobTypes(jobTypes.filter((t) => t !== type));
-  } else {
-    setJobTypes([...jobTypes, type]);
-  }
-};
-
+  
   /* ===== CATEGORY FILTER ===== */
   const handleCategoryChange = (category) => {
     if (categories.includes(category)) {
@@ -375,7 +336,7 @@ const handleJobTypeChange = (type) => {
 
                     <button
                       className="apply-btn"
-                      onClick={() => handleApply(job)}
+                      onClick={() => navigate(`/apply/${job._id}`)}
                     >
                       Apply Now
                     </button>
