@@ -29,6 +29,8 @@ export default function Profile() {
   const [resumeFile, setResumeFile] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const [notifications, setNotifications] = useState([]);
+  const [showNotifications, setShowNotifications] = useState(false);
   const [active, setActive] = useState("resume");
 
   const [newSkill, setNewSkill] = useState("");
@@ -66,6 +68,11 @@ export default function Profile() {
     fetchProfileFromDB();
   }, []);
 
+  useEffect(() => {
+    fetchProfileFromDB();
+    fetchNotifications();
+  }, []);
+
   /* ================= FETCH FUNCTION ================= */
 
   const fetchProfileFromDB = async () => {
@@ -85,6 +92,26 @@ export default function Profile() {
 
     } catch (error) {
       console.log("REFETCH ERROR:", error);
+    }
+  };
+
+  const fetchNotifications = async () => {
+    try {
+
+      const token = localStorage.getItem("token");
+
+      const res = await axios.get(
+        "https://job-listing-portal-iu9g.onrender.com/api/notifications",
+        {
+          params: { email: profile.email },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+
+      setNotifications(res.data);
+
+    } catch (error) {
+      console.log("Notification fetch error:", error);
     }
   };
 
@@ -233,6 +260,35 @@ export default function Profile() {
     <div className="dashboard">
 
       <header className="topbar">
+
+         <div className="notification-wrapper">
+    <button
+      className="notification-btn"
+      onClick={() => setShowNotifications(!showNotifications)}
+    >
+      🔔
+      {notifications.length > 0 && (
+        <span className="notification-count">
+          {notifications.length}
+        </span>
+      )}
+    </button>
+
+    {showNotifications && (
+      <div className="notification-dropdown">
+        {notifications.length === 0 ? (
+          <p>No notifications</p>
+        ) : (
+          notifications.map((n) => (
+            <div key={n._id} className="notification-item">
+              {n.message}
+            </div>
+          ))
+        )}
+      </div>
+    )}
+  </div>
+
 
         {/* Mobile Menu Button */}
         <button
@@ -454,7 +510,7 @@ export default function Profile() {
                     onChange={(e) => setNewEducation({ ...newEducation, completed: e.target.checked })} />
                 </label>
 
-               <button className="add-btn" onClick={addSkill}>Add</button>
+                <button className="add-btn" onClick={addSkill}>Add</button>
               </>
             )}
 
@@ -527,7 +583,7 @@ export default function Profile() {
                   }
                 />
 
-               <button className="add-btn" onClick={addCertification}>Add</button>
+                <button className="add-btn" onClick={addCertification}>Add</button>
               </>
             )}
 
