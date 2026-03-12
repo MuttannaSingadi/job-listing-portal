@@ -80,4 +80,35 @@ router.get("/", async (req, res) => {
 
 });
 
+const Notification = require("../models/Notification");
+
+router.put("/status/:id", async (req, res) => {
+
+  try {
+
+    const { status } = req.body;
+
+    const application = await Application.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    );
+
+    // Create notification
+    await Notification.create({
+      userEmail: application.applicantEmail,
+      message: `Your application for ${application.jobTitle} moved to ${status}`
+    });
+
+    res.json(application);
+
+  } catch (error) {
+
+    console.log(error);
+    res.status(500).json({ msg: "Status update failed" });
+
+  }
+
+});
+
 module.exports = router;

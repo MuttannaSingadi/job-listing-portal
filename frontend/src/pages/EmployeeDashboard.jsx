@@ -169,6 +169,33 @@ export default function Admin() {
         }
     };
 
+    const updateStatus = async (id, status) => {
+
+    try {
+
+        const token = localStorage.getItem("token");
+
+        await axios.put(
+            `${API}/api/applications/status/${id}`,
+            { status },
+            {
+                headers: { Authorization: `Bearer ${token}` }
+            }
+        );
+
+        setApplications((prev) =>
+            prev.map((app) =>
+                app._id === id ? { ...app, status } : app
+            )
+        );
+
+    } catch (err) {
+
+        console.log("Status update error:", err);
+
+    }
+
+};
     return (
         <div className="admin-wrapper">
             {/* ===== TOP NAVBAR ===== */}
@@ -342,6 +369,21 @@ export default function Admin() {
                                         <p>
                                             <strong>Phone:</strong> {app.phone}
                                         </p>
+
+                                        <p>
+                                            <strong>Status:</strong>
+                                        </p>
+
+                                        <select
+                                            value={app.status || "Pending"}
+                                            onChange={(e) => updateStatus(app._id, e.target.value)}
+                                        >
+                                            <option value="Pending">Pending</option>
+                                            <option value="Interview">Interview</option>
+                                            <option value="SecondRound">Second Round</option>
+                                            <option value="Accepted">Accepted</option>
+                                            <option value="Rejected">Rejected</option>
+                                        </select>
 
                                         {app.resumeUrl && (
                                             <a

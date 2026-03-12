@@ -797,3 +797,35 @@ flex:1;
   border-color: #4a90e2;
   box-shadow: 0 0 6px rgba(74,144,226,0.3);
 }
+
+.status {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.status.Pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status.Accepted {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status.Rejected {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status.Interview {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.status.SecondRound {
+  background: #ede9fe;
+  color: #5b21b6;
+}

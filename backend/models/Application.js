@@ -23,14 +23,21 @@ const applicationSchema = new mongoose.Schema(
       required: true,
     },
 
-    phone: String,
+    phone: {
+      type: String,
+    },
 
     resumeUrl: {
-      type: String
-    }
+      type: String,
+    },
 
+    status: {
+      type: String,
+      enum: ["Pending", "Interview", "SecondRound", "Accepted", "Rejected"],
+      default: "Pending",
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("Application", applicationSchema);
