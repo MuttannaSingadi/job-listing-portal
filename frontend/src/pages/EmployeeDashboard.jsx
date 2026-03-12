@@ -312,57 +312,57 @@ export default function Admin() {
 
                 {/* ===== APPLICATIONS ===== */}
                 {active === "applications" && (
-  <div className="applications-section">
+                    <div>
 
-    <h2>Job Applications</h2>
+                        <h2>Job Applications</h2>
 
-    {applications.length === 0 ? (
-      <p>No applications yet</p>
-    ) : (
-      <div className="applications-grid">
+                        {applications.length === 0 ? (
+                            <p>No applications yet</p>
+                        ) : (
+                            <div className="jobs-grid">
 
-        {applications.map((app) => (
+                                {applications.map((app) => (
 
-          <div key={app._id} className="application-card">
+                                    <div key={app._id} className="job-card">
 
-            <h3>{app.jobId?.title}</h3>
+                                        <h4>{app.jobId?.title}</h4>
 
-            <p>
-              <strong>Company:</strong> {app.jobId?.company}
-            </p>
+                                        <p>
+                                            <strong>Company:</strong> {app.jobId?.company}
+                                        </p>
 
-            <p>
-              <strong>Name:</strong> {app.applicantName}
-            </p>
+                                        <p>
+                                            <strong>Name:</strong> {app.applicantName}
+                                        </p>
 
-            <p>
-              <strong>Email:</strong> {app.applicantEmail}
-            </p>
+                                        <p>
+                                            <strong>Email:</strong> {app.applicantEmail}
+                                        </p>
 
-            <p>
-              <strong>Phone:</strong> {app.phone}
-            </p>
+                                        <p>
+                                            <strong>Phone:</strong> {app.phone}
+                                        </p>
 
-            {app.resumeUrl && (
-              <a
-                href={app.resumeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="resume-btn"
-              >
-                View Resume
-              </a>
-            )}
+                                        {app.resumeUrl && (
+                                            <a
+                                                href={app.resumeUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                style={{ color: "#6d28d9", fontWeight: "600" }}
+                                            >
+                                                View Resume
+                                            </a>
+                                        )}
 
-          </div>
+                                    </div>
 
-        ))}
+                                ))}
 
-      </div>
-    )}
+                            </div>
+                        )}
 
-  </div>
-)}
+                    </div>
+                )}
 
                 {/* ===== CANDIDATES ===== */}
                 {active === "profiles" && (

@@ -1,10 +1,13 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import "./ApplyJob.css";
 
 export default function ApplyJob() {
 
     const { id } = useParams();
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const [form, setForm] = useState({
         name: "",
@@ -13,6 +16,8 @@ export default function ApplyJob() {
     });
 
     const [resume, setResume] = useState(null);
+
+    const [message, setMessage] = useState("");
 
     const handleChange = (e) => {
 
@@ -36,6 +41,8 @@ export default function ApplyJob() {
 
         try {
 
+            setLoading(true);
+
             await axios.post(
                 "https://job-listing-portal-iu9g.onrender.com/api/applications/apply",
                 data,
@@ -46,57 +53,74 @@ export default function ApplyJob() {
                 }
             );
 
-            alert("Application submitted successfully");
+            setLoading(false);
+
+            setMessage("✅ Application submitted successfully");
+
+            // ⏳ Redirect after 2 seconds
+            setTimeout(() => {
+                navigate("/jobs");
+            }, 2000);
 
         } catch (err) {
 
-            alert("Application failed");
+            setLoading(false);
+
+            setMessage("❌ Application failed");
 
         }
 
     };
-
     return (
 
-        <div style={{ padding: "40px" }}>
+<div className="apply-page">
 
-            <h2>Apply for Job</h2>
+  <div className="apply-container">
 
-            <input
-                name="name"
-                placeholder="Full Name"
-                onChange={handleChange}
-            />
+    <h2>Apply for Job</h2>
 
-            <br /><br />
+    {message && <div className="success-msg">{message}</div>}
 
-            <input
-                name="email"
-                placeholder="Email"
-                onChange={handleChange}
-            />
+    {loading && <p className="loading-text">Submitting application...</p>}
 
-            <br /><br />
+    <div className="apply-form">
 
-            <input
-                name="phone"
-                placeholder="Phone"
-                onChange={handleChange}
-            />
+      <input
+        name="name"
+        placeholder="Full Name"
+        onChange={handleChange}
+      />
 
-            <br /><br />
+      <input
+        name="email"
+        placeholder="Email"
+        onChange={handleChange}
+      />
 
-            <input
-                type="file"
-                onChange={(e) => setResume(e.target.files[0])}
-            />
+      <input
+        name="phone"
+        placeholder="Phone"
+        onChange={handleChange}
+      />
 
-            <br /><br />
+      <input
+        className="file-input"
+        type="file"
+        onChange={(e) => setResume(e.target.files[0])}
+      />
 
-            <button onClick={handleSubmit}>
-                Submit Application
-            </button>
+      <button
+        className="apply-btn"
+        onClick={handleSubmit}
+        disabled={loading}
+      >
+        {loading ? "Submitting..." : "Submit Application"}
+      </button>
 
-        </div>
+    </div>
+
+  </div>
+
+</div>
     );
 }
