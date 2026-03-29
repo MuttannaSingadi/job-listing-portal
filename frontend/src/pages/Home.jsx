@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import "../style/home.css";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Navbar from "../components/Navbar";
 import logo from "../assets/image.png";
 
 export default function Home() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [jobs, setJobs] = useState([]);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [followedCompanies, setFollowedCompanies] = useState([]);
   const [profileImage, setProfileImage] = useState("");
 
@@ -19,15 +19,11 @@ export default function Home() {
     skills: "",
   });
 
-
-  
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
   }, []);
 
-
-  
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -54,7 +50,6 @@ export default function Home() {
     fetchProfileImage();
   }, []);
 
-
   useEffect(() => {
     axios
       .get("https://job-listing-portal-iu9g.onrender.com/api/jobs")
@@ -76,19 +71,6 @@ export default function Home() {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-    navigate("/");
-    setMenuOpen(false);
-  };
-
-  
-  const handleProfileClick = () => {
-    navigate("/profile");
-    setMenuOpen(false);
   };
 
   const handleApply = () => {
@@ -113,155 +95,11 @@ export default function Home() {
 
   return (
     <>
-      {/* ================= NAVBAR ================= */}
+      <Navbar />
 
-      <div className="top-header">
-
-        
-        <div className="nav-left">
-
-          
-          <Link to="/" className="brand">
-            <img src={logo} alt="DevHire" />
-          </Link>
-
-        </div>
-
-
-        {/* DESKTOP MENU */}
-        <div className="nav-right desktop-menu">
-
-          <Link
-            to="#"
-            onClick={(e) => {
-              e.preventDefault();
-              const token = localStorage.getItem("token");
-
-              if (!token) {
-                alert("Please login first");
-                navigate("/auth");
-              } else {
-                navigate("/jobs");
-              }
-            }}
-          >
-            Jobs
-          </Link>
-
-          <a href="#companies">Companies</a>
-
-          {!isLoggedIn && (
-            <Link to="/auth">Employer/Job Seekers</Link>
-          )}
-
-          {isLoggedIn && (
-            <>
-              <div className="desktop-profile">
-                <img
-                  src={profileImage || logo}
-                  alt="profile"
-                  onClick={handleProfileClick}
-                />
-              </div>
-
-              <button
-                className="logout-btn"
-                onClick={handleLogout}
-              >
-                Logout
-              </button>
-            </>
-          )}
-
-        </div>
-
-
-        {/* MOBILE PROFILE */}
-        {isLoggedIn && (
-          <div className="mobile-profile">
-            <img
-              src={profileImage || logo}
-              alt="profile"
-              onClick={handleProfileClick}
-            />
-          </div>
-        )}
-
-
-        {/* HAMBURGER */}
-        <div
-          className="hamburger"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          {menuOpen ? "☰" : "☰"}
-        </div>
-
-      </div>
-
-      {/* ================= MOBILE MENU ================= */}
-
-      <div
-        className={`mobile-menu ${menuOpen ? "open" : ""}`}
-        onClick={(e) => e.stopPropagation()}
-      >
-
-        <Link
-          to="#"
-          onClick={(e) => {
-            e.preventDefault();
-            const token = localStorage.getItem("token");
-
-            if (!token) {
-              alert("Please login first");
-              navigate("/auth");
-            } else {
-              navigate("/jobs");
-            }
-          }}
-        >
-          Jobs
-        </Link>
-
-        <a href="#companies" onClick={() => setMenuOpen(false)}>
-          Companies
-        </a>
-
-        
-
-        {!isLoggedIn && (
-          <Link to="/auth" onClick={() => setMenuOpen(false)}>
-            Login
-          </Link>
-        )}
-
-        {isLoggedIn && (
-          <button
-            className="logout-btn"
-            onClick={() => {
-              handleLogout();
-              setMenuOpen(false);
-            }}
-          >
-            Logout
-          </button>
-        )}
-
-      </div>
-
-
-      {/* ================= OVERLAY ================= */}
-
-      {menuOpen && (
-        <div
-          className="menu-overlay"
-          onClick={() => setMenuOpen(false)}
-        />
-      )}
       {/* ================= MODERN HERO SECTION ================= */}
       <section className="hero-modern">
-
         <div className="hero-content">
-
           <div className="hero-left">
             <h1>
               Unlock Your <span className="gradient-text">Career</span>
@@ -330,10 +168,9 @@ export default function Home() {
           </div>
 
         </div>
-
       </section>
-      
-      <section className="features-section">
+
+       <section className="features-section">
 
         
         <div className="features-header">
@@ -499,7 +336,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-    
+      {/* ================= FOOTER ================= */}
       <footer className="footer">
         <div className="footer-container">
 
@@ -534,6 +371,7 @@ export default function Home() {
           © {new Date().getFullYear()} DevHire. All Rights Reserved.
         </div>
       </footer>
+
       <footer>© 2026 DevHire. All rights reserved.</footer>
     </>
   );
