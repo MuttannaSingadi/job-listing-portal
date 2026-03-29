@@ -41,13 +41,12 @@ export default function Admin() {
     skills: "",
   });
 
-  /* ================= AUTH CHECK ================= */
+  
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) navigate("/auth");
   }, [navigate]);
 
-  /* ================= FETCH JOBS ================= */
   const fetchJobs = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -158,8 +157,6 @@ export default function Admin() {
             <FaArrowLeft />
           </button>
 
-
-          {/* Logo */}
           <div className="brand">
             <Link to="/">
               <img src={logo} alt="DevHire Logo" />
@@ -167,7 +164,6 @@ export default function Admin() {
           </div>
         </div>
 
-        {/* Mobile Menu Button */}
         <div
           className="menu-btn"
           onClick={() => setMenuOpen(!menuOpen)}
@@ -202,14 +198,11 @@ export default function Admin() {
       )}
 
 
-      {/* MAIN */}
       <div className="main">
 
-        {/* DASHBOARD */}
         {active === "dashboard" && (
           <div className="dashboard">
 
-            {/* STATS CARDS */}
             <div className="cards">
 
               <div className="card">
@@ -229,8 +222,6 @@ export default function Admin() {
 
             </div>
 
-
-            {/* GRAPH DATA */}
             {(() => {
               const statsData = [
                 { name: "Jobs", value: jobs?.length || 0 },
@@ -290,7 +281,6 @@ export default function Admin() {
           </div>
         )}
 
-        {/* POST JOB */}
         {active === "post" && (
           <div className="post-section">
             <h2>Post New Job</h2>
@@ -307,7 +297,6 @@ export default function Admin() {
           </div>
         )}
 
-        {/* MANAGE JOBS */}
         {active === "manage" && (
           <div className="jobs-grid">
             {jobs.map((j) => (
@@ -321,7 +310,6 @@ export default function Admin() {
           </div>
         )}
 
-        {/* APPLICATIONS */}
         {active === "applications" && (
           <div className="jobs-grid">
             {applications.length === 0 ? (
@@ -338,7 +326,6 @@ export default function Admin() {
           </div>
         )}
 
-        {/* CANDIDATES */}
         {active === "profiles" && (
           <div className="jobs-grid">
             {profiles.length === 0 ? (

@@ -1,4 +1,4 @@
-/* ================= RESET ================= */
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -41,12 +41,10 @@ padding:0 40px;
 background:#244a66;
 color:white;
 
-z-index:10002; /* higher than overlay */
+z-index:10002;
 
 box-shadow:0 4px 20px rgba(0,0,0,0.08);
 }
-
-/* ================= NAV LEFT ================= */
 
 .admin-wrapper .nav-left{
 display:flex;
@@ -54,7 +52,6 @@ align-items:center;
 gap:12px;
 }
 
-/* Back Button */
 
 .admin-wrapper .back-btn{
 background:none;
@@ -70,15 +67,11 @@ transform:scale(1.1);
 color:#c7d2fe;
 }
 
-/* Brand */
-
 .admin-wrapper .brand{
 font-size:20px;
 font-weight:600;
 letter-spacing:0.5px;
 }
-
-/* ================= NAV CENTER ================= */
 
 .admin-wrapper .nav-center{
 flex:1;
@@ -100,14 +93,11 @@ position:relative;
 transition:0.3s ease;
 }
 
-/* Hover animation */
-
 .admin-wrapper .nav-center li:hover{
 transform:translateY(-2px);
 opacity:0.9;
 }
 
-/* underline animation */
 
 .admin-wrapper .nav-center li::after{
 content:"";
@@ -124,15 +114,12 @@ transition:width 0.3s ease;
 width:100%;
 }
 
-/* ================= NAV RIGHT ================= */
 
 .admin-wrapper .nav-right{
 display:flex;
 align-items:center;
 gap:15px;
 }
-
-/* Profile Image */
 
 .admin-wrapper .profile-img{
 width:40px;
@@ -147,8 +134,6 @@ width:100%;
 height:100%;
 object-fit:cover;
 }
-
-/* Logout Button */
 
 .admin-wrapper .logout-btn{
 background:white;
@@ -165,8 +150,6 @@ transition:0.3s;
 transform:scale(1.05);
 box-shadow:0 6px 15px rgba(0,0,0,0.2);
 }
-
-/* ================= MENU BUTTON ================= */
 
 .admin-wrapper .menu-btn{
 display:none;
@@ -209,14 +192,11 @@ z-index:10001;
 right:0;
 }
 
-/* Drawer Menu */
-
 .admin-wrapper .nav-center{
 position: fixed;
 color:rgba(0, 0, 0, 0.61);
 top:70px;
 
-/* hide outside right */
 right:-100%;
 
 width:60%;
@@ -242,20 +222,14 @@ box-shadow:-5px 0 25px rgba(0,0,0,0.2);
 
 }
 
-/* When menu opens */
-
 .admin-wrapper .nav-center.open{
 right:0;
 }
-
-/* Menu list */
 
 .admin-wrapper .nav-center ul{
 flex-direction:column;
 gap:30px;
 }
-
-/* Hide profile */
 
 .admin-wrapper .nav-right{
 display:none;
@@ -286,8 +260,6 @@ flex:1;
 
 
 /* ================= PREMIUM DASHBOARD UI ================= */
-
-/* Cards Container */
 .cards {
   display: flex;
   gap: 30px;
@@ -296,8 +268,6 @@ flex:1;
   align-items: stretch;
   margin-top: 30px;
 }
-
-/* Card Base */
 .card {
   flex: 1;
   position: relative;
@@ -316,12 +286,10 @@ flex:1;
 
 }
 
-/* Stagger animation */
 .cards .card:nth-child(1) { animation-delay: 0.1s; }
 .cards .card:nth-child(2) { animation-delay: 0.2s; }
 .cards .card:nth-child(3) { animation-delay: 0.3s; }
 
-/* Entrance Animation */
 @keyframes slideUp {
   from {
     opacity: 0;
@@ -333,13 +301,11 @@ flex:1;
   }
 }
 
-/* Floating hover */
 .card:hover {
   transform: translateY(-12px) scale(1.03);
   box-shadow: 0 30px 60px rgba(79, 70, 229, 0.18);
 }
 
-/* Top gradient accent */
 .card::before {
   content: "";
   position: absolute;
@@ -350,7 +316,6 @@ flex:1;
   background: linear-gradient(90deg, #4f46e5, #7c3aed);
 }
 
-/* Glow circle background */
 .card::after {
   content: "";
   position: absolute;
@@ -362,7 +327,6 @@ flex:1;
   border-radius: 50%;
 }
 
-/* Title */
 .card h3 {
   font-size: 16px;
   font-weight: 500;
@@ -371,7 +335,6 @@ flex:1;
   letter-spacing: 0.5px;
 }
 
-/* Number */
 .card p {
   font-size: 42px;
   font-weight: 800;
@@ -380,13 +343,11 @@ flex:1;
   transition: 0.3s ease;
 }
 
-/* Number glow on hover */
 .card:hover p {
   color: #4f46e5;
   text-shadow: 0 0 12px rgba(79,70,229,0.3);
 }
 
-/* Smooth responsive */
 @media (max-width: 900px) {
   .cards {
     flex-direction: column;
@@ -406,7 +367,6 @@ flex:1;
     gap: 20px;
   }
 }
-/* ================= POST JOB SECTION ================= */
 
 .post-section {
   background: #ffffff;
@@ -418,7 +378,6 @@ flex:1;
   animation: fadeIn 0.5s ease-in-out;
 }
 
-/* Heading */
 .post-section h2 {
   font-size: 22px;
   font-weight: 600;
@@ -428,15 +387,12 @@ flex:1;
   padding-left: 14px;
 }
 
-/* ================= FORM GRID ================= */
-
 .post-section form {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
 }
 
-/* Make textarea full width */
 .post-section textarea {
   grid-column: span 2;
   min-height: 130px;
@@ -511,7 +467,6 @@ flex:1;
   }
 }
 
-/* Mobile */
 @media (max-width: 768px) {
   .post-section {
     margin: 20px;
@@ -519,7 +474,7 @@ flex:1;
   }
 
   .post-section form {
-    grid-template-columns: 1fr;   /* 🔥 Single column */
+    grid-template-columns: 1fr;
   }
 
   .post-section textarea,
@@ -528,7 +483,6 @@ flex:1;
   }
 }
 
-/* Small Mobile */
 @media (max-width: 480px) {
   .post-section {
     padding: 20px;
@@ -574,7 +528,6 @@ flex:1;
   overflow: hidden;
 }
 
-/* Top Gradient Accent */
 .job-card::before {
   content: "";
   position: absolute;
@@ -585,7 +538,6 @@ flex:1;
   background: linear-gradient(90deg, #6d28d9, #7c3aed);
 }
 
-/* Hover Effect */
 .job-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08);
@@ -607,19 +559,16 @@ flex:1;
   margin: 6px 0;
 }
 
-/* Company */
 .job-card p:nth-child(2) {
   color: #6d28d9;
   font-weight: 500;
 }
 
-/* Salary */
 .job-card p:nth-child(3) {
   color: #059669;
   font-weight: 600;
 }
 
-/* Location */
 .job-card p:nth-child(4) {
   color: #9ca3af;
   font-size: 13px;
@@ -640,14 +589,12 @@ flex:1;
 
 /* ================= RESPONSIVE ================= */
 
-/* Tablet */
 @media (max-width: 992px) {
   .jobs-grid {
     gap: 20px;
   }
 }
 
-/* Mobile */
 @media (max-width: 768px) {
   .jobs-grid {
     grid-template-columns: 1fr;
@@ -680,8 +627,6 @@ flex:1;
   margin-bottom:15px;
   font-size:16px;
 }
-
-/* mobile */
 
 @media(max-width:768px){
   .dashboard-graphs{

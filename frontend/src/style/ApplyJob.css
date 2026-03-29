@@ -23,20 +23,17 @@
   transform: translateY(-3px);
 }
 
-/* Title */
 .apply-container h2 {
   text-align: center;
   margin-bottom: 25px;
   color: #333;
 }
 
-/* Form Layout */
 .apply-form {
   display: flex;
   flex-direction: column;
 }
 
-/* Inputs */
 .apply-form input {
   padding: 12px 14px;
   margin-bottom: 18px;
@@ -52,13 +49,11 @@
   box-shadow: 0 0 4px rgba(74,144,226,0.3);
 }
 
-/* File Upload */
 .file-input {
   padding: 6px;
   border: none;
 }
 
-/* Submit Button */
 .apply-btn {
   background: #4a90e2;
   color: white;
@@ -74,13 +69,11 @@
   background: #2f6fbe;
 }
 
-/* Disabled Button */
 .apply-btn:disabled {
   background: #bfcde0;
   cursor: not-allowed;
 }
 
-/* Success Message */
 .success-msg {
   background: #e7f9ee;
   color: #1c7c45;
@@ -91,7 +84,7 @@
   font-weight: 500;
 }
 
-/* Error Message */
+
 .error-msg {
   background: #fdeaea;
   color: #b3261e;
@@ -102,7 +95,7 @@
   font-weight: 500;
 }
 
-/* Loading Text */
+
 .loading-text {
   text-align: center;
   margin-bottom: 10px;
@@ -110,7 +103,7 @@
   font-size: 14px;
 }
 
-/* Responsive */
+
 @media (max-width: 500px) {
   .apply-container {
     width: 100%;
