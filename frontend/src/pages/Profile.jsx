@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import "./profile.css";
+import "../style/profile.css";
 
 export default function Profile() {
 

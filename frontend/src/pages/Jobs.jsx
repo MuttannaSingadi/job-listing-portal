@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./jobs.css";
+import "../style/jobs.css";
 import { FaArrowLeft } from "react-icons/fa";
 
 export default function Jobs() {

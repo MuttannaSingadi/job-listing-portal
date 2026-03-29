@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./home.css";
+import "../style/home.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import logo from "../assets/image.png";
@@ -20,14 +20,14 @@ export default function Home() {
   });
 
 
-  // ✅ Check Login
+  
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
   }, []);
 
 
-  // ✅ Fetch profile image
+  
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -54,7 +54,7 @@ export default function Home() {
     fetchProfileImage();
   }, []);
 
-  // ✅ Fetch Jobs
+
   useEffect(() => {
     axios
       .get("https://job-listing-portal-iu9g.onrender.com/api/jobs")
@@ -85,7 +85,7 @@ export default function Home() {
     setMenuOpen(false);
   };
 
-  // ✅ FIXED (Moved Outside)
+  
   const handleProfileClick = () => {
     navigate("/profile");
     setMenuOpen(false);
@@ -117,10 +117,10 @@ export default function Home() {
 
       <div className="top-header">
 
-        {/* LEFT */}
+        
         <div className="nav-left">
 
-          {/* Logo */}
+          
           <Link to="/" className="brand">
             <img src={logo} alt="DevHire" />
           </Link>
@@ -312,7 +312,7 @@ export default function Home() {
 
           <div className="hero-right">
             <div className="hero-card">
-              <h3>🔥 Trending Skills</h3>
+              <h3> Trending Skills</h3>
               <ul>
                 <li>React Developer</li>
                 <li>Node.js Engineer</li>
@@ -332,10 +332,10 @@ export default function Home() {
         </div>
 
       </section>
-      {/* ================= FEATURES SECTION ================= */}
+      
       <section className="features-section">
 
-        {/* 🔥 SECTION HEADER */}
+        
         <div className="features-header">
           <h2>Why Choose <span>DevHire</span>?</h2>
           <p>
@@ -346,7 +346,7 @@ export default function Home() {
 
         <div className="features-container">
 
-          {/* ===== LEFT SIDE ===== */}
+  
           <div className="features-column seekers">
             <h3 className="features-title blue">
               For Job Seekers
@@ -386,7 +386,7 @@ export default function Home() {
           </div>
 
 
-          {/* ===== RIGHT SIDE ===== */}
+  
           <div className="features-column employers">
             <h3 className="features-title purple">
               For Employers
@@ -428,7 +428,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= COMPANY SECTION ================= */}
+      
       <section id="companies" className="company-section">
         <h2 className="section-title">Top Hiring Companies</h2>
 
@@ -499,7 +499,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      {/* ================= FOOTER ================= */}
+    
       <footer className="footer">
         <div className="footer-container">
 

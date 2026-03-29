@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
-import "./ApplyJob.css";
+import "../style/applyjob.css";
 
 export default function ApplyJob() {
 
