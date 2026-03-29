@@ -21,6 +21,15 @@ export default function Jobs() {
   const [showFilter, setShowFilter] = useState(false);
   const navigate = useNavigate();
 
+useEffect(() => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    alert("Please login first");
+    navigate("/auth");
+  }
+}, []);
+
   /* ================= FETCH JOBS ================= */
   useEffect(() => {
     axios

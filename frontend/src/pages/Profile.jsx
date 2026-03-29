@@ -256,6 +256,8 @@ export default function Profile() {
       organization: "",
     });
   };
+
+  
   return (
     <div className="dashboard">
 
@@ -350,7 +352,7 @@ export default function Profile() {
         <main className="main2">
 
           {/* RESUME */}
-          <section id="resume" className="card">
+          <section id="resume" className="card1">
 
             {/* PROFILE IMAGE */}
             <div className="profile-image">
@@ -400,7 +402,7 @@ export default function Profile() {
                   placeholder="Location"
                 />
 
-                <input
+                <input 
                   value={profile.email}
                   onChange={(e) =>
                     setProfile({ ...profile, email: e.target.value })
@@ -423,16 +425,16 @@ export default function Profile() {
               </>
             ) : (
               <>
-                <h3>{profile.name}</h3>
-                <p>{profile.role}</p>
-                <p>{profile.email}</p>
-                <p>{profile.phone}</p>
+                <h4>{profile.name}</h4>
+                <h4>{profile.role}</h4>
+                <h4>{profile.email}</h4>
+                <h4>{profile.phone}</h4>
               </>
             )}
           </section>
 
           {/* SUMMARY */}
-          <section id="summary" className="card">
+          <section id="summary" className="card1">
             <h3>Summary</h3>
             {editMode ? (
               <textarea
@@ -440,12 +442,12 @@ export default function Profile() {
                 onChange={(e) => setProfile({ ...profile, summary: e.target.value })}
               />
             ) : (
-              <p>{profile.summary}</p>
+              <h4>{profile.summary}</h4>
             )}
           </section>
 
           {/* SKILLS */}
-          <section id="skills" className="card">
+          <section id="skills" className="card1">
             <h3>Skills</h3>
             {editMode && (
               <>
@@ -470,7 +472,7 @@ export default function Profile() {
           </section>
 
           {/* EDUCATION */}
-          <section id="education" className="card">
+          <section id="education" className="card1">
             <h3>Education</h3>
 
             {editMode && (
@@ -530,7 +532,7 @@ export default function Profile() {
           </section>
 
           {/* EXPERIENCE */}
-          <section id="experience" className="card">
+          <section id="experience" className="card1">
             <h3>Experience</h3>
 
             {editMode && (
@@ -559,7 +561,7 @@ export default function Profile() {
           </section>
 
           {/* CERTIFICATIONS */}
-          <section id="certifications" className="card">
+          <section id="certifications" className="card1">
             <h3>Certifications</h3>
 
             {editMode && (

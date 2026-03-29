@@ -171,31 +171,37 @@ export default function Admin() {
 
     const updateStatus = async (id, status) => {
 
-    try {
+        try {
 
-        const token = localStorage.getItem("token");
+            const token = localStorage.getItem("token");
 
-        await axios.put(
-            `${API}/api/applications/status/${id}`,
-            { status },
-            {
-                headers: { Authorization: `Bearer ${token}` }
-            }
-        );
+            await axios.put(
+                `${API}/api/applications/status/${id}`,
+                { status },
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
 
-        setApplications((prev) =>
-            prev.map((app) =>
-                app._id === id ? { ...app, status } : app
-            )
-        );
+            setApplications((prev) =>
+                prev.map((app) =>
+                    app._id === id ? { ...app, status } : app
+                )
+            );
 
-    } catch (err) {
+        } catch (err) {
 
-        console.log("Status update error:", err);
+            console.log("Status update error:", err);
 
-    }
+        }
 
-};
+
+    };
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        navigate("/auth");
+    };
+
     return (
         <div className="admin-wrapper">
             {/* ===== TOP NAVBAR ===== */}
@@ -206,7 +212,7 @@ export default function Admin() {
                     </button>
 
                     <div className="brand">
-                        <Link to="/">
+                        <Link to="/profile">
                             <img src={logo} alt="DevHire Logo" />
                         </Link>
                     </div>
@@ -227,10 +233,9 @@ export default function Admin() {
                 </div>
 
                 <div className="nav-right">
-                    <div className="profile-img">
-                        <img src={employee.profileImage ? `${API}${employee.profileImage}` : profile} alt="Profile" />
-                    </div>
-                    <button className="logout-btn">Logout</button>
+                    <button className="logout-btn" onClick={handleLogout}>
+                        Logout
+                    </button>
                 </div>
             </div>
 

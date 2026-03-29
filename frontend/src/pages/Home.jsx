@@ -19,7 +19,7 @@ export default function Home() {
     skills: "",
   });
 
-  
+
   // ✅ Check Login
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -131,14 +131,27 @@ export default function Home() {
         {/* DESKTOP MENU */}
         <div className="nav-right desktop-menu">
 
-          <Link to="/jobs">Jobs</Link>
+          <Link
+            to="#"
+            onClick={(e) => {
+              e.preventDefault();
+              const token = localStorage.getItem("token");
+
+              if (!token) {
+                alert("Please login first");
+                navigate("/auth");
+              } else {
+                navigate("/jobs");
+              }
+            }}
+          >
+            Jobs
+          </Link>
 
           <a href="#companies">Companies</a>
 
-          <Link to="/auth">Employer/Job Seekers</Link>
-
           {!isLoggedIn && (
-            <Link to="/auth">Login</Link>
+            <Link to="/auth">Employer/Job Seekers</Link>
           )}
 
           {isLoggedIn && (
@@ -180,7 +193,7 @@ export default function Home() {
           className="hamburger"
           onClick={() => setMenuOpen(!menuOpen)}
         >
-          {menuOpen ? "✕" : "☰"}
+          {menuOpen ? "☰" : "☰"}
         </div>
 
       </div>
@@ -192,7 +205,20 @@ export default function Home() {
         onClick={(e) => e.stopPropagation()}
       >
 
-        <Link to="/jobs" onClick={() => setMenuOpen(false)}>
+        <Link
+          to="#"
+          onClick={(e) => {
+            e.preventDefault();
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+              alert("Please login first");
+              navigate("/auth");
+            } else {
+              navigate("/jobs");
+            }
+          }}
+        >
           Jobs
         </Link>
 
@@ -200,7 +226,7 @@ export default function Home() {
           Companies
         </a>
 
-        <Link to="/auth">LogIn</Link>
+        
 
         {!isLoggedIn && (
           <Link to="/auth" onClick={() => setMenuOpen(false)}>
@@ -247,7 +273,19 @@ export default function Home() {
             </p>
 
             <div className="hero-buttons">
-              <button className="primary-cta" onClick={() => navigate("/jobs")}>
+              <button
+                className="primary-cta"
+                onClick={() => {
+                  const token = localStorage.getItem("token");
+
+                  if (!token) {
+                    alert("Please login first");
+                    navigate("/auth");
+                  } else {
+                    navigate("/jobs");
+                  }
+                }}
+              >
                 Explore Jobs
               </button>
 
