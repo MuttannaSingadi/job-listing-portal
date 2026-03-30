@@ -195,7 +195,7 @@ export default function Admin() {
                 formData.append("profileImage", profileImage);
             }
 
-            const res = await axios.put(`${API}/api/admin/profile`, formData, {
+            const res = await axios.put(`${API}/api/employee/profile`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "multipart/form-data"
