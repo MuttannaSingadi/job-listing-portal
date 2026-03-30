@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
-import "../style/adminnavbar.css";
+import "../style/AdminNavbar.css";
 
 export default function AdminNavbar({
   navigate,

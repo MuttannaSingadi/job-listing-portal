@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
-import "../style/applyjob.css";
+import "../style/ApplyJob.css";
 
 export default function ApplyJob() {
 
@@ -57,7 +57,7 @@ export default function ApplyJob() {
 
             setMessage("✅ Application submitted successfully");
 
-            // ⏳ Redirect after 2 seconds
+            
             setTimeout(() => {
                 navigate("/jobs");
             }, 2000);
