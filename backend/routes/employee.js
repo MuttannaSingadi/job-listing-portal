@@ -27,15 +27,15 @@ router.get("/profile", authMiddleware, async (req, res) => {
 /* ================= PUT PROFILE ================= */
 router.put("/profile", authMiddleware, upload.single("profileImage"), async (req, res) => {
   try {
-    const { name, email, phone, role, company, location, website } = req.body;
+    const { name, phone, role, company, location, website } = req.body;
 
-    // Find existing employee or create new
-    let employee = await Employee.findOne({ email });
+const email = req.user.email;
 
-    // Convert uploaded image to Base64 if present
+let employee = await Employee.findOne({ email });
+
     const profileImageData = req.file
       ? req.file.buffer.toString("base64")
-      : employee?.profileImage; // keep old image if no new image uploaded
+      : employee?.profileImage;
 
     const employeeData = {
       name,
