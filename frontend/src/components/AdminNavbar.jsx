@@ -8,6 +8,13 @@ export default function AdminNavbar({
   setMenuOpen,
   setActive
 }) {
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+    setMenuOpen(false);
+  };
+
   return (
     <>
       <div className="top-navbar">
@@ -28,15 +35,18 @@ export default function AdminNavbar({
           className="menu-btn"
           onClick={() => setMenuOpen(!menuOpen)}
         >
-          {menuOpen ? "✕" : "☰"}
+          ☰
         </div>
 
-        {/* DESKTOP ONLY */}
+        {/* DESKTOP */}
         <div className="nav-right desktop-only">
           <div className="profile-img">
             <img src="/profile.png" alt="Profile" />
           </div>
-          <button className="logout-btn">Logout</button>
+
+          <button className="logout-btn" onClick={handleLogout}>
+            Logout
+          </button>
         </div>
 
       </div>
@@ -44,26 +54,32 @@ export default function AdminNavbar({
       {/* MOBILE MENU */}
       <div className={`nav-center ${menuOpen ? "open" : ""}`}>
         <ul>
+
           <li onClick={() => { setActive("dashboard"); setMenuOpen(false); }}>
             Dashboard
           </li>
+
           <li onClick={() => { setActive("post"); setMenuOpen(false); }}>
             Post Job
           </li>
+
           <li onClick={() => { setActive("manage"); setMenuOpen(false); }}>
             Manage Jobs
           </li>
+
           <li onClick={() => { setActive("applications"); setMenuOpen(false); }}>
             Applications
           </li>
+
           <li onClick={() => { setActive("profiles"); setMenuOpen(false); }}>
             Candidates
           </li>
 
-          {/* MOBILE ONLY LOGOUT */}
-          <li className="mobile-only" onClick={() => setMenuOpen(false)}>
+          {/* MOBILE LOGOUT */}
+          <li className="logout-item" onClick={handleLogout}>
             Logout
           </li>
+
         </ul>
       </div>
 

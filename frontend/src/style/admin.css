@@ -1,93 +1,92 @@
+@media (max-width: 768px) {
 
-/* BASE */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+  /* OVERLAY */
+  .menu-overlay {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 70px);
+    background: rgba(0,0,0,0.4);
+    z-index: 10000;
+  }
 
-body {
-  font-family: "Inter", sans-serif;
-  background: #f3f4f9;
-}
+  /* MENU CONTAINER */
+  .mobile-menu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
 
-/* WRAPPER */
-.admin-wrapper {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
+    transform: translate(-50%, -50%) scale(0.95);
+    opacity: 0;
+    pointer-events: none;
 
-.main {
-  margin-top: 70px;
-  padding: 40px;
-}
+    width: 90%;
+    max-width: 320px;
 
-/* DASHBOARD */
-.cards {
-  display: flex;
-  gap: 30px;
-  margin-top: 30px;
-}
+    background: #0f172a; /* clean dark */
+    border-radius: 20px;
 
-.card {
-  flex: 1;
-  padding: 30px;
-  border-radius: 20px;
-  background: white;
-}
-
-/* GRAPH */
-.dashboard-graphs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 25px;
-  margin-top: 30px;
-}
-
-/* POST JOB */
-.post-section {
-  background: white;
-  padding: 40px;
-  border-radius: 20px;
-  max-width: 900px;
-  margin: 40px auto;
-}
-
-.post-section form {
-  display: grid;
-  grid-template-columns: repeat(2,1fr);
-  gap: 20px;
-}
-
-.post-section textarea {
-  grid-column: span 2;
-}
-
-/* JOB GRID */
-.jobs-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
-  gap: 25px;
-}
-
-.job-card {
-  background: white;
-  padding: 20px;
-  border-radius: 15px;
-}
-
-/* RESPONSIVE */
-@media(max-width:768px){
-  .cards {
+    padding: 20px;
+    display: flex;
     flex-direction: column;
+    gap: 16px;
+
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+
+    transition: all 0.3s ease;
+    z-index: 10001;
   }
 
-  .dashboard-graphs {
-    grid-template-columns: 1fr;
+  .mobile-menu.open {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    pointer-events: auto;
   }
 
-  .post-section form {
-    grid-template-columns: 1fr;
+  /* MENU ITEMS */
+  .mobile-menu a,
+  .mobile-menu button {
+    width: 100%;
+    padding: 14px;
+
+    background: #475569;   /* lighter than container */
+    color: #ffffff;
+
+    border-radius: 12px;
+    border: none;
+
+    font-size: 15px;
+    font-weight: 500;
+
+    text-align: center;
+    cursor: pointer;
+
+    transition: all 0.25s ease;
   }
+
+  /* HOVER */
+  .mobile-menu a:hover,
+  .mobile-menu button:hover {
+    background: #64748b;
+    transform: translateY(-2px);
+  }
+
+  /* ACTIVE */
+  .mobile-menu a:active,
+  .mobile-menu button:active {
+    transform: scale(0.97);
+  }
+
+  /* LOGOUT BUTTON */
+  .mobile-menu .logout-btn {
+    background: #ef4444;
+    color: white;
+    font-weight: 600;
+  }
+
+  .mobile-menu .logout-btn:hover {
+    background: #dc2626;
+  }
+
 }

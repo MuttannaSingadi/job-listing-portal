@@ -18,7 +18,6 @@ export default function Navbar() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     if (!token) return;
 
     const fetchProfileImage = async () => {
@@ -53,6 +52,19 @@ export default function Navbar() {
     setMenuOpen(false);
   };
 
+  const handleJobsClick = (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("Please login first");
+      navigate("/auth");
+    } else {
+      navigate("/jobs");
+    }
+    setMenuOpen(false);
+  };
+
   return (
     <>
       <div className="top-header">
@@ -63,28 +75,13 @@ export default function Navbar() {
         </div>
 
         <div className="nav-right desktop-menu">
-          <Link
-            to="#"
-            onClick={(e) => {
-              e.preventDefault();
-              const token = localStorage.getItem("token");
-
-              if (!token) {
-                alert("Please login first");
-                navigate("/auth");
-              } else {
-                navigate("/jobs");
-              }
-            }}
-          >
+          <Link to="#" onClick={handleJobsClick}>
             Jobs
           </Link>
 
-          <a href="#companies">Companies</a>
+          <Link to="/companies">Companies</Link>
 
-          {!isLoggedIn && (
-            <Link to="/auth">Employer/Job Seekers</Link>
-          )}
+          {!isLoggedIn && <Link to="/auth">Employer/Job Seekers</Link>}
 
           {isLoggedIn && (
             <>
@@ -96,10 +93,7 @@ export default function Navbar() {
                 />
               </div>
 
-              <button
-                className="logout-btn"
-                onClick={handleLogout}
-              >
+              <button className="logout-btn" onClick={handleLogout}>
                 Logout
               </button>
             </>
@@ -116,64 +110,44 @@ export default function Navbar() {
           </div>
         )}
 
-        <div
-          className="hamburger"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          {menuOpen ? "☰" : "☰"}
+        <div className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+          ☰
         </div>
       </div>
 
-      <div
-        className={`mobile-menu ${menuOpen ? "open" : ""}`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <Link
-          to="#"
-          onClick={(e) => {
-            e.preventDefault();
-            const token = localStorage.getItem("token");
-
-            if (!token) {
-              alert("Please login first");
-              navigate("/auth");
-            } else {
-              navigate("/jobs");
-            }
-          }}
-        >
-          Jobs
-        </Link>
-
-        <a href="#companies" onClick={() => setMenuOpen(false)}>
-          Companies
-        </a>
-
-        {!isLoggedIn && (
-          <Link to="/auth" onClick={() => setMenuOpen(false)}>
-            Login
-          </Link>
-        )}
-
-        {isLoggedIn && (
-          <button
-            className="logout-btn"
-            onClick={() => {
-              handleLogout();
-              setMenuOpen(false);
-            }}
-          >
-            Logout
-          </button>
-        )}
-      </div>
-
+      {/* ✅ OVERLAY FIRST */}
       {menuOpen && (
         <div
           className="menu-overlay"
           onClick={() => setMenuOpen(false)}
         />
       )}
+
+      {/* ✅ MENU AFTER OVERLAY */}
+      <div
+        className={`mobile-menu ${menuOpen ? "open" : ""}`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <Link to="#" onClick={handleJobsClick}>
+          Jobs
+        </Link>
+
+        <Link to="/companies" onClick={() => setMenuOpen(false)}>
+          Companies
+        </Link>
+
+        {!isLoggedIn && (
+          <Link to="/auth" className="logout-btn" onClick={() => setMenuOpen(false)}>
+            Login
+          </Link>
+        )}
+
+        {isLoggedIn && (
+          <button className="logout-btn" onClick={handleLogout}>
+            Logout
+          </button>
+        )}
+      </div>
     </>
   );
 }
