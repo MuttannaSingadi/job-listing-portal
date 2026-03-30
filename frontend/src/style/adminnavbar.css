@@ -1,4 +1,6 @@
-.top-navbar {
+/* ================= NAVBAR ================= */
+
+.admin-navbar {
   position: fixed;
   top: 0;
   left: 0;
@@ -9,169 +11,242 @@
   align-items: center;
   justify-content: space-between;
 
-  padding: 0 40px;
-  background: #244a66;
-  color: white;
-  z-index: 10002;
+  padding: 0 20px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: #fff;
+
+  z-index: 9999;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
 }
 
-.nav-left {
+/* ================= LEFT ================= */
+
+.admin-nav-left {
   display: flex;
   align-items: center;
-  gap: 12px;
 }
 
-.back-btn {
-  background: none;
+.admin-back-btn {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+  font-size: 16px;
+}
+
+.admin-back-btn:hover {
+  background: rgba(255,255,255,0.35);
+}
+
+/* ================= LOGO ================= */
+
+.admin-nav-logo {
+  display: flex;
+  align-items: center;   
+  justify-content: flex-start;
+  margin-right: 250px;      /
+}
+
+.admin-nav-logo img {
+  height: 38px;
+  object-fit: contain;
+}
+
+/* ================= DESKTOP MENU ================= */
+
+.admin-nav-links {
+  display: flex;
+  gap: 18px;
+  margin-left: 10px;
+}
+
+.admin-nav-links button {
+  background: transparent;
   border: none;
   color: white;
-  font-size: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.admin-nav-links button:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+/* ================= RIGHT PROFILE ================= */
+
+.admin-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-profile-dropdown {
+  position: relative;
   cursor: pointer;
 }
 
-.brand img {
-  height: 40px;
-}
-
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.profile-img {
-  width: 40px;
-  height: 40px;
+.admin-profile-img img {
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
+  border: 2px solid #fff;
+}
+
+/* DROPDOWN */
+
+.admin-dropdown-menu {
+  position: absolute;
+  top: 55px;
+  right: 0;
+
+  background: white;
+  color: #333;
+  width: 150px;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: 0.3s;
   overflow: hidden;
 }
 
-.logout-btn {
-  background: white;
-  color: #244a66;
-  border: none;
-  padding: 6px 14px;
-  border-radius: 20px;
+.admin-profile-dropdown:hover .admin-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.admin-dropdown-menu p {
+  padding: 12px;
+  font-size: 14px;
   cursor: pointer;
 }
 
-.menu-btn {
+.admin-dropdown-menu p:hover {
+  background: #f3f4f6;
+}
+
+/* ================= MOBILE MENU BUTTON ================= */
+
+.admin-menu-btn {
   display: none;
-  font-size: 26px;
+  font-size: 24px;
   cursor: pointer;
 }
 
-/* MOBILE MENU */
-.nav-center {
+/* ================= MOBILE MENU ================= */
+
+.admin-nav-center {
   position: fixed;
   top: 70px;
   right: -100%;
-  width: 80%;
-  max-width: 320px;
-  height: 100vh;
+  width: 250px;
+  height: 100%;
 
-  background: #0f172a;
+  background: white;
+  box-shadow: -5px 0 20px rgba(0,0,0,0.1);
 
-  transition: right 0.3s ease;
-  z-index: 10002;
+  transition: 0.3s ease;
+  z-index: 9998;
 }
 
-.nav-center.open {
+.admin-nav-center.open {
   right: 0;
 }
 
-.nav-center ul {
+.admin-nav-center ul {
+  list-style: none;
   padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
 }
 
-.nav-center li {
-  background: #334155;
-  padding: 16px;
-  border-radius: 16px;
-  text-align: center;
-  color: #e5e7eb;
+.admin-nav-center li {
+  padding: 14px;
+  font-size: 15px;
+  border-bottom: 1px solid #eee;
   cursor: pointer;
 }
 
-/* LOGOUT STYLE */
-.logout-item {
-  background: #ef4444;
-  color: white;
+.admin-nav-center li:hover {
+  background: #f9fafb;
+}
+
+.admin-logout-item {
+  color: red;
   font-weight: 600;
 }
 
-.logout-item:hover {
-  background: #dc2626;
-}
+/* ================= OVERLAY ================= */
 
-/* OVERLAY */
-.menu-overlay {
+.admin-menu-overlay {
   position: fixed;
-  top: 0;
+  top: 70px;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5);
-  z-index: 10001;
+
+  background: rgba(0,0,0,0.3);
+  z-index: 9997;
 }
 
-.desktop-only {
-  display: flex;
+/* ================= CONTENT FIX ================= */
+
+.admin-wrapper {
+  padding-top: 80px;
 }
+
+/* ================= MOBILE FIX ================= */
 
 @media (max-width: 768px) {
-  .desktop-only {
-    display: none !important;
-  }
-}
-/* RESPONSIVE */
-@media(max-width:768px){
 
-  .menu-btn {
-    display: block;
-  }
-
-  .nav-right {
-    display: none !important;  
-  }
-
-  .top-navbar {
+  .admin-navbar {
+    height: 65px;
     padding: 0 15px;
   }
 
-  .brand img {
+  /* BACK BUTTON */
+  .admin-back-btn {
+    padding: 6px 8px;
+    font-size: 14px;
+  }
+
+  /* CENTER LOGO */
+  .admin-nav-logo {
+    position: absolute;
+    left: 25%;
+    transform: translateX(-50%);
+  }
+
+  .admin-nav-logo img {
     height: 30px;
   }
 
-}
+  /* PROFILE SIZE */
+  .admin-profile-img img {
+    width: 32px;
+    height: 32px;
+    margin-left: 300%;
+  }
 
-/* ===== MENU BACKGROUND ENHANCEMENT ===== */
+  /* HIDE DESKTOP MENU */
+  .admin-nav-links {
+    display: none;
+  }
 
+  /* SHOW MENU BUTTON */
+  .admin-menu-btn {
+    display: block;
+    font-size: 22px;
+  }
 
-.nav-center {
-  background: linear-gradient(135deg, #1e293b, #334155);
-  width: 60%;
-  height: 100%;
-}
-
-.nav-center {
-  box-shadow: -10px 0 30px rgba(0,0,0,0.4);
-}
-
-.nav-center li {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(4px);
-  transition: all 0.3s ease;
-}
-
-.nav-center li:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: translateX(5px);
-}
-
-.nav-center li:active {
-  transform: scale(0.97);
+  /* RIGHT ALIGN */
+  .admin-nav-right {
+    gap: 8px;
+  }
 }

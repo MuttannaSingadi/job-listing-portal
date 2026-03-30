@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../style/EmployeeDashboard.css";
+import AdminNavbar from "../components/AdminNavbar";
 import profile from "../assets/image.png";
-import { FaArrowLeft } from "react-icons/fa";
-import logo from "../assets/image.png";
 
 const API =
     import.meta.env.VITE_API_URL ||
@@ -18,7 +17,6 @@ export default function Admin() {
     const [applications, setApplications] = useState([]);
     const [profiles, setProfiles] = useState([]);
     const [menuOpen, setMenuOpen] = useState(false);
-    const [profileImage, setProfileImage] = useState(null);
 
     const [job, setJob] = useState({
         title: "",
@@ -30,67 +28,46 @@ export default function Admin() {
         skills: "",
     });
 
-    const [editMode, setEditMode] = useState(false);
-
-    const [employee, setEmployee] = useState({
-        name: "",
-        email: "",
-        phone: "",
-        role: "",
-        company: "",
-        location: "",
-        website: "",
-        profileImage: "", // store image path
-    });
-
-    /* ================= AUTH CHECK ================= */
+    /* AUTH CHECK */
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (!token) navigate("/auth");
     }, [navigate]);
 
-    /* ================= FETCH JOBS ================= */
+    /* FETCH LIST DATA */
     const fetchJobs = async () => {
         try {
             const token = localStorage.getItem("token");
-
             const res = await axios.get(`${API}/api/jobs`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-
             setJobs(res.data);
         } catch (err) {
-            console.log("Jobs fetch error:", err.response?.data || err.message);
+            console.log(err);
         }
     };
 
-    /* ================= FETCH APPLICATIONS ================= */
     const fetchApplications = async () => {
         try {
             const token = localStorage.getItem("token");
-
             const res = await axios.get(`${API}/api/applications`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-
             setApplications(res.data);
         } catch (err) {
-            console.log("Applications fetch error:", err.response?.data || err.message);
+            console.log(err);
         }
     };
 
-    /* ================= FETCH PROFILES ================= */
     const fetchProfiles = async () => {
         try {
             const token = localStorage.getItem("token");
-
             const res = await axios.get(`${API}/api/admin/profiles`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-
             setProfiles(res.data);
         } catch (err) {
-            console.log("Profiles fetch error:", err.response?.data || err.message);
+            console.log(err);
         }
     };
 
@@ -100,46 +77,32 @@ export default function Admin() {
         fetchProfiles();
     }, []);
 
-    /* ================= HANDLE PROFILE CHANGE ================= */
-    const handleProfileChange = (e) => {
-        setEmployee({
-            ...employee,
+    /* FETCH SINGLE PROFILE */
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                const res = await axios.get(`${API}/api/admin/profile`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                setEmployee(res.data); // backend returns direct object
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
+        fetchProfile();
+    }, []);
+
+    /* HANDLE JOB INPUT */
+    const handleChange = (e) => {
+        setJob({
+            ...job,
             [e.target.name]: e.target.value,
         });
     };
 
-    /* ================= SAVE PROFILE WITH IMAGE ================= */
-    const saveProfile = async () => {
-        try {
-            const token = localStorage.getItem("token");
-            const formData = new FormData();
-
-            Object.keys(employee).forEach((key) => {
-                formData.append(key, employee[key]);
-            });
-
-            if (profileImage) formData.append("profileImage", profileImage);
-
-            const res = await axios.put(`${API}/api/employee/profile`, formData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "multipart/form-data",
-                },
-            });
-
-            setEmployee(res.data);
-            setEditMode(false);
-            alert("Profile updated ✅");
-        } catch (err) {
-            console.log(err.response?.data || err.message);
-        }
-    };
-
-    /* ================= HANDLE JOB FORM ================= */
-    const handleChange = (e) => {
-        setJob({ ...job, [e.target.name]: e.target.value });
-    };
-
+    /* POST JOB */
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -150,7 +113,7 @@ export default function Admin() {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
-            alert("Job posted successfully ✅");
+            alert("Job Posted Successfully");
 
             setJob({
                 title: "",
@@ -163,24 +126,22 @@ export default function Admin() {
             });
 
             fetchJobs();
-            setActive("manage");
+
         } catch (err) {
-            alert(err.response?.data?.message || "Unauthorized ❌");
+            console.log(err);
+            alert("Error posting job");
         }
     };
 
+    /* UPDATE STATUS */
     const updateStatus = async (id, status) => {
-
         try {
-
             const token = localStorage.getItem("token");
 
             await axios.put(
                 `${API}/api/applications/status/${id}`,
                 { status },
-                {
-                    headers: { Authorization: `Bearer ${token}` }
-                }
+                { headers: { Authorization: `Bearer ${token}` } }
             );
 
             setApplications((prev) =>
@@ -188,66 +149,91 @@ export default function Admin() {
                     app._id === id ? { ...app, status } : app
                 )
             );
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    /* PROFILE STATE */
+    const [employee, setEmployee] = useState({
+        name: "",
+        email: "",
+        phone: "",
+        role: "",
+        company: "",
+        location: "",
+        website: "",
+        profileImage: ""
+    });
+
+    const [editMode, setEditMode] = useState(false);
+    const [profileImage, setProfileImage] = useState(null);
+
+    /* HANDLE PROFILE INPUT */
+    const handleProfileChange = (e) => {
+        setEmployee({
+            ...employee,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    /* SAVE PROFILE */
+    const saveProfile = async () => {
+        try {
+            const token = localStorage.getItem("token");
+
+            const formData = new FormData();
+
+            formData.append("name", employee.name);
+            formData.append("phone", employee.phone);
+            formData.append("role", employee.role);
+            formData.append("company", employee.company);
+            formData.append("location", employee.location);
+            formData.append("website", employee.website);
+
+            if (profileImage) {
+                formData.append("profileImage", profileImage);
+            }
+
+            const res = await axios.put(`${API}/api/admin/profile`, formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "multipart/form-data"
+                }
+            });
+
+            setEmployee(res.data);
+            setEditMode(false);
+
+            alert("Profile Updated");
 
         } catch (err) {
-
-            console.log("Status update error:", err);
-
+            console.log(err);
+            alert("Error updating profile");
         }
-
-
     };
-    const handleLogout = () => {
-        localStorage.removeItem("token");
-        navigate("/auth");
-    };
+
 
     return (
         <div className="admin-wrapper">
-            {/* ===== TOP NAVBAR ===== */}
-            <div className="top-navbar">
-                <div className="nav-left">
-                    <button className="back-btn" onClick={() => navigate(-1)}>
-                        <FaArrowLeft />
-                    </button>
 
-                    <div className="brand">
-                        <Link to="/profile">
-                            <img src={logo} alt="DevHire Logo" />
-                        </Link>
-                    </div>
-                </div>
+            <AdminNavbar
+                navigate={navigate}
+                menuOpen={menuOpen}
+                setMenuOpen={setMenuOpen}
+                setActive={setActive}
+            />
 
-                <div className="menu-btn" onClick={() => setMenuOpen(!menuOpen)}>
-                    {menuOpen ? "✕" : "☰"}
-                </div>
-
-                <div className={`nav-center ${menuOpen ? "open" : ""}`}>
-                    <ul>
-                        <li onClick={() => { setActive("profile"); setMenuOpen(false); }}>Profile</li>
-                        <li onClick={() => { setActive("post"); setMenuOpen(false); }}>Post Job</li>
-                        <li onClick={() => { setActive("manage"); setMenuOpen(false); }}>Manage Jobs</li>
-                        <li onClick={() => { setActive("applications"); setMenuOpen(false); }}>Applications</li>
-                        <li onClick={() => { setActive("profiles"); setMenuOpen(false); }}>Candidates</li>
-                    </ul>
-                </div>
-
-                <div className="nav-right">
-                    <button className="logout-btn" onClick={handleLogout}>
-                        Logout
-                    </button>
-                </div>
-            </div>
-
-            {menuOpen && <div className="menu-overlay" onClick={() => setMenuOpen(false)}></div>}
-
-            {/* ===== MAIN ===== */}
             <div className="main">
+
                 {/* ===== PROFILE ===== */}
                 {active === "profile" && (
                     <div className="profile-section">
+
                         <h2>Employee Profile</h2>
+
                         <div className="profile-card">
+
                             <div className="profile-image-upload">
                                 <img
                                     src={
@@ -267,10 +253,11 @@ export default function Admin() {
                                             onChange={(e) => setProfileImage(e.target.files[0])}
                                             style={{ display: "none" }}
                                         />
-                                        <i className="fa fa-pencil"></i> {/* pencil icon */}
+                                        <i className="fa fa-pencil"></i>
                                     </label>
                                 )}
                             </div>
+
                             <div className="profile-details">
                                 {!editMode ? (
                                     <>
@@ -286,7 +273,10 @@ export default function Admin() {
                                         <p><strong>Website:</strong> {employee.website}</p>
 
                                         <div className="profile-buttons">
-                                            <button className="edit-btn" onClick={() => setEditMode(true)}>
+                                            <button
+                                                className="edit-btn"
+                                                onClick={() => setEditMode(true)}
+                                            >
                                                 Edit Profile
                                             </button>
                                         </div>
@@ -307,6 +297,7 @@ export default function Admin() {
                                     </div>
                                 )}
                             </div>
+
                         </div>
                     </div>
                 )}
@@ -345,43 +336,25 @@ export default function Admin() {
                 {/* ===== APPLICATIONS ===== */}
                 {active === "applications" && (
                     <div>
-
                         <h2>Job Applications</h2>
 
                         {applications.length === 0 ? (
                             <p>No applications yet</p>
                         ) : (
                             <div className="jobs-grid">
-
                                 {applications.map((app) => (
-
                                     <div key={app._id} className="job-card">
-
                                         <h4>{app.jobId?.title}</h4>
-
-                                        <p>
-                                            <strong>Company:</strong> {app.jobId?.company}
-                                        </p>
-
-                                        <p>
-                                            <strong>Name:</strong> {app.applicantName}
-                                        </p>
-
-                                        <p>
-                                            <strong>Email:</strong> {app.applicantEmail}
-                                        </p>
-
-                                        <p>
-                                            <strong>Phone:</strong> {app.phone}
-                                        </p>
-
-                                        <p>
-                                            <strong>Status:</strong>
-                                        </p>
+                                        <p><strong>Company:</strong> {app.jobId?.company}</p>
+                                        <p><strong>Name:</strong> {app.applicantName}</p>
+                                        <p><strong>Email:</strong> {app.applicantEmail}</p>
+                                        <p><strong>Phone:</strong> {app.phone}</p>
 
                                         <select
                                             value={app.status || "Pending"}
-                                            onChange={(e) => updateStatus(app._id, e.target.value)}
+                                            onChange={(e) =>
+                                                updateStatus(app._id, e.target.value)
+                                            }
                                         >
                                             <option value="Pending">Pending</option>
                                             <option value="Interview">Interview</option>
@@ -391,23 +364,14 @@ export default function Admin() {
                                         </select>
 
                                         {app.resumeUrl && (
-                                            <a
-                                                href={app.resumeUrl}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                style={{ color: "#6d28d9", fontWeight: "600" }}
-                                            >
+                                            <a href={app.resumeUrl} target="_blank" rel="noopener noreferrer">
                                                 View Resume
                                             </a>
                                         )}
-
                                     </div>
-
                                 ))}
-
                             </div>
                         )}
-
                     </div>
                 )}
 
@@ -423,11 +387,16 @@ export default function Admin() {
                                     <p>Email: {profile.email}</p>
                                     <p>Role: {profile.role}</p>
                                     <p>Location: {profile.location}</p>
+
                                     <h4>Skills</h4>
                                     <p>{profile.skills?.join(", ")}</p>
+
                                     {profile.resume && (
                                         <a
-                                            href={profile.resume.replace("/upload/", "/upload/fl_attachment/")}
+                                            href={profile.resume.replace(
+                                                "/upload/",
+                                                "/upload/fl_attachment/"
+                                            )}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
@@ -439,6 +408,7 @@ export default function Admin() {
                         )}
                     </div>
                 )}
+
             </div>
         </div>
     );
