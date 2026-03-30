@@ -114,9 +114,6 @@
   .mobile-menu {
     position: fixed;
 
-    top: 80px;        /* below navbar */
-    right: 10px;      /* right side */
-
     opacity: 0;
     pointer-events: none;
 
@@ -140,6 +137,8 @@
   .mobile-menu.open {
     opacity: 1;
     pointer-events: auto;
+    top: 40%;        
+    right: 0%; 
   }
 
   /* MENU ITEMS */
@@ -147,6 +146,7 @@
   .mobile-menu button {
     width: 100%;
     padding: 14px;
+  
 
     background: #334155;
     color: #e2e8f0;
