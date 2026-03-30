@@ -79,17 +79,9 @@ export default function Admin() {
 
     /* FETCH SINGLE PROFILE */
     useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                const token = localStorage.getItem("token");
-                const res = await axios.get(`${API}/api/employee/profile`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                setEmployee(res.data);
-            } catch (err) {
-                console.log(err);
-            }
-        };
+        const fetchProfiles = async () => {
+    setProfiles([]);
+};
 
         fetchProfile();
     }, []);
