@@ -62,7 +62,7 @@ export default function Admin() {
     const fetchProfiles = async () => {
         try {
             const token = localStorage.getItem("token");
-            const res = await axios.get(`${API}/api/admin/profiles`, {
+            const res = await axios.get(`${API}/api/employee/profiles`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setProfiles(res.data);
@@ -82,10 +82,10 @@ export default function Admin() {
         const fetchProfile = async () => {
             try {
                 const token = localStorage.getItem("token");
-                const res = await axios.get(`${API}/api/admin/profile`, {
+                const res = await axios.get(`${API}/api/employee/profile`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
-                setEmployee(res.data); // backend returns direct object
+                setEmployee(res.data);
             } catch (err) {
                 console.log(err);
             }
