@@ -31,11 +31,12 @@ router.post("/signup", async (req, res) => {
       companyLocation,
     } = req.body;
 
+    // ✅ Validate required fields
     if (!email || !password) {
       return res.status(400).json({ msg: "Email and Password required" });
     }
 
-    // Employer uses company name
+    // ✅ Employer uses company name
     if (role === "employer") {
       name = companyName;
     }
@@ -44,14 +45,17 @@ router.post("/signup", async (req, res) => {
       return res.status(400).json({ msg: "Name required" });
     }
 
+    // ✅ Check existing user
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ msg: "User already exists" });
     }
 
+    // ✅ Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    // ✅ Create new user
     const user = new User({
       role,
       name,
@@ -68,7 +72,7 @@ router.post("/signup", async (req, res) => {
 
     res.status(201).json({ msg: "Registration successful ✅" });
 
-    // ✅ Send email only if resend exists
+    // ✅ Send email (optional)
     if (resend) {
       setImmediate(async () => {
         try {
@@ -104,27 +108,36 @@ router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // ✅ Validate input
     if (!email || !password) {
       return res.status(400).json({ msg: "Email and Password required" });
     }
 
+    // ✅ Check user exists
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ msg: "Invalid Email" });
     }
 
+    // ✅ Check password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ msg: "Wrong Password" });
     }
 
-    // ✅ Generate JWT
+    // ✅ GENERATE JWT TOKEN
+    // 🔥 IMPORTANT: email added here (FIX for your error)
     const token = jwt.sign(
-      { id: user._id, role: user.role },
+      { 
+        id: user._id,
+        role: user.role,
+        email: user.email   // ✅ REQUIRED for profile API
+      },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
 
+    // ✅ Send response
     res.json({
       msg: "Login successful",
       token,
@@ -153,6 +166,7 @@ router.post("/reset-password", async (req, res) => {
       return res.status(400).json({ msg: "User not found" });
     }
 
+    // ✅ Hash new password
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(newPassword, salt);
 
