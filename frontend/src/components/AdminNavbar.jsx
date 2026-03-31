@@ -7,7 +7,8 @@ export default function AdminNavbar({
   navigate,
   menuOpen,
   setMenuOpen,
-  setActive
+  setActive,
+  profileImage
 }) {
 
   const handleLogout = () => {
@@ -57,11 +58,17 @@ export default function AdminNavbar({
           <div className="admin-profile-dropdown">
 
             <div className="admin-profile-img">
-              <img src={profileImg} alt="Profile" />
+              <img
+                src={
+                  profileImage && profileImage !== ""
+                    ? `data:image/png;base64,${profileImage}`
+                    : profileImg
+                }
+                alt="Profile"
+              />
             </div>
 
             <div className="admin-dropdown-menu">
-              {/* ✅ FIXED CLICK */}
               <p
                 onClick={(e) => {
                   e.stopPropagation();
@@ -97,7 +104,6 @@ export default function AdminNavbar({
           <li onClick={() => handleMenuClick("applications")}>Applications</li>
           <li onClick={() => handleMenuClick("profiles")}>Candidates</li>
 
-          {/* ✅ ADD PROFILE IN MOBILE MENU */}
           <li onClick={() => handleMenuClick("profile")}>Profile</li>
 
           <li className="admin-logout-item" onClick={handleLogout}>

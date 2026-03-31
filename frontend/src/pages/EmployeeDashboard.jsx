@@ -133,6 +133,32 @@ export default function Admin() {
         }
     };
 
+    // ✅ DELETE JOB
+    const deleteJob = async (id) => {
+        try {
+            const token = localStorage.getItem("token");
+
+            await axios.delete(`${API}/api/jobs/${id}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            setJobs((prev) => prev.filter((job) => job._id !== id));
+
+            alert("Job Deleted Successfully");
+
+        } catch (err) {
+            console.log(err);
+            alert("Error deleting job");
+        }
+    };
+
+
+    // ✅ UPDATE JOB (simple version - reuse form)
+    const editJob = (job) => {
+        setJob(job);        // fill form
+        setActive("post");  // redirect to post form
+    };
+
     /* UPDATE STATUS */
     const updateStatus = async (id, status) => {
         try {
@@ -222,6 +248,7 @@ export default function Admin() {
                 menuOpen={menuOpen}
                 setMenuOpen={setMenuOpen}
                 setActive={setActive}
+                profileImage={employee.profileImage}
             />
 
             <div className="main">
@@ -328,6 +355,23 @@ export default function Admin() {
                                 <p>{j.company}</p>
                                 <p>₹ {j.salary}</p>
                                 <p>{j.location}</p>
+
+                                {/* ✅ ACTION BUTTONS */}
+                                <div className="job-actions">
+                                    <button
+                                        className="edit-btn"
+                                        onClick={() => editJob(j)}
+                                    >
+                                        Edit
+                                    </button>
+
+                                    <button
+                                        className="delete-btn"
+                                        onClick={() => deleteJob(j._id)}
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
                         ))}
                     </div>
