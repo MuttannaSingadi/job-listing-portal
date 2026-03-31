@@ -15,7 +15,8 @@ router.get("/profile", authMiddleware, async (req, res) => {
     const email = req.user.email; // set by authMiddleware
     const employee = await Employee.findOne({ email });
 
-    if (!employee) return res.status(404).json({ message: "Employee not found" });
+    if (!employee)
+      return res.status(404).json({ message: "Employee not found" });
 
     res.json(employee);
   } catch (error) {
@@ -25,42 +26,51 @@ router.get("/profile", authMiddleware, async (req, res) => {
 });
 
 /* ================= PUT PROFILE ================= */
-router.put("/profile", authMiddleware, upload.single("profileImage"), async (req, res) => {
-  try {
-    const { name, phone, role, company, location, website } = req.body;
+router.put(
+  "/profile",
+  authMiddleware,
+  upload.single("profileImage"),
+  async (req, res) => {
+    try {
+      const { name, phone, role, company, location, website } = req.body;
 
-const email = req.user.email;
+      const email = req.user.email;
 
-let employee = await Employee.findOne({ email });
+      let employee = await Employee.findOne({ email });
 
-    const profileImageData = req.file
-      ? req.file.buffer.toString("base64")
-      : employee?.profileImage;
+      let profileImageData = employee?.profileImage || "";
 
-    const employeeData = {
-      name,
-      phone,
-      role,
-      company,
-      location,
-      website,
-      profileImage: profileImageData,
-    };
+      if (req.file) {
+        profileImageData = req.file.buffer.toString("base64");
+      }
 
-    if (employee) {
-      // Update existing employee
-      employee = await Employee.findOneAndUpdate({ email }, employeeData, { new: true });
-    } else {
-      // Create new employee
-      employee = new Employee({ email, ...employeeData });
-      await employee.save();
+      const employeeData = {
+        name,
+        phone,
+        role,
+        company,
+        location,
+        website,
+        profileImage: profileImageData,
+      };
+
+      if (employee) {
+        // Update existing employee
+        employee = await Employee.findOneAndUpdate({ email }, employeeData, {
+          new: true,
+        });
+      } else {
+        // Create new employee
+        employee = new Employee({ email, ...employeeData });
+        await employee.save();
+      }
+
+      res.json(employee);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      res.status(500).json({ message: "Server Error" });
     }
-
-    res.json(employee);
-  } catch (error) {
-    console.error("Error updating profile:", error);
-    res.status(500).json({ message: "Server Error" });
-  }
-});
+  },
+);
 
 module.exports = router;
