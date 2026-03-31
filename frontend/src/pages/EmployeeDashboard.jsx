@@ -17,6 +17,7 @@ export default function Admin() {
     const [applications, setApplications] = useState([]);
     const [profiles, setProfiles] = useState([]);
     const [menuOpen, setMenuOpen] = useState(false);
+    const [editingId, setEditingId] = useState(null);
 
     const [job, setJob] = useState({
         title: "",
@@ -109,11 +110,22 @@ export default function Admin() {
         try {
             const token = localStorage.getItem("token");
 
-            await axios.post(`${API}/api/jobs`, job, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            if (editingId) {
+                // ✅ UPDATE JOB (fix duplicate error)
+                await axios.put(`${API}/api/jobs/${editingId}`, job, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
 
-            alert("Job Posted Successfully");
+                alert("Job Updated Successfully");
+
+            } else {
+                // ✅ CREATE JOB
+                await axios.post(`${API}/api/jobs`, job, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+
+                alert("Job Posted Successfully");
+            }
 
             setJob({
                 title: "",
@@ -125,11 +137,12 @@ export default function Admin() {
                 skills: "",
             });
 
+            setEditingId(null); // ✅ reset after update
             fetchJobs();
 
         } catch (err) {
             console.log(err);
-            alert("Error posting job");
+            alert("Error saving job");
         }
     };
 
@@ -137,6 +150,8 @@ export default function Admin() {
     const deleteJob = async (id) => {
         try {
             const token = localStorage.getItem("token");
+
+            if (!window.confirm("Are you sure you want to delete this job?")) return;
 
             await axios.delete(`${API}/api/jobs/${id}`, {
                 headers: { Authorization: `Bearer ${token}` },
@@ -147,16 +162,17 @@ export default function Admin() {
             alert("Job Deleted Successfully");
 
         } catch (err) {
-            console.log(err);
+            console.log("DELETE ERROR:", err.response?.data || err.message);
             alert("Error deleting job");
         }
     };
 
 
-    // ✅ UPDATE JOB (simple version - reuse form)
     const editJob = (job) => {
-        setJob(job);        // fill form
-        setActive("post");  // redirect to post form
+        const { _id, ...rest } = job;   // remove _id
+        setJob(rest);
+        setEditingId(_id);
+        setActive("post");
     };
 
     /* UPDATE STATUS */
