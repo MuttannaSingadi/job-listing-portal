@@ -79,7 +79,17 @@ export default function Navbar() {
             Jobs
           </Link>
 
-          <Link to="/companies">Companies</Link>
+          <Link
+            to="/"
+            onClick={() => {
+              setTimeout(() => {
+                const section = document.getElementById("companies");
+                section?.scrollIntoView({ behavior: "smooth" });
+              }, 100);
+            }}
+          >
+            Companies
+          </Link>
 
           {!isLoggedIn && <Link to="/auth">Employer/Job Seekers</Link>}
 
@@ -132,7 +142,15 @@ export default function Navbar() {
           Jobs
         </Link>
 
-        <Link to="/companies" onClick={() => setMenuOpen(false)}>
+        <Link
+          to="/"
+          onClick={() => {
+            setTimeout(() => {
+              const section = document.getElementById("companies");
+              section?.scrollIntoView({ behavior: "smooth" });
+            }, 100);
+          }}
+        >
           Companies
         </Link>
 

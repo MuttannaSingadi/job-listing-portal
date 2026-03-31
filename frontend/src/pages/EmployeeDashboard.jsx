@@ -31,6 +31,7 @@ export default function Admin() {
         description: "",
         experience: "",
         skills: "",
+        isRecommended: false,
     });
 
     /* AUTH CHECK */
@@ -139,6 +140,7 @@ export default function Admin() {
                 description: "",
                 experience: "",
                 skills: "",
+                isRecommended: false,
             });
 
             setEditingId(null); // ✅ reset after update
@@ -147,6 +149,20 @@ export default function Admin() {
         } catch (err) {
             console.log(err);
             alert("Error saving job");
+        }
+    };
+
+    const toggleRecommended = async (id) => {
+        try {
+            const token = localStorage.getItem("token");
+
+            await axios.put(`${API}/api/recommended-jobs/${id}`, {}, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            fetchJobs();
+        } catch (err) {
+            console.log(err);
         }
     };
 
@@ -521,6 +537,18 @@ export default function Admin() {
                             <input name="experience" placeholder="Experience" value={job.experience} onChange={handleChange} required />
                             <input name="skills" placeholder="Skills" value={job.skills} onChange={handleChange} required />
                             <textarea name="description" placeholder="Description" value={job.description} onChange={handleChange} required />
+                            {/* ⭐ NEW FIELD (IMPORTANT) */}
+                            <label style={{ marginTop: "10px" }}>
+                                <input
+                                    type="checkbox"
+                                    name="isRecommended"
+                                    checked={job.isRecommended || false}
+                                    onChange={(e) =>
+                                        setJob({ ...job, isRecommended: e.target.checked })
+                                    }
+                                />
+                                Mark as Recommended ⭐
+                            </label>
                             <button type="submit">Post Job</button>
                         </form>
                     </div>
@@ -531,6 +559,7 @@ export default function Admin() {
                     <div className="jobs-grid">
                         {jobs.map((j) => (
                             <div key={j._id} className="job-card">
+                                {j.isRecommended && <span className="badge">⭐ Featured</span>}
                                 <h4>{j.title}</h4>
                                 <p>{j.company}</p>
                                 <p>₹ {j.salary}</p>
@@ -538,6 +567,12 @@ export default function Admin() {
 
                                 {/* ✅ ACTION BUTTONS */}
                                 <div className="job-actions">
+                                    <button
+                                        className="recommended-btn"
+                                        onClick={() => toggleRecommended(j._id)}
+                                    >
+                                        {j.isRecommended ? "⭐ Recommended" : "☆ Make Recommended"}
+                                    </button>
                                     <button
                                         className="edit-btn"
                                         onClick={() => editJob(j)}

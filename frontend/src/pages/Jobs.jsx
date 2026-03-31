@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../style/jobs.css";
 import { FaArrowLeft } from "react-icons/fa";
+import RecommendedJobs from "../components/RecommendedJobs";
 
 export default function Jobs() {
   const [jobs, setJobs] = useState([]);
@@ -21,14 +22,14 @@ export default function Jobs() {
   const [showFilter, setShowFilter] = useState(false);
   const navigate = useNavigate();
 
-useEffect(() => {
-  const token = localStorage.getItem("token");
+  useEffect(() => {
+    const token = localStorage.getItem("token");
 
-  if (!token) {
-    alert("Please login first");
-    navigate("/auth");
-  }
-}, []);
+    if (!token) {
+      alert("Please login first");
+      navigate("/auth");
+    }
+  }, []);
 
   /* ================= FETCH JOBS ================= */
   useEffect(() => {
@@ -104,7 +105,7 @@ useEffect(() => {
     setFilteredJobs(filtered);
 
   }, [search, jobs, jobTypes, categories, minSalary, maxSalary]);
-  
+
   /* ===== CATEGORY FILTER ===== */
   const handleCategoryChange = (category) => {
     if (categories.includes(category)) {
@@ -144,6 +145,7 @@ useEffect(() => {
         <button className="back-btn" onClick={() => navigate(-1)}>
           <FaArrowLeft /> Back
         </button>
+
 
         <div>
           <h1 className="jobs-title">Find Your Dream Job</h1>
@@ -299,6 +301,8 @@ useEffect(() => {
         {/* ===== JOB LIST ===== */}
         <div className="jobs-container">
 
+          <RecommendedJobs />
+
           {loading ? (
             <p className="no-jobs">Loading jobs...</p>
           ) : filteredJobs.length === 0 ? (
@@ -309,8 +313,8 @@ useEffect(() => {
 
               {filteredJobs.map((job) => (
 
-                <div key={job._id} className="job-card fade-in">
-
+                <div key={job._id} className={`job-card fade-in ${job.isRecommended ? "recommended" : ""}`}>
+                  {job.isRecommended && <span className="badge">⭐ Featured</span>}
                   <h3>{job.title}</h3>
                   <p className="company">{job.company}</p>
 

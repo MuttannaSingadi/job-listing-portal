@@ -192,6 +192,20 @@
   transform: scale(1.05);
 }
 
+.recommended-section {
+  margin-bottom: 30px;
+}
+
+.recommended-section h2 {
+  margin-bottom: 15px;
+  color: #6a5acd;
+}
+
+.job-card.recommended {
+  border: 2px solid #6a5acd;
+  background: #f9f8ff;
+}
+
 /* ================= SAVE BUTTON ================= */
 
 .save-job-btn {

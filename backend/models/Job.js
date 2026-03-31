@@ -31,7 +31,12 @@ const jobSchema = new mongoose.Schema(
     skills: {
       type: String,
       default: ""
-    }
+    },
+
+    isRecommended: {
+      type: Boolean,
+      default: false,
+    },
 
   },
   { timestamps: true }

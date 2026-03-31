@@ -11,7 +11,7 @@ const employeeRoutes = require("./routes/employee");
 
 const profile = require("./routes/profile");
 const applicationRoutes = require("./routes/applicationRoutes");
-
+const recommendedJobRoutes = require("./routes/recommendedJobRoutes");
 const app = express();
 
 /* ================= DATABASE ================= */
@@ -48,6 +48,7 @@ app.use("/api/profile", require("./routes/profile"));
 app.use("/api/employee", employeeRoutes);
 app.use("/uploads", express.static("uploads"));
 app.use("/api/notifications", require("./routes/notificationRoutes"));
+app.use("/api/recommendedJobRoutes", recommendedJobRoutes);
 /* ================= 404 ================= */
 
 app.use((req, res) => {
