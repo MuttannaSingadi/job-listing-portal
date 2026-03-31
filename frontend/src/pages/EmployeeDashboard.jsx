@@ -571,7 +571,7 @@ export default function Admin() {
                                         className="recommended-btn"
                                         onClick={() => toggleRecommended(j._id)}
                                     >
-                                        {j.isRecommended ? "⭐ Recommended" : "☆ Make Recommended"}
+                                        {j.isRecommended ? "⭐ Recommended" : "☆"}
                                     </button>
                                     <button
                                         className="edit-btn"
