@@ -4,6 +4,10 @@ import axios from "axios";
 import "../style/EmployeeDashboard.css";
 import AdminNavbar from "../components/AdminNavbar";
 import profile from "../assets/image.png";
+import {
+    BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
+    PieChart, Pie, Cell
+} from "recharts";
 
 const API =
     import.meta.env.VITE_API_URL ||
@@ -219,6 +223,42 @@ export default function Admin() {
         });
     };
 
+    // JOBS PER LOCATION (Bar Chart)
+    const jobData = jobs.reduce((acc, job) => {
+        const location = job.location || "Other";
+        const found = acc.find((item) => item.name === location);
+
+        if (found) {
+            found.jobs += 1;
+        } else {
+            acc.push({ name: location, jobs: 1 });
+        }
+
+        return acc;
+    }, []);
+
+    // APPLICATION STATUS (Pie Chart)
+    const statusData = [
+        { name: "Pending", value: applications.filter(a => a.status === "Pending").length },
+        { name: "Interview", value: applications.filter(a => a.status === "Interview").length },
+        { name: "Accepted", value: applications.filter(a => a.status === "Accepted").length },
+        { name: "Rejected", value: applications.filter(a => a.status === "Rejected").length },
+    ];
+
+    const trendData = jobs.reduce((acc, job) => {
+        const date = new Date(job.createdAt).toLocaleDateString();
+
+        const found = acc.find((d) => d.date === date);
+
+        if (found) {
+            found.count += 1;
+        } else {
+            acc.push({ date, count: 1 });
+        }
+
+        return acc;
+    }, []);
+
     /* SAVE PROFILE */
     const saveProfile = async () => {
         try {
@@ -255,6 +295,7 @@ export default function Admin() {
         }
     };
 
+    const COLORS = ["#f59e0b", "#222090", "#f59e0b", "#ef4444"];
 
     return (
         <div className="admin-wrapper">
@@ -269,6 +310,128 @@ export default function Admin() {
 
             <div className="main">
 
+                {/* ===== DASHBOARD ===== */}
+                {active === "dashboard" && (
+                    <div className="dashboard">
+
+                        <h2 className="dashboard-title">Dashboard Overview</h2>
+
+                        {/* ===== TOP CARDS ===== */}
+                        <div className="cards">
+
+                            <div className="card">
+                                <h3>📌 Total Jobs</h3>
+                                <p>{jobs.length}</p>
+                            </div>
+
+                            <div className="card">
+                                <h3>📄 Applications</h3>
+                                <p>{applications.length}</p>
+                            </div>
+
+                            <div className="card">
+                                <h3>👨‍💼 Candidates</h3>
+                                <p>{profiles.length}</p>
+                            </div>
+
+                        </div>
+
+                        <div className="charts">
+
+                            {/* ===== BAR CHART ===== */}
+                            <div className="chart-box">
+                                <h3>📊 Jobs by Location</h3>
+
+                                <ResponsiveContainer width="100%" height={250}>
+                                    <BarChart data={jobData}>
+                                        <XAxis dataKey="name" />
+                                        <YAxis />
+                                        <Tooltip />
+                                        <Bar dataKey="jobs" fill="#8b5cf6" />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </div>
+
+                            {/* ===== PIE CHART ===== */}
+                            <div className="chart-box">
+                                <h3>📈 Application Status</h3>
+
+                                <ResponsiveContainer width="100%" height={250}>
+                                    <PieChart>
+                                        <Pie
+                                            data={statusData}
+                                            dataKey="value"
+                                            nameKey="name"
+                                            outerRadius={80}
+                                        >
+                                            {statusData.map((entry, index) => (
+                                                <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                            </div>
+                            <div className="chart-box">
+                                <h3>📈 Hiring Trends</h3>
+
+                                <ResponsiveContainer width="100%" height={250}>
+                                    <BarChart data={trendData}>
+                                        <XAxis dataKey="date" />
+                                        <YAxis />
+                                        <Tooltip />
+                                        <Bar dataKey="count" fill="#10b981" />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </div>
+
+                        </div>
+
+                        {/* ===== RECENT JOBS ===== */}
+                        <div className="dashboard-section">
+                            <h3>🆕 Recent Jobs</h3>
+
+                            {jobs.slice(0, 3).map((job) => (
+                                <div key={job._id} className="dashboard-item">
+                                    <p><strong>{job.title}</strong> - {job.company}</p>
+                                    <span>{job.location}</span>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* ===== RECENT APPLICATIONS ===== */}
+                        <div className="dashboard-section">
+                            <h3>📥 Recent Applications</h3>
+
+                            {applications.slice(0, 3).map((app) => (
+                                <div key={app._id} className="dashboard-item">
+                                    <p><strong>{app.applicantName}</strong></p>
+                                    <span>{app.jobId?.title}</span>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* ===== QUICK ACTIONS ===== */}
+                        <div className="dashboard-section">
+                            <h3>⚡ Quick Actions</h3>
+
+                            <div className="quick-actions">
+                                <button onClick={() => setActive("post")}>
+                                    ➕ Post Job
+                                </button>
+
+                                <button onClick={() => setActive("manage")}>
+                                    📋 Manage Jobs
+                                </button>
+
+                                <button onClick={() => setActive("applications")}>
+                                    📑 View Applications
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                )}
                 {/* ===== PROFILE ===== */}
                 {active === "profile" && (
                     <div className="profile-section">
@@ -344,6 +507,7 @@ export default function Admin() {
                         </div>
                     </div>
                 )}
+
 
                 {/* ===== POST JOB ===== */}
                 {active === "post" && (
