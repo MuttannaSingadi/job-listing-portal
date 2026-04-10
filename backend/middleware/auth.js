@@ -13,7 +13,6 @@ module.exports = function (req, res, next) {
       process.env.JWT_SECRET || "secretkey"
     );
 
-    // ✅ FIX: ensure email exists in token
     if (!decoded.email) {
       return res.status(400).json({ message: "Token missing email" });
     }

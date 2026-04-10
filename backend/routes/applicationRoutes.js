@@ -60,7 +60,7 @@ router.post("/apply", upload.single("resume"), async (req, res) => {
 });
 
 
-// GET ALL APPLICATIONS (for employer dashboard)
+// GET ALL APPLICATIONS
 router.get("/", async (req, res) => {
 
   try {

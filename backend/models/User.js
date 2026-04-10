@@ -8,7 +8,6 @@ const userSchema = new mongoose.Schema(
       default: "jobseeker",
     },
 
-    // main display name
     name: {
       type: String,
       required: true,
@@ -25,7 +24,6 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
 
-    // extra profile fields
     phone: String,
     location: String,
     companyName: String,

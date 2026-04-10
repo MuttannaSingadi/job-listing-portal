@@ -1,18 +1,16 @@
-// backend/routes/employee.js
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const Employee = require("../models/Employee");
-const authMiddleware = require("../middleware/auth"); // JWT auth middleware
+const authMiddleware = require("../middleware/auth"); 
 
-// Use memory storage to avoid disk issues on Render
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-/* ================= GET PROFILE ================= */
+// GET PROFILE 
 router.get("/profile", authMiddleware, async (req, res) => {
   try {
-    const email = req.user.email; // set by authMiddleware
+    const email = req.user.email; 
     const employee = await Employee.findOne({ email });
 
     if (!employee)
@@ -25,7 +23,7 @@ router.get("/profile", authMiddleware, async (req, res) => {
   }
 });
 
-/* ================= PUT PROFILE ================= */
+// PUT PROFILE 
 router.put(
   "/profile",
   authMiddleware,
@@ -55,12 +53,12 @@ router.put(
       };
 
       if (employee) {
-        // Update existing employee
+        
         employee = await Employee.findOneAndUpdate({ email }, employeeData, {
           new: true,
         });
       } else {
-        // Create new employee
+        
         employee = new Employee({ email, ...employeeData });
         await employee.save();
       }
@@ -73,7 +71,7 @@ router.put(
   },
 );
 
-/* ================= GET ALL PROFILES (CANDIDATES) ================= */
+// GET ALL PROFILES
 router.get("/profiles", async (req, res) => {
   try {
     const profiles = await Employee.find();

@@ -1,7 +1,6 @@
-/* ================= GOOGLE FONT ================= */
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
-/* ================= GLOBAL ================= */
 * {
   margin: 0;
   padding: 0;
@@ -50,7 +49,6 @@ body {
   margin-bottom: 25px;
 }
 
-/* BUTTONS */
 .hero-buttons {
   display: flex;
   gap: 15px;
@@ -80,7 +78,6 @@ body {
   cursor: pointer;
 }
 
-/* HERO RIGHT */
 .hero-right {
   flex: 1;
   display: flex;
@@ -173,7 +170,6 @@ body {
   margin-bottom: 40px;
 }
 
-/* DESKTOP SCROLL */
 .company-track {
   display: flex;
   gap: 20px;
@@ -209,7 +205,6 @@ body {
   cursor: pointer;
 }
 
-/* ANIMATION */
 @keyframes scroll {
   100% {
     transform: translateX(-50%);
@@ -251,7 +246,6 @@ body {
   padding-top: 70px;
 }
 
-/* REMOVE BULLETS */
 .hero-card ul,
 .footer-column ul {
   list-style: none;
@@ -264,7 +258,6 @@ body {
   margin-bottom: 8px;
 }
 
-/* TABLET */
 @media (max-width: 992px) {
   .hero-content {
     flex-direction: column;
@@ -279,7 +272,6 @@ body {
   }
 }
 
-/* MOBILE */
 @media (max-width: 768px) {
 
   .hero-modern {
@@ -323,7 +315,6 @@ body {
     text-align: center;
   }
 
-  /* COMPANY SCROLL SAME AS DESKTOP */
   .company-marquee {
     overflow-x: auto;
     scroll-behavior: smooth;
@@ -356,7 +347,6 @@ body {
     padding: 5px 10px;
   }
 
-  /* FOOTER */
   .footer {
     padding: 40px 15px;
   }
@@ -368,7 +358,6 @@ body {
   }
 }
 
-/* SMALL MOBILE */
 @media (max-width: 480px) {
   .hero-left h1 {
     font-size: 22px;
@@ -393,7 +382,6 @@ body {
   }
 }
 
-/* SCROLL ANIMATION */
 @keyframes scroll {
   0% {
     transform: translateX(0);

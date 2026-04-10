@@ -34,13 +34,11 @@ export default function Admin() {
         isRecommended: false,
     });
 
-    /* AUTH CHECK */
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (!token) navigate("/auth");
     }, [navigate]);
 
-    /* FETCH LIST DATA */
     const fetchJobs = async () => {
         try {
             const token = localStorage.getItem("token");
@@ -116,7 +114,6 @@ export default function Admin() {
             const token = localStorage.getItem("token");
 
             if (editingId) {
-                // ✅ UPDATE JOB (fix duplicate error)
                 await axios.put(`${API}/api/jobs/${editingId}`, job, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
@@ -124,7 +121,6 @@ export default function Admin() {
                 alert("Job Updated Successfully");
 
             } else {
-                // ✅ CREATE JOB
                 await axios.post(`${API}/api/jobs`, job, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
@@ -143,7 +139,7 @@ export default function Admin() {
                 isRecommended: false,
             });
 
-            setEditingId(null); // ✅ reset after update
+            setEditingId(null); 
             fetchJobs();
 
         } catch (err) {
@@ -166,7 +162,6 @@ export default function Admin() {
         }
     };
 
-    // ✅ DELETE JOB
     const deleteJob = async (id) => {
         try {
             const token = localStorage.getItem("token");
@@ -189,7 +184,7 @@ export default function Admin() {
 
 
     const editJob = (job) => {
-        const { _id, ...rest } = job;   // remove _id
+        const { _id, ...rest } = job; 
         setJob(rest);
         setEditingId(_id);
         setActive("post");
@@ -231,7 +226,7 @@ export default function Admin() {
     const [editMode, setEditMode] = useState(false);
     const [profileImage, setProfileImage] = useState(null);
 
-    /* HANDLE PROFILE INPUT */
+    // HANDLE PROFILE INPUT 
     const handleProfileChange = (e) => {
         setEmployee({
             ...employee,
@@ -239,7 +234,7 @@ export default function Admin() {
         });
     };
 
-    // JOBS PER LOCATION (Bar Chart)
+    // JOBS PER LOCATION
     const jobData = jobs.reduce((acc, job) => {
         const location = job.location || "Other";
         const found = acc.find((item) => item.name === location);
@@ -253,7 +248,7 @@ export default function Admin() {
         return acc;
     }, []);
 
-    // APPLICATION STATUS (Pie Chart)
+    // APPLICATION STATUS
     const statusData = [
         { name: "Pending", value: applications.filter(a => a.status === "Pending").length },
         { name: "Interview", value: applications.filter(a => a.status === "Interview").length },
@@ -326,13 +321,13 @@ export default function Admin() {
 
             <div className="main">
 
-                {/* ===== DASHBOARD ===== */}
+                {/* DASHBOARD */}
                 {active === "dashboard" && (
                     <div className="dashboard">
 
                         <h2 className="dashboard-title">Dashboard Overview</h2>
 
-                        {/* ===== TOP CARDS ===== */}
+                        {/* TOP CARDS  */}
                         <div className="cards">
 
                             <div className="card">
@@ -354,7 +349,7 @@ export default function Admin() {
 
                         <div className="charts">
 
-                            {/* ===== BAR CHART ===== */}
+                            {/*  BAR CHART */}
                             <div className="chart-box">
                                 <h3>📊 Jobs by Location</h3>
 
@@ -368,7 +363,7 @@ export default function Admin() {
                                 </ResponsiveContainer>
                             </div>
 
-                            {/* ===== PIE CHART ===== */}
+                            {/*  PIE CHART */}
                             <div className="chart-box">
                                 <h3>📈 Application Status</h3>
 
@@ -403,7 +398,7 @@ export default function Admin() {
 
                         </div>
 
-                        {/* ===== RECENT JOBS ===== */}
+                        {/* RECENT JOBS */}
                         <div className="dashboard-section">
                             <h3>🆕 Recent Jobs</h3>
 
@@ -415,7 +410,7 @@ export default function Admin() {
                             ))}
                         </div>
 
-                        {/* ===== RECENT APPLICATIONS ===== */}
+                        {/*  RECENT APPLICATIONS */}
                         <div className="dashboard-section">
                             <h3>📥 Recent Applications</h3>
 
@@ -427,7 +422,7 @@ export default function Admin() {
                             ))}
                         </div>
 
-                        {/* ===== QUICK ACTIONS ===== */}
+                        {/*  QUICK ACTIONS  */}
                         <div className="dashboard-section">
                             <h3>⚡ Quick Actions</h3>
 
@@ -448,7 +443,7 @@ export default function Admin() {
 
                     </div>
                 )}
-                {/* ===== PROFILE ===== */}
+                {/*  PROFILE  */}
                 {active === "profile" && (
                     <div className="profile-section">
 
@@ -525,7 +520,7 @@ export default function Admin() {
                 )}
 
 
-                {/* ===== POST JOB ===== */}
+                {/*  POST JOB  */}
                 {active === "post" && (
                     <div className="post-section">
                         <h2>Post New Job</h2>
@@ -554,7 +549,7 @@ export default function Admin() {
                     </div>
                 )}
 
-                {/* ===== MANAGE JOBS ===== */}
+                {/*  MANAGE JOBS */}
                 {active === "manage" && (
                     <div className="jobs-grid">
                         {jobs.map((j) => (
@@ -565,7 +560,7 @@ export default function Admin() {
                                 <p>₹ {j.salary}</p>
                                 <p>{j.location}</p>
 
-                                {/* ✅ ACTION BUTTONS */}
+                                {/*  ACTION BUTTONS */}
                                 <div className="job-actions">
                                     <button
                                         className="recommended-btn"
@@ -592,7 +587,7 @@ export default function Admin() {
                     </div>
                 )}
 
-                {/* ===== APPLICATIONS ===== */}
+                {/* APPLICATIONS  */}
                 {active === "applications" && (
                     <div>
                         <h2>Job Applications</h2>
@@ -634,7 +629,7 @@ export default function Admin() {
                     </div>
                 )}
 
-                {/* ===== CANDIDATES ===== */}
+                {/*  CANDIDATES  */}
                 {active === "profiles" && (
                     <div className="jobs-grid">
                         {profiles.length === 0 ? (

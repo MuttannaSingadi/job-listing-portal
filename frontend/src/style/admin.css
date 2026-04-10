@@ -24,7 +24,7 @@
     width: 90%;
     max-width: 320px;
 
-    background: #0f172a; /* clean dark */
+    background: #0f172a;
     border-radius: 20px;
 
     padding: 20px;
@@ -50,7 +50,7 @@
     width: 100%;
     padding: 14px;
 
-    background: #475569;   /* lighter than container */
+    background: #475569; 
     color: #ffffff;
 
     border-radius: 12px;
@@ -65,20 +65,17 @@
     transition: all 0.25s ease;
   }
 
-  /* HOVER */
   .mobile-menu a:hover,
   .mobile-menu button:hover {
     background: #64748b;
     transform: translateY(-2px);
   }
 
-  /* ACTIVE */
   .mobile-menu a:active,
   .mobile-menu button:active {
     transform: scale(0.97);
   }
 
-  /* LOGOUT BUTTON */
   .mobile-menu .logout-btn {
     background: #ef4444;
     color: white;

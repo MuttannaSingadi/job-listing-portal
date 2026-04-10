@@ -6,7 +6,7 @@ const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("../config/cloudinary");
 
-/* ================= CLOUDINARY STORAGE ================= */
+// CLOUDINARY STORAGE
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
@@ -19,7 +19,7 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({ storage });
 
-/* ================= GET PROFILE ================= */
+// GET PROFILE
 
 router.get("/", protect, async (req, res) => {
   try {
@@ -38,7 +38,7 @@ router.get("/", protect, async (req, res) => {
   }
 });
 
-/* ================= UPDATE PROFILE ================= */
+// UPDATE PROFILE
 
 router.put(
   "/",
@@ -77,7 +77,6 @@ router.put(
   personal: safeParse(req.body.personal, {}),
 };
 
-      /* FILE UPLOADS */
 
       if (req.files?.resume) {
         updateData.resume = req.files.resume[0].path;

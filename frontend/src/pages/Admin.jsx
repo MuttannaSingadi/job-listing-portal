@@ -40,13 +40,13 @@ export default function Admin() {
     skills: "",
   });
 
-  /* ================= AUTH CHECK ================= */
+  // AUTH CHECK
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) navigate("/auth");
   }, [navigate]);
 
-  /* ================= FETCH DATA ================= */
+  // FETCH DATA
   const fetchJobs = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -89,7 +89,7 @@ export default function Admin() {
     fetchProfiles();
   }, []);
 
-  /* ================= FORM ================= */
+  // FORM
   const handleChange = (e) => {
     setJob({ ...job, [e.target.name]: e.target.value });
   };
@@ -123,7 +123,7 @@ export default function Admin() {
     }
   };
 
-  /* ================= DATA ================= */
+  // DATA 
   const statsData = [
     { name: "Jobs", value: jobs.length },
     { name: "Applications", value: applications.length },
@@ -135,7 +135,7 @@ export default function Admin() {
   return (
     <div className="admin-wrapper">
 
-      {/* ✅ Navbar */}
+      {/* Navbar */}
       <AdminNavbar
         navigate={navigate}
         menuOpen={menuOpen}
@@ -145,7 +145,7 @@ export default function Admin() {
 
       <div className="main">
 
-        {/* ================= DASHBOARD ================= */}
+        {/* DASHBOARD*/}
         {active === "dashboard" && (
           <div className="dashboard">
 
@@ -168,7 +168,6 @@ export default function Admin() {
 
             <div className="dashboard-graphs">
 
-              {/* BAR */}
               <div className="graph-card">
                 <h3>Statistics</h3>
                 <ResponsiveContainer width="100%" height={300}>
@@ -181,7 +180,6 @@ export default function Admin() {
                 </ResponsiveContainer>
               </div>
 
-              {/* PIE */}
               <div className="graph-card">
                 <h3>Distribution</h3>
                 <ResponsiveContainer width="100%" height={300}>
@@ -201,7 +199,7 @@ export default function Admin() {
           </div>
         )}
 
-        {/* ================= POST JOB ================= */}
+        {/*  POST JOB  */}
         {active === "post" && (
           <div className="post-section">
             <h2>Post Job</h2>
@@ -218,7 +216,7 @@ export default function Admin() {
           </div>
         )}
 
-        {/* ================= MANAGE JOBS ================= */}
+        {/* MANAGE JOBS  */}
         {active === "manage" && (
           <div className="jobs-grid">
             {jobs.map((j) => (
@@ -232,7 +230,7 @@ export default function Admin() {
           </div>
         )}
 
-        {/* ================= APPLICATIONS ================= */}
+        {/*  APPLICATIONS  */}
         {active === "applications" && (
           <div className="jobs-grid">
             {applications.length === 0 ? (
@@ -249,7 +247,7 @@ export default function Admin() {
           </div>
         )}
 
-        {/* ================= PROFILES ================= */}
+        {/*  PROFILES */}
         {active === "profiles" && (
           <div className="jobs-grid">
             {profiles.length === 0 ? (

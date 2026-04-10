@@ -1,4 +1,4 @@
-/* ================= NAVBAR ================= */
+/*  NAVBAR */
 
 .admin-navbar {
   position: fixed;
@@ -19,7 +19,7 @@
   box-shadow: 0 5px 20px rgba(0,0,0,0.1);
 }
 
-/* ================= LEFT ================= */
+/* LEFT */
 
 .admin-nav-left {
   display: flex;
@@ -40,7 +40,7 @@
   background: rgba(255,255,255,0.35);
 }
 
-/* ================= LOGO ================= */
+/* LOGO */
 
 .admin-nav-logo {
   display: flex;
@@ -96,8 +96,6 @@
   border-radius: 50%;
   border: 2px solid #fff;
 }
-
-/* DROPDOWN */
 
 .admin-dropdown-menu {
   position: absolute;
@@ -210,13 +208,13 @@
     padding: 0 15px;
   }
 
-  /* BACK BUTTON */
+  
   .admin-back-btn {
     padding: 6px 8px;
     font-size: 14px;
   }
 
-  /* CENTER LOGO */
+
   .admin-nav-logo {
     position: absolute;
     left: 25%;
@@ -227,25 +225,25 @@
     height: 30px;
   }
 
-  /* PROFILE SIZE */
+
   .admin-profile-img img {
     width: 32px;
     height: 32px;
     margin-left: 300%;
   }
 
-  /* HIDE DESKTOP MENU */
+ 
   .admin-nav-links {
     display: none;
   }
 
-  /* SHOW MENU BUTTON */
+  
   .admin-menu-btn {
     display: block;
     font-size: 22px;
   }
 
-  /* RIGHT ALIGN */
+ 
   .admin-nav-right {
     gap: 8px;
   }

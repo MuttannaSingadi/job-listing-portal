@@ -10,9 +10,8 @@ router.get("/", getJobs);
 router.get("/search", searchJobs);
 
 
-// ================= ADD THESE =================
+//  ADD THESE 
 
-// ✅ DELETE JOB
 router.delete("/:id", protect, async (req, res) => {
   try {
     const Job = require("../models/Job");
@@ -28,7 +27,7 @@ router.delete("/:id", protect, async (req, res) => {
 });
 
 
-// ✅ UPDATE JOB
+// UPDATE JOB
 router.put("/:id", protect, async (req, res) => {
   try {
     const Job = require("../models/Job");

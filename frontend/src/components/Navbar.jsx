@@ -125,7 +125,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* ✅ OVERLAY FIRST */}
+      {/* OVERLAY */}
       {menuOpen && (
         <div
           className="menu-overlay"
@@ -133,7 +133,7 @@ export default function Navbar() {
         />
       )}
 
-      {/* ✅ MENU AFTER OVERLAY */}
+      {/*  MENU AFTER OVERLAY */}
       <div
         className={`mobile-menu ${menuOpen ? "open" : ""}`}
         onClick={(e) => e.stopPropagation()}

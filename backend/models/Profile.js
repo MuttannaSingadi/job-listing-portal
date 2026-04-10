@@ -39,7 +39,6 @@ const profileSchema = new mongoose.Schema(
       default: "",
     },
 
-    // ⭐ ADD THIS FIELD
     profileImage: {
       type: String,
       default: "",

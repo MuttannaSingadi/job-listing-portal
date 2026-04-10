@@ -4,7 +4,7 @@ const router = express.Router();
 const Profile = require("../models/Profile");
 const { protect } = require("../middleware/authMiddleware");
 
-/* ================= GET ALL PROFILES (ADMIN) ================= */
+// GET ALL PROFILES
 router.get("/profiles", protect, async (req, res) => {
   try {
     console.log("Admin route hit by user:", req.user);

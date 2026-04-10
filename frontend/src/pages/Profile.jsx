@@ -60,7 +60,7 @@ export default function Profile() {
 
   const [profileImageFile, setProfileImageFile] = useState(null);
 
-  /* ================= FETCH PROFILE ================= */
+  /*  FETCH PROFILE  */
 
 
 
@@ -73,7 +73,7 @@ export default function Profile() {
     fetchNotifications();
   }, []);
 
-  /* ================= FETCH FUNCTION ================= */
+  /*  FETCH FUNCTION  */
 
   const fetchProfileFromDB = async () => {
     try {
@@ -115,7 +115,7 @@ export default function Profile() {
     }
   };
 
-  /* ================= SAVE PROFILE ================= */
+  /*  SAVE PROFILE */
 
   const saveProfile = async () => {
     try {
@@ -305,7 +305,6 @@ export default function Profile() {
         <div className="top-actions">
           <button onClick={() => {
             if (editMode) {
-              // If cancelling, RE-FETCH original data from DB to undo typed changes
               fetchProfileFromDB();
             }
             setEditMode(!editMode);
@@ -332,7 +331,7 @@ export default function Profile() {
                 className={active === item.id ? "active" : ""}
                 onClick={() => {
                   handleScroll(item.id);
-                  setMenuOpen(false); // close menu after click
+                  setMenuOpen(false); 
                 }}
               >
                 {item.name}

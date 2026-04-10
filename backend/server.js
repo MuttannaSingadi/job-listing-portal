@@ -14,11 +14,11 @@ const applicationRoutes = require("./routes/applicationRoutes");
 const recommendedJobRoutes = require("./routes/recommendedJobRoutes");
 const app = express();
 
-/* ================= DATABASE ================= */
+// DATABASE 
 
 connectDB();
 
-/* ================= MIDDLEWARE ================= */
+// MIDDLEWARE 
 
 app.use(express.json());
 
@@ -32,13 +32,11 @@ app.use(
   })
 );
 
-/* ================= ROOT ================= */
-
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-/* ================= ROUTES ================= */
+// ROUTES 
 
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/jobs", require("./routes/jobRoutes"));
@@ -49,16 +47,13 @@ app.use("/api/employee", employeeRoutes);
 app.use("/uploads", express.static("uploads"));
 app.use("/api/notifications", require("./routes/notificationRoutes"));
 app.use("/api/recommendedJobRoutes", recommendedJobRoutes);
-/* ================= 404 ================= */
 
 app.use((req, res) => {
   res.status(404).json({ message: "Route Not Found" });
 });
 
-/* ================= START ================= */
-
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(` Server running on port ${PORT}`);
 });

@@ -16,7 +16,6 @@
   z-index: 7000;
 }
 
-/* LEFT */
 .nav-left {
   display: flex;
   align-items: center;
@@ -26,7 +25,6 @@
   height: 40px;
 }
 
-/* DESKTOP MENU */
 .desktop-menu {
   display: flex;
   align-items: center;
@@ -39,7 +37,6 @@
   font-weight: 500;
 }
 
-/* PROFILE */
 .desktop-profile img {
   width: 36px;
   height: 36px;
@@ -110,7 +107,7 @@
     margin-right: 10px;
   }
 
-  /* ===== RIGHT SIDE DROPDOWN MENU ===== */
+ 
   .mobile-menu {
     position: fixed;
 
@@ -141,7 +138,6 @@
     right: 0%; 
   }
 
-  /* MENU ITEMS */
   .mobile-menu a,
   .mobile-menu button {
     width: 100%;
@@ -174,7 +170,6 @@
     transform: scale(0.97);
   }
 
-  /* LOGOUT BUTTON */
   .mobile-menu .logout-btn {
     background: #ef4444;
     color: white;

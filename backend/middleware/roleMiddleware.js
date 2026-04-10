@@ -1,6 +1,6 @@
 const Job = require("../models/Job");
 
-// Create Job (Admin only)
+// Create Job
 exports.createJob = async (req, res) => {
   try {
     const job = await Job.create(req.body);

@@ -97,7 +97,7 @@ export default function Home() {
     <>
       <Navbar />
 
-      {/* ================= MODERN HERO SECTION ================= */}
+      {/* MODERN HERO SECTION */}
       <section className="hero-modern">
         <div className="hero-content">
           <div className="hero-left">
@@ -336,7 +336,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      {/* ================= FOOTER ================= */}
+      {/*  FOOTER */}
       <footer className="footer">
         <div className="footer-container">
 

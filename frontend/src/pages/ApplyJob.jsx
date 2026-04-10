@@ -55,7 +55,7 @@ export default function ApplyJob() {
 
             setLoading(false);
 
-            setMessage("✅ Application submitted successfully");
+            setMessage(" Application submitted successfully");
 
             
             setTimeout(() => {

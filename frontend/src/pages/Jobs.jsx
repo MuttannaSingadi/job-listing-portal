@@ -12,7 +12,7 @@ export default function Jobs() {
   const [search, setSearch] = useState("");
   const [expandedJob, setExpandedJob] = useState(null);
 
-  /* ===== SAVE JOB STATE ===== */
+  /*  SAVE JOB STATE */
   const [savedJobs, setSavedJobs] = useState([]);
 
   const [jobTypes, setJobTypes] = useState([]);
@@ -31,7 +31,7 @@ export default function Jobs() {
     }
   }, []);
 
-  /* ================= FETCH JOBS ================= */
+  /*  FETCH JOBS  */
   useEffect(() => {
     axios
       .get("https://job-listing-portal-iu9g.onrender.com/api/jobs")
@@ -67,7 +67,7 @@ export default function Jobs() {
   }, []);
 
 
-  /* ================= FILTER + SEARCH ================= */
+  /*  FILTER + SEARCH  */
   useEffect(() => {
 
     const filtered = jobs.filter((job) => {
@@ -106,7 +106,7 @@ export default function Jobs() {
 
   }, [search, jobs, jobTypes, categories, minSalary, maxSalary]);
 
-  /* ===== CATEGORY FILTER ===== */
+  /*  CATEGORY FILTER  */
   const handleCategoryChange = (category) => {
     if (categories.includes(category)) {
       setCategories(categories.filter((c) => c !== category));
@@ -115,7 +115,7 @@ export default function Jobs() {
     }
   };
 
-  /* ===== CLEAR FILTERS ===== */
+  /*  CLEAR FILTERS  */
   const clearFilters = () => {
     setJobTypes([]);
     setCategories([]);
@@ -123,7 +123,7 @@ export default function Jobs() {
     setMaxSalary("");
   };
 
-  /* ================= SAVE JOB ================= */
+  /* SAVE JOB */
   const handleSave = (jobId) => {
     if (savedJobs.includes(jobId)) {
       setSavedJobs(savedJobs.filter((id) => id !== jobId));
@@ -139,7 +139,7 @@ export default function Jobs() {
   return (
     <div className="jobs-page">
 
-      {/* ===== HEADER ===== */}
+      {/*  HEADER  */}
       <div className="jobs-header">
 
         <button className="back-btn" onClick={() => navigate(-1)}>
@@ -165,10 +165,10 @@ export default function Jobs() {
 
       </div>
 
-      {/* ===== MAIN LAYOUT ===== */}
+      {/* MAIN LAYOUT */}
       <div className="jobs-layout">
 
-        {/* ===== FILTER SIDEBAR ===== */}
+        {/* FILTER SIDEBAR  */}
         <button className="mobile-filter-btn" onClick={() => setShowFilter(!showFilter)}>
           Filter Jobs
         </button>
@@ -298,7 +298,7 @@ export default function Jobs() {
 
         </div>
 
-        {/* ===== JOB LIST ===== */}
+        {/* JOB LIST  */}
         <div className="jobs-container">
 
           <RecommendedJobs />

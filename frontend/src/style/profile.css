@@ -42,7 +42,7 @@ h1, h2, h3, p {
 
 .top-actions{
   display: flex;
-  gap: 10px;   /* space between buttons */
+  gap: 10px;
 }
 
 .top-actions button {
@@ -92,9 +92,8 @@ h1, h2, h3, p {
 
 /* ================= FIX BIG GAP ISSUE ================= */
 
-/* IMPORTANT FIX */
 .dashboard-body {
-  display: block;   /* remove flex */
+  display: block;
   width: 100%;
 }
 
@@ -183,7 +182,6 @@ h1, h2, h3, p {
   box-shadow: 0 20px 45px rgba(0,0,0,0.12);
 }
 
-/* Top gradient border */
 .card1::before {
   content: "";
   position: absolute;
@@ -247,8 +245,6 @@ textarea:focus {
   box-shadow: 0 12px 35px rgba(0,0,0,0.08);
 }
 
-/* MENU BUTTON */
-
 .menu-btn{
 display:none;
 font-size:26px;
@@ -256,8 +252,6 @@ background:none;
 border:none;
 cursor:pointer;
 }
-
-/* MOBILE SIDEBAR */
 
 @media (max-width:768px){
 
@@ -270,7 +264,7 @@ display:block;
 
 top:70px;
 
-/* hide outside right */
+
 right:-100%;
 
 width:40%;

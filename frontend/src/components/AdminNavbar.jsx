@@ -24,7 +24,7 @@ export default function AdminNavbar({
 
   return (
     <>
-      {/* ===== NAVBAR ===== */}
+      {/* NAVBAR */}
       <div className="admin-navbar">
 
         {/* LEFT */}
